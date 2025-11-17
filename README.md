@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🏪 Sistema de Gestão para Lojas de Varejo
+# Sistema de Gestão para Lojas de Varejo
 
 ### Plataforma completa para gerenciamento inteligente de operações comerciais
 
@@ -15,17 +15,17 @@
 
 ---
 
-## 📋 Visão Geral
+## Visão Geral
 
 Sistema web profissional desenvolvido para otimizar a gestão de lojas de varejo, oferecendo controle completo sobre vendas, equipe, relatórios e operações do dia a dia.
 
-## ✨ Recursos
+## Recursos
 
 <table>
 <tr>
 <td width="50%">
 
-### 📊 Dashboard Executivo
+### Dashboard Executivo
 - Métricas em tempo real
 - Indicadores de desempenho
 - Gráficos comparativos
@@ -34,7 +34,7 @@ Sistema web profissional desenvolvido para otimizar a gestão de lojas de varejo
 </td>
 <td width="50%">
 
-### 🏢 Gestão de Lojas
+### Gestão de Lojas
 - Cadastro completo de unidades
 - Controle de status
 - Informações detalhadas
@@ -45,7 +45,7 @@ Sistema web profissional desenvolvido para otimizar a gestão de lojas de varejo
 <tr>
 <td width="50%">
 
-### 👥 Controle de Vendedores
+### Controle de Vendedores
 - Gerenciamento de equipe
 - Acompanhamento de desempenho
 - Registro de entrada/saída
@@ -54,7 +54,7 @@ Sistema web profissional desenvolvido para otimizar a gestão de lojas de varejo
 </td>
 <td width="50%">
 
-### 📈 Relatórios Gerenciais
+### Relatórios Gerenciais
 - Geração automática em PDF
 - Exportação para Excel
 - Processamento inteligente
@@ -65,16 +65,10 @@ Sistema web profissional desenvolvido para otimizar a gestão de lojas de varejo
 <tr>
 <td width="50%">
 
-### 🔧 Assistência Técnica
-- Controle de chamados
-- Estoque de peças
-- Histórico de atendimentos
-- Gestão de garantias
-
 </td>
 <td width="50%">
 
-### 📋 Sistema de Demandas
+### Sistema de Demandas
 - Criação de tarefas
 - Controle de status
 - Tags e categorização
@@ -84,14 +78,14 @@ Sistema web profissional desenvolvido para otimizar a gestão de lojas de varejo
 </tr>
 </table>
 
-## 🚀 Instalação Rápida
+## Instalação Rápida
 
 ```bash
 # Clone o repositório
-git clone https://github.com/seu-usuario/sistema-gestao-lojas.git
+git clone (clone esse repositório) 
 
 # Entre no diretório
-cd sistema-gestao-lojas
+cd (local onde voce salvou) 
 
 # Instale as dependências
 npm install
@@ -109,9 +103,9 @@ Usuário: admin
 Senha: admin
 ```
 
-> ⚠️ **Segurança**: Altere a senha padrão imediatamente após o primeiro acesso.
+>  **Segurança**: Altere a senha padrão imediatamente após o primeiro acesso.
 
-## 🛠️ Tecnologias
+## Tecnologias
 
 <div align="center">
 
@@ -126,13 +120,13 @@ Senha: admin
 
 </div>
 
-## 📁 Estrutura
+## Estrutura
 
 ```
 sistema-gestao-lojas/
-├── 📄 server.js              # Servidor principal
-├── 📦 package.json           # Dependências
-├── 🔧 .env.example           # Configurações
+├── server.js              # Servidor principal
+├── package.json           # Dependências
+├── .env.example           # Configurações
 ├── 📂 src/                   # Código fonte
 │   ├── config/               # Configurações
 │   ├── middleware/           # Autenticação e segurança
@@ -145,7 +139,7 @@ sistema-gestao-lojas/
 └── 📂 data/                  # Dados e relatórios
 ```
 
-## ⚙️ Configuração
+## Configuração
 
 ### Variáveis de Ambiente
 
@@ -173,27 +167,17 @@ Configure credenciais OAuth 2.0 para backup automático na nuvem.
 #### Integração DVR/NVR
 Suporte para sistemas Intelbras de monitoramento.
 
-## 🔒 Segurança
+## Segurança
 
-- ✅ Senhas com hash bcrypt
-- ✅ Autenticação JWT
-- ✅ Proteção CSRF
-- ✅ Rate limiting
-- ✅ Helmet security headers
-- ✅ Auditoria completa de ações
-- ✅ Controle de acesso por roles
+- Senhas com hash bcrypt
+- Autenticação JWT
+- Proteção CSRF
+- Rate limiting
+- Helmet security headers
+- Auditoria completa de ações
+- Controle de acesso por roles
 
-## 👥 Níveis de Acesso
-
-| Role | Permissões |
-|------|-----------|
-| **Admin** | Acesso total ao sistema |
-| **Monitoramento** | Visualização de relatórios e métricas |
-| **Gerente** | Gestão de loja específica |
-| **Consultor** | Consulta de informações |
-| **Técnico** | Assistência técnica |
-
-## 🤝 Contribuindo
+## Contribuindo
 
 Contribuições são bem-vindas! Por favor:
 
@@ -203,21 +187,21 @@ Contribuições são bem-vindas! Por favor:
 4. Push para a branch (`git push origin feature/MinhaFeature`)
 5. Abra um Pull Request
 
-## 📄 Licença
+## Licença
 
-Este projeto é de **uso privado e interno**.
+Este projeto é para estudos.
 
-## 💼 Suporte
+## Suporte
 
 Para suporte técnico ou dúvidas:
-- 📖 Consulte a documentação
-- 🔍 Verifique os logs do sistema
-- 📧 Entre em contato com o administrador
+- Consulte a documentação
+- Verifique os logs do sistema
+- Entre em contato com o administrador
 
 ---
 
 <div align="center">
 
-**Desenvolvido para otimizar a gestão de varejo** 🏪
+**Desenvolvido para otimizar a gestão de varejo**
 
 </div>
