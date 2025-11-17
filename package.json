@@ -1,0 +1,150 @@
+{
+  "name": "sistema-gestao-lojas",
+  "version": "1.0.0",
+  "description": "Sistema completo de gestão para lojas de varejo com dashboard, relatórios e controle de vendas.",
+  "main": "server.js",
+  "author": "",
+  "license": "ISC",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/seu-usuario/sistema-gestao-lojas.git"
+  },
+  "keywords": [
+    "gestao",
+    "lojas",
+    "varejo",
+    "relatorios",
+    "dashboard",
+    "vendas"
+  ],
+  "scripts": {
+    "start": "node server.js",
+    "electron": "electron .",
+    "electron:dev": "electron . --enable-logging",
+    "ngrok": "node scripts/start-with-ngrok.js",
+    "sync": "node scripts/sync-database.js",
+    "build:electron": "electron-builder",
+    "build:electron:win": "electron-builder --win",
+    "build:electron:mac": "electron-builder --mac",
+    "build:electron:linux": "electron-builder --linux",
+    "build:pkg": "npm run build:pkg:win && npm run build:pkg:mac && npm run build:pkg:linux",
+    "build:pkg:win": "pkg . --targets node20-win-x64 --output dist/SistemaRelatorios-Windows.exe",
+    "build:pkg:mac": "pkg . --targets node20-macos-x64 --output dist/SistemaRelatorios-Mac",
+    "build:pkg:linux": "pkg . --targets node20-linux-x64 --output dist/SistemaRelatorios-Linux"
+  },
+  "bin": "server.js",
+  "pkg": {
+    "assets": [
+      "views/**/*",
+      "public/**/*",
+      "middleware/**/*",
+      "services/**/*",
+      "scripts/**/*",
+      ".env.example"
+    ],
+    "outputPath": "dist"
+  },
+  "build": {
+    "appId": "com.sistema.relatorios",
+    "productName": "Sistema de Relatórios",
+    "directories": {
+      "output": "dist-electron",
+      "buildResources": "build"
+    },
+    "files": [
+      "electron-main.js",
+      "electron-preload.js",
+      "server.js",
+      "package.json",
+      "views/**/*",
+      "public/**/*",
+      "data/**/*",
+      "middleware/**/*",
+      "services/**/*",
+      "src/**/*",
+      "node_modules/**/*",
+      "!node_modules/.cache/**/*",
+      "!dist/**/*",
+      "!dist-electron/**/*",
+      "!attached_assets/**/*",
+      "!docs/**/*",
+      "!scripts/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.png",
+      "artifactName": "${productName}-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Sistema de Relatórios",
+      "installerIcon": "build/icon.png",
+      "uninstallerIcon": "build/icon.png"
+    },
+    "portable": {
+      "artifactName": "${productName}-Portable-${version}.${ext}"
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "icon": "build/icon.png",
+      "category": "public.app-category.business"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "icon": "build/icon.png",
+      "category": "Office"
+    }
+  },
+  "dependencies": {
+    "archiver": "^7.0.1",
+    "axios": "^1.13.2",
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.2.3",
+    "electron": "^39.2.1",
+    "electron-builder": "^26.0.12",
+    "exceljs": "^4.4.0",
+    "express": "^4.21.2",
+    "express-rate-limit": "^8.2.1",
+    "express-session": "^1.18.2",
+    "express-validator": "^7.3.0",
+    "googleapis": "^165.0.0",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^2.0.2",
+    "ngrok": "^5.0.0-beta.2",
+    "node-cron": "^4.2.1",
+    "nodemailer": "^7.0.10",
+    "pdf-parse": "^1.1.4",
+    "pdfkit": "^0.15.2",
+    "pg": "^8.16.3",
+    "sqlite3": "^5.1.7",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "pkg": "^5.8.1"
+  }
+}

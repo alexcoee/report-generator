@@ -1,0 +1,399 @@
+<div class="container-fluid" style="max-width: 1600px;">
+    <!-- CARD DE FILTROS -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form id="form-filtros-dashboard">
+                <div class="row gx-3 gy-3 align-items-end">
+                    <!-- Loja -->
+                    <div class="col-12 col-md-6 col-lg-3">
+                        <label for="filtro-loja-dashboard" class="form-label small text-uppercase fw-semibold">Loja</label>
+                        <select id="filtro-loja-dashboard" class="form-select form-select-sm">
+                            <option value="todas" selected>Todas as Lojas</option>
+                        </select>
+                    </div>
+
+                    <!-- Período Rápido -->
+                    <div class="col-12 col-lg-5">
+                        <label class="form-label small text-uppercase fw-semibold">Período Rápido</label>
+                        <div class="d-flex flex-wrap gap-2">
+                            <button type="button" class="btn btn-sm btn-outline-secondary" data-period="hoje">Hoje</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" data-period="7d">7 dias</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" data-period="mes-atual">Este Mês</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" data-period="mes-passado">Mês Passado</button>
+                        </div>
+                    </div>
+
+                    <!-- Período Manual -->
+                    <div class="col-12 col-md-6 col-lg-3">
+                        <label for="filtro-data-inicio-dashboard" class="form-label small text-uppercase fw-semibold">Período Manual</label>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <input type="date" class="form-control form-control-sm" id="filtro-data-inicio-dashboard" placeholder="Início">
+                            </div>
+                            <div class="col-6">
+                                <input type="date" class="form-control form-control-sm" id="filtro-data-fim-dashboard" placeholder="Fim">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botão Analisar -->
+                    <div class="col-12 col-md-6 col-lg-1">
+                        <button type="submit" class="btn btn-primary btn-sm w-100">Analisar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- CARDS DE VISÃO GERAL (NOVO) -->
+    <h4 class="mb-3">Visão Geral</h4>
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="d-flex justify-content-center align-items-center mb-2">
+                        <i class="bi bi-building fs-2" style="color: var(--color-info);"></i>
+                    </div>
+                    <h3 class="mb-1" id="overview-total-lojas">-</h3>
+                    <small class="text-muted">Total de Lojas Ativas</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="d-flex justify-content-center align-items-center mb-2">
+                        <i class="bi bi-trophy fs-2" style="color: var(--color-warning);"></i>
+                    </div>
+                    <h5 class="mb-1" id="overview-melhor-loja">-</h5>
+                    <small class="text-muted">Melhor Loja (Conv.)</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="d-flex justify-content-center align-items-center mb-2">
+                        <i class="bi bi-graph-up-arrow fs-2" style="color: var(--color-success);"></i>
+                    </div>
+                    <h3 class="mb-1" id="overview-media-conversao">-</h3>
+                    <small class="text-muted">Média de Conversão</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="d-flex justify-content-center align-items-center mb-2">
+                        <i class="bi bi-cart-check fs-2" style="color: var(--accent-primary);"></i>
+                    </div>
+                    <h3 class="mb-1" id="overview-total-vendas">-</h3>
+                    <small class="text-muted">Total de Vendas</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARDS DE MÉTRICAS PRINCIPAIS (MONITORAMENTO E BLUVE) -->
+    <h4 class="mb-3 mt-4">Métricas Principais</h4>
+    <div class="row g-3 mb-4">
+        <!-- CARD MONITORAMENTO -->
+        <div class="col-12 col-md-6" id="monitoramento-card">
+            <div class="card h-100" style="border-left: 4px solid #3b82f6;">
+                <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #f0f7ff; border-bottom: 2px solid #3b82f6;">
+                    <span style="color: #2563eb; font-weight: 600;"><i class="bi bi-graph-up-arrow me-2"></i>Monitoramento</span>
+                    <select id="filtro-loja-monitoramento" class="form-select form-select-sm" style="width: 180px; font-size: 0.875rem;">
+                        <option value="">Geral</option>
+                    </select>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3 text-center">
+                        <div class="col-4">
+                            <div class="d-flex flex-column">
+                                <small class="text-muted mb-1">Clientes</small>
+                                <h4 class="mb-0" id="monitoramento-clientes">0</h4>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="d-flex flex-column">
+                                <small class="text-muted mb-1">Vendas</small>
+                                <h4 class="mb-0" id="monitoramento-vendas">0</h4>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="d-flex flex-column">
+                                <small class="text-muted mb-1">Tx de Conversão</small>
+                                <h4 class="mb-0" id="monitoramento-tx-conversao">0.00%</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD BLUVE -->
+        <div class="col-12 col-md-6" id="loja-card-col">
+            <div class="card h-100" style="border-left: 4px solid #ff6600;">
+                <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #fff5ed; border-bottom: 2px solid #ff6600;">
+                    <span style="color: #ff5500; font-weight: 600;"><i class="bi bi-shop me-2"></i>Bluve</span>
+                    <select id="filtro-loja-bluve" class="form-select form-select-sm" style="width: 180px; font-size: 0.875rem;">
+                        <option value="">Geral</option>
+                    </select>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3 text-center">
+                        <div class="col-4">
+                            <div class="d-flex flex-column">
+                                <small class="text-muted mb-1">Clientes</small>
+                                <h4 class="mb-0" id="bluve-clientes">0</h4>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="d-flex flex-column">
+                                <small class="text-muted mb-1">Vendas</small>
+                                <h4 class="mb-0" id="bluve-vendas">0</h4>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="d-flex flex-column">
+                                <small class="text-muted mb-1">Tx de Conversão</small>
+                                <h4 class="mb-0" id="bluve-tx-conversao">0.00%</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARD GOOGLE DRIVE (NOVO) -->
+    <h4 class="mb-3 mt-4">Armazenamento Google Drive</h4>
+    <div class="row g-3 mb-4">
+        <div class="col-12">
+            <div class="card" style="border-left: 4px solid #4285f4;">
+                <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #f0f7ff; border-bottom: 2px solid #4285f4;">
+                    <span style="color: #2563eb; font-weight: 600;"><i class="bi bi-google me-2"></i>Status do Drive</span>
+                    <a href="#configuracoes" class="btn btn-sm btn-outline-primary">Ver Detalhes</a>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3 text-center">
+                        <div class="col-12 col-sm-3">
+                            <div class="d-flex flex-column">
+                                <small class="text-muted mb-1">Espaço Usado</small>
+                                <h4 class="mb-0" id="dash-drive-usado">-- GB</h4>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-3">
+                            <div class="d-flex flex-column">
+                                <small class="text-muted mb-1">Disponível</small>
+                                <h4 class="mb-0" id="dash-drive-disponivel">-- GB</h4>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-3">
+                            <div class="d-flex flex-column">
+                                <small class="text-muted mb-1">Percentual</small>
+                                <h4 class="mb-0" id="dash-drive-percentual">--%</h4>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-3">
+                            <div class="d-flex flex-column">
+                                <small class="text-muted mb-1">Status</small>
+                                <span class="badge bg-success" id="dash-drive-status">Online</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARDS INFORMATIVOS ELABORADOS -->
+    <h4 class="mb-3 mt-4">Indicadores de Performance</h4>
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card h-100 card-hover-effect">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="icon-badge" style="background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);">
+                            <i class="bi bi-shop-window"></i>
+                        </div>
+                        <span class="badge bg-info">Última Entrega</span>
+                    </div>
+                    <h5 class="text-muted mb-1" style="font-size: 0.875rem;">Última Loja</h5>
+                    <h5 class="mb-0" id="card-ultima-loja" style="font-size: 1.1rem;">-</h5>
+                    <small class="text-muted"><span id="card-ultima-loja-data">-</span></small>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card h-100 card-hover-effect">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="icon-badge" style="background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);">
+                            <i class="bi bi-file-earmark-text"></i>
+                        </div>
+                        <span class="badge bg-purple">Operacional</span>
+                    </div>
+                    <h5 class="text-muted mb-1" style="font-size: 0.875rem;">Relatórios Hoje</h5>
+                    <h2 class="mb-0" id="card-relatorios-hoje">0</h2>
+                    <small class="text-muted">Enviados no dia atual</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card h-100 card-hover-effect">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="icon-badge" style="background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);">
+                            <i class="bi bi-tools"></i>
+                        </div>
+                        <span class="badge bg-success">Técnico</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="text-muted mb-0" style="font-size: 0.875rem;">Assistências Registradas</h5>
+                        <select id="filtro-loja-assistencias" class="form-select form-select-sm" style="width: 100px; font-size: 0.75rem;">
+                            <option value="">Geral</option>
+                        </select>
+                    </div>
+                    <h2 class="mb-0" id="card-assistencias-total">0</h2>
+                    <small class="text-muted">Registradas hoje</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card h-100 card-hover-effect">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="icon-badge" style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);">
+                            <i class="bi bi-basket"></i>
+                        </div>
+                        <span class="badge bg-warning text-dark">Omni</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="text-muted mb-0" style="font-size: 0.875rem;">Vendas Omni</h5>
+                        <select id="filtro-loja-omni" class="form-select form-select-sm" style="width: 100px; font-size: 0.75rem;">
+                            <option value="">Geral</option>
+                        </select>
+                    </div>
+                    <h2 class="mb-0" id="card-omni-total">0</h2>
+                    <small class="text-muted">Vendas de hoje</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARD DE DEMANDAS PENDENTES -->
+    <div class="row g-3 mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-list-check me-2"></i>Demandas Pendentes</span>
+                    <a href="#demandas" class="btn btn-sm btn-outline-primary">Ver Todas</a>
+                </div>
+                <div class="card-body p-0">
+                    <div id="dashboard-demandas-container" class="scrollable-card-content">
+                        <div class="text-center text-muted py-3">
+                            <div class="spinner-border spinner-border-sm" role="status"></div>
+                            <p class="mb-0 mt-2 small">Carregando demandas...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- GRÁFICOS COMPARATIVOS -->
+    <div id="comparative-charts-section">
+        <h4 class="mb-3 mt-4"><i class="bi bi-graph-up"></i> Análise Comparativa</h4>
+        <div class="row g-3 mb-4">
+            <!-- Gráfico de Barras Comparativo -->
+            <div class="col-12 col-lg-8">
+                <div class="card h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span><i class="bi bi-bar-chart-fill me-2"></i>Comparativo de Desempenho por Loja</span>
+                        <select id="bar-chart-metric-select" class="form-select form-select-sm" style="width: auto;">
+                            <option value="vendas" selected>Vendas</option>
+                            <option value="clientes">Clientes</option>
+                            <option value="conversao">Taxa de Conversão</option>
+                        </select>
+                    </div>
+                    <div class="card-body" style="height: 400px; position: relative;">
+                        <canvas id="dashboard-bar-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráfico Donut -->
+            <div class="col-12 col-lg-4">
+                <div class="card h-100">
+                    <div class="card-header"><i class="bi bi-pie-chart-fill me-2"></i>Distribuição de Conversão</div>
+                    <div class="card-body" style="height: 400px; position: relative;">
+                        <canvas id="dashboard-donut-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GRÁFICO DE LINHA (EVOLUÇÃO) -->
+    <div class="row g-3 mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header"><i class="bi bi-graph-up-arrow me-2"></i>Evolução da Taxa de Conversão ao Longo do Tempo</div>
+                <div class="card-body" style="height: 350px; position: relative;">
+                    <canvas id="dashboard-line-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DESEMPENHO DAS LOJAS -->
+    <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
+        <h4 class="mb-0"><i class="bi bi-graph-up me-2"></i>Desempenho das Lojas</h4>
+    </div>
+    
+    <div class="row g-3 mb-4">
+        <!-- Top 10 Lojas por Vendas Médias Diárias -->
+        <div class="col-12 col-lg-6">
+            <div class="card h-100">
+                <div class="card-header"><i class="bi bi-trophy me-2"></i>Top 10 Lojas - Vendas Médias por Dia</div>
+                <div class="card-body" style="height: 400px; position: relative;">
+                    <canvas id="store-sales-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ticket Médio por Loja -->
+        <div class="col-12 col-lg-6">
+            <div class="card h-100">
+                <div class="card-header"><i class="bi bi-receipt me-2"></i>Ticket Médio por Loja</div>
+                <div class="card-body" style="height: 400px; position: relative;">
+                    <canvas id="store-ticket-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <!-- PA (Peças por Venda) por Loja -->
+        <div class="col-12 col-lg-6">
+            <div class="card h-100">
+                <div class="card-header"><i class="bi bi-boxes me-2"></i>Peças por Venda (PA) por Loja</div>
+                <div class="card-body" style="height: 400px; position: relative;">
+                    <canvas id="store-pa-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Distribuição de Formas de Pagamento -->
+        <div class="col-12 col-lg-6">
+            <div class="card h-100">
+                <div class="card-header"><i class="bi bi-credit-card me-2"></i>Distribuição de Formas de Pagamento</div>
+                <div class="card-body" style="height: 400px; position: relative;">
+                    <canvas id="payment-distribution-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
