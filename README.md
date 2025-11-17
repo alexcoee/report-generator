@@ -17,7 +17,7 @@
 
 ## Visão Geral
 
-Sistema web profissional desenvolvido para otimizar a gestão de lojas de varejo, oferecendo controle completo sobre vendas, equipe, relatórios e operações do dia a dia.
+Sistema web desenvolvido para otimizar a gestão de lojas de varejo, oferecendo controle completo  obre vendas, equipe, relatórios e operações do dia a dia, utilizado para comparar dados fornecido pela loja e dados fornecidos pela equipe de monitoramento de câmeras.
 
 ## Recursos
 
