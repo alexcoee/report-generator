@@ -8,7 +8,7 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/seu-usuario/sistema-gestao-lojas.git"
+    "url": "https://github.com/AlexStdy/gerador-de-relatorios.git"
   },
   "keywords": [
     "gestao",
@@ -18,104 +18,13 @@
     "dashboard",
     "vendas"
   ],
+
   "scripts": {
-    "start": "node server.js",
-    "ngrok": "node scripts/start-with-ngrok.js",
-    "sync": "node scripts/sync-database.js",
-    "build:electron": "electron-builder",
-    "build:electron:win": "electron-builder --win",
-    "build:electron:mac": "electron-builder --mac",
-    "build:electron:linux": "electron-builder --linux",
-    "build:pkg": "npm run build:pkg:win && npm run build:pkg:mac && npm run build:pkg:linux",
-    "build:pkg:win": "pkg . --targets node20-win-x64 --output dist/SistemaRelatorios-Windows.exe",
-    "build:pkg:mac": "pkg . --targets node20-macos-x64 --output dist/SistemaRelatorios-Mac",
-    "build:pkg:linux": "pkg . --targets node20-linux-x64 --output dist/SistemaRelatorios-Linux"
+    "start": "node server.js"
   },
+
   "bin": "server.js",
-  "pkg": {
-    "assets": [
-      "views/**/*",
-      "public/**/*",
-      "middleware/**/*",
-      "services/**/*",
-      "scripts/**/*",
-      ".env.example"
-    ],
-    "outputPath": "dist"
-  },
-  "build": {
-    "appId": "com.sistema.relatorios",
-    "productName": "Sistema de Relatórios",
-    "directories": {
-      "output": "dist-electron",
-      "buildResources": "build"
-    },
-    "files": [
-      "electron-main.js",
-      "electron-preload.js",
-      "server.js",
-      "package.json",
-      "views/**/*",
-      "public/**/*",
-      "data/**/*",
-      "middleware/**/*",
-      "services/**/*",
-      "src/**/*",
-      "node_modules/**/*",
-      "!node_modules/.cache/**/*",
-      "!dist/**/*",
-      "!dist-electron/**/*",
-      "!attached_assets/**/*",
-      "!docs/**/*",
-      "!scripts/**/*"
-    ],
-    "win": {
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64"
-          ]
-        },
-        {
-          "target": "portable",
-          "arch": [
-            "x64"
-          ]
-        }
-      ],
-      "icon": "build/icon.png",
-      "artifactName": "${productName}-Setup-${version}.${ext}"
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true,
-      "shortcutName": "Sistema de Relatórios",
-      "installerIcon": "build/icon.png",
-      "uninstallerIcon": "build/icon.png"
-    },
-    "portable": {
-      "artifactName": "${productName}-Portable-${version}.${ext}"
-    },
-    "mac": {
-      "target": [
-        "dmg",
-        "zip"
-      ],
-      "icon": "build/icon.png",
-      "category": "public.app-category.business"
-    },
-    "linux": {
-      "target": [
-        "AppImage",
-        "deb"
-      ],
-      "icon": "build/icon.png",
-      "category": "Office"
-    }
-  },
+
   "dependencies": {
     "archiver": "^7.0.1",
     "axios": "^1.13.2",
@@ -139,5 +48,7 @@
     "pg": "^8.16.3",
     "sqlite3": "^5.1.7",
     "uuid": "^13.0.0"
-  }
+  },
+
+  "devDependencies": {}
 }
