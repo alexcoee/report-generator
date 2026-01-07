@@ -66,9 +66,7 @@ It provides tools to manage sales data, staff, reports, and operational routines
 </td>
 </tr>
 <tr>
-<td width="50%">
-
-</td>
+<td width="50%"></td>
 <td width="50%">
 
 ### Task Management System
@@ -83,7 +81,6 @@ It provides tools to manage sales data, staff, reports, and operational routines
 
 ## Quick Installation
 
-```bash
 # Clone the repository
 git clone (clone this repository)
 
@@ -96,6 +93,106 @@ npm install
 # Start the server
 npm start
 
+Access: http://localhost:5000
 
+### First Access
 
+Username: admin  
+Password: admin  
 
+Security: Change the default password immediately after the first login.
+
+## Technologies
+
+<div align="center">
+
+| Category | Technologies |
+|--------|--------------|
+| Backend | Node.js, Express.js |
+| Database | PostgreSQL, SQLite |
+| Frontend | HTML5, CSS3, JavaScript, Bootstrap 5 |
+| Security | bcrypt, JWT, Helmet, Express-Session |
+| Documents | PDFKit, ExcelJS |
+| Integration | Google Drive API, Multer |
+
+</div>
+
+## Project Structure
+
+retail-management-system/
+├── server.js
+├── package.json
+├── .env.example
+├── src/
+│   ├── config/
+│   ├── middleware/
+│   ├── routes/
+│   └── services/
+├── public/
+│   ├── css/
+│   └── js/
+├── views/
+└── data/
+
+## Configuration
+
+### Environment Variables
+
+Create a .env file based on .env.example:
+
+PORT=5000  
+NODE_ENV=production  
+SESSION_SECRET=your-secret-key  
+JWT_SECRET=your-jwt-key  
+
+### Database
+
+The system supports PostgreSQL and SQLite.
+
+- PostgreSQL: Automatic configuration via environment variables  
+- SQLite: Local fallback for development  
+
+### Optional Features
+
+Google Drive Backup  
+OAuth 2.0 credentials can be configured for automatic cloud backups.
+
+DVR/NVR Integration  
+Support for Intelbras monitoring systems.
+
+## Security
+
+- Password hashing with bcrypt
+- JWT authentication
+- CSRF protection
+- Rate limiting
+- Helmet security headers
+- Full action auditing
+- Role-based access control
+
+## Contributing
+
+1. Fork the project  
+2. Create a feature branch  
+3. Commit your changes  
+4. Push to the branch  
+5. Open a Pull Request  
+
+## License
+
+This project was developed for learning and study purposes.
+
+## Support
+
+For technical support or questions:
+- Check the documentation
+- Review system logs
+- Contact the administrator
+
+---
+
+<div align="center">
+
+Built to improve retail operations while learning and growing as a junior developer
+
+</div>
