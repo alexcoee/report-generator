@@ -18,7 +18,7 @@
 ## Overview
 
 This web system was developed to streamline daily operations in retail stores.  
-The project was created while I was learning and working as a junior developer, with the goal of speeding up and simplifying internal processes at **Company X**.
+The project was created while I was learning and working as a junior developer, with the goal of speeding up and simplifying internal processes at **Company**.
 
 It provides tools to manage sales data, staff, reports, and operational routines, and was also used to compare data provided by stores with data collected by the camera monitoring team.
 
