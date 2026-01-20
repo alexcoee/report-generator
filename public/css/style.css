@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap');
 
 /* ============================================================
    VARIÁVEIS - TEMA APPLE + LOFT DESIGN
@@ -6,28 +6,28 @@
 :root {
     --sidebar-width: 220px;
     
-    /* Modo Claro - Cores REAIS da Loft (branco + cinza pastel + laranja) */
-    --main-bg-light: #ffffff;
-    --content-bg-light: #f8f8f8;
-    --hover-bg-light: #f0f0f0;
-    --border-color-light: #e0e0e0;
-    --text-primary-light: #2c2c2c;
-    --text-secondary-light: #757575;
-    --text-tertiary-light: #9e9e9e;
+    /* Modo Claro - Neutros quentes e mais humanos */
+    --main-bg-light: #f6f4f0;
+    --content-bg-light: #ffffff;
+    --hover-bg-light: #f1ede7;
+    --border-color-light: #e6e0d9;
+    --text-primary-light: #2f2b27;
+    --text-secondary-light: #6f6660;
+    --text-tertiary-light: #9a9088;
     
-    /* Modo Escuro - Cinza escuro com toques de laranja */
-    --main-bg-dark: #1a1a1a;
-    --content-bg-dark: #2a2a2a;
-    --hover-bg-dark: #353535;
-    --border-color-dark: #404040;
-    --text-primary-dark: #f5f5f5;
-    --text-secondary-dark: #b0b0b0;
-    --text-tertiary-dark: #808080;
+    /* Modo Escuro - Cinza quente com contraste suave */
+    --main-bg-dark: #1f1c19;
+    --content-bg-dark: #27231f;
+    --hover-bg-dark: #322d28;
+    --border-color-dark: #3a332d;
+    --text-primary-dark: #f2ede6;
+    --text-secondary-dark: #c3b8ae;
+    --text-tertiary-dark: #9c9086;
     
-    /* Cor de Destaque - Laranja Pastel da Loft */
-    --accent-primary: #ff8c42;
-    --accent-secondary: #ff7733;
-    --accent-hover: #ff9d5c;
+    /* Cor de Destaque - Terracota discreta */
+    --accent-primary: #c26d2d;
+    --accent-secondary: #a85c27;
+    --accent-hover: #d27d3b;
     
     /* Cores Chamativas e Claras para Dashboard */
     --color-success: #4ade80;
@@ -49,14 +49,14 @@
     --text-tertiary: var(--text-tertiary-light);
     
     /* Design */
-    --border-radius-xl: 20px;
-    --border-radius-large: 16px;
-    --border-radius-medium: 12px;
-    --border-radius-small: 8px;
-    --transition-speed: 0.3s;
-    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
-    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
-    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+    --border-radius-xl: 16px;
+    --border-radius-large: 12px;
+    --border-radius-medium: 10px;
+    --border-radius-small: 6px;
+    --transition-speed: 0.2s;
+    --shadow-sm: 0 1px 3px rgba(15, 10, 5, 0.08);
+    --shadow-md: 0 4px 12px rgba(15, 10, 5, 0.12);
+    --shadow-lg: 0 10px 24px rgba(15, 10, 5, 0.16);
 }
 
 /* Tema Escuro */
@@ -186,14 +186,14 @@
    ESTRUTURA PRINCIPAL E ESTILOS GLOBAIS
 ============================================================ */
 * {
-    transition: background-color var(--transition-speed) ease, 
+    transition: background-color var(--transition-speed) ease,
                 color var(--transition-speed) ease,
                 border-color var(--transition-speed) ease;
 }
 
 body { 
     background-color: var(--main-bg) !important; 
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Source Sans 3', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-weight: 400;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
@@ -226,27 +226,15 @@ small, .text-muted {
 /* Títulos com estilo Apple */
 h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
 }
 
 h4.mb-3 {
     font-weight: 600;
-    font-size: 1.5rem;
-    padding-bottom: 1rem;
-    position: relative;
+    font-size: 1.45rem;
+    padding-bottom: 0.75rem;
     border-bottom: 1px solid var(--border-color);
     margin-bottom: 1.5rem !important;
-    letter-spacing: -0.02em;
-}
-
-h4.mb-3::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    width: 60px;
-    height: 2px;
-    background: var(--accent-primary);
 }
 
 /* ============================================================
@@ -338,7 +326,7 @@ body.page-loaded {
     display: flex;
     flex-direction: column;
     box-shadow: var(--shadow-sm);
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.3s ease;
 }
 
 .sidebar-header {
@@ -385,10 +373,11 @@ body.page-loaded {
 .theme-toggle {
     background: var(--hover-bg);
     border: 1px solid var(--border-color);
-    border-radius: 10px;
+    border-radius: var(--border-radius-small);
     padding: 0;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: background-color var(--transition-speed) ease,
+                border-color var(--transition-speed) ease;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -399,12 +388,10 @@ body.page-loaded {
 
 .theme-toggle:hover {
     background: var(--border-color);
-    transform: scale(1.08);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .theme-toggle:active {
-    transform: scale(0.92);
+    transform: none;
 }
 
 .theme-toggle i {
@@ -432,17 +419,16 @@ body.page-loaded {
     height: 48px;
     background: var(--content-bg);
     border: 1px solid var(--border-color);
-    border-radius: 12px;
+    border-radius: var(--border-radius-medium);
     display: none;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     z-index: 999;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: var(--shadow-md);
+    transition: background-color var(--transition-speed) ease,
+                border-color var(--transition-speed) ease;
     opacity: 0;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
 }
 
 .sidebar-show-btn i {
@@ -452,59 +438,17 @@ body.page-loaded {
 
 .sidebar-show-btn:hover {
     background: var(--hover-bg);
-    transform: scale(1.05);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-md);
 }
 
 .sidebar-show-btn:active {
-    transform: scale(0.95);
+    transform: none;
 }
 
 .sidebar-show-btn.visible {
     display: flex;
     opacity: 1;
     animation: slideInLeft 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* Botão flutuante de tema (canto superior direito) */
-.theme-toggle-floating {
-    position: fixed;
-    top: 1.25rem;
-    right: 1.25rem;
-    width: 36px;
-    height: 36px;
-    background: var(--content-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 999;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-}
-
-.theme-toggle-floating i {
-    font-size: 1.1rem;
-    color: var(--text-primary) !important;
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.theme-toggle-floating:hover {
-    background: var(--hover-bg);
-    transform: scale(1.05) rotate(5deg);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-}
-
-.theme-toggle-floating:hover i {
-    transform: rotate(15deg) scale(1.1);
-}
-
-.theme-toggle-floating:active {
-    transform: scale(0.95);
 }
 
 .sidebar-nav {
@@ -524,10 +468,11 @@ body.page-loaded {
     align-items: center;
     gap: 0.75rem;
     padding: 0.625rem 1rem;
-    border-radius: 8px;
+    border-radius: var(--border-radius-small);
     color: var(--text-secondary) !important;
     text-decoration: none;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: background-color var(--transition-speed) ease,
+                color var(--transition-speed) ease;
     font-weight: 500;
     font-size: 0.875rem;
     position: relative;
@@ -547,18 +492,9 @@ body.page-loaded {
     transition: height 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.nav-link i {
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
 .nav-link:hover {
     color: var(--text-primary) !important;
     background-color: var(--hover-bg);
-    transform: translateX(4px);
-}
-
-.nav-link:hover i {
-    transform: scale(1.1);
 }
 
 .nav-link:hover::before {
@@ -577,7 +513,6 @@ body.page-loaded {
 
 .nav-item.active .nav-link i {
     color: var(--accent-primary) !important;
-    transform: scale(1.05);
 }
 
 /* Submenu de Configurações */
@@ -672,22 +607,18 @@ body.page-loaded {
 /* Cards Redesenhados - Visual Moderno e Profissional */
 .card, .alert, .list-group-item {
     background-color: var(--content-bg) !important;
-    border-radius: 14px !important;
+    border-radius: var(--border-radius-large) !important;
     border: 1px solid var(--border-color) !important;
     margin-bottom: 1.5rem;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04),
-                0 1px 3px rgba(0, 0, 0, 0.06);
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition-speed) ease,
+                border-color var(--transition-speed) ease;
     overflow: hidden;
 }
 
 .card:hover {
-    border-color: rgba(255, 140, 66, 0.3);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08),
-                0 2px 6px rgba(0, 0, 0, 0.06);
-    transform: translateY(-3px);
+    border-color: var(--accent-primary);
+    box-shadow: var(--shadow-md);
 }
 
 #page-content > .container-fluid > .card:first-of-type {
@@ -718,33 +649,13 @@ body.page-loaded {
 
 /* Cards Elaborados com Efeitos Especiais */
 .card-hover-effect {
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    position: relative;
-    overflow: visible;
-}
-
-.card-hover-effect::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 14px;
-    background: linear-gradient(135deg, rgba(255, 140, 66, 0.05), rgba(255, 140, 66, 0));
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    pointer-events: none;
-}
-
-.card-hover-effect:hover::before {
-    opacity: 1;
+    transition: box-shadow var(--transition-speed) ease,
+                transform var(--transition-speed) ease;
 }
 
 .card-hover-effect:hover {
-    transform: translateY(-6px) scale(1.02);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12),
-                0 4px 12px rgba(255, 140, 66, 0.15);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
 .icon-badge {
@@ -761,8 +672,8 @@ body.page-loaded {
 }
 
 .card-hover-effect:hover .icon-badge {
-    transform: rotate(10deg) scale(1.1);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    transform: scale(1.05);
+    box-shadow: var(--shadow-md);
 }
 
 .bg-purple {
@@ -1050,15 +961,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     left: 0;
     width: 100%;
     height: 60px;
-    background-color: rgba(var(--content-bg-rgb, 248, 248, 248), 0.95);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background-color: var(--content-bg);
     border-bottom: 1px solid var(--border-color);
     display: flex;
     align-items: center;
     padding: 0 1rem;
     z-index: 1030;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    box-shadow: var(--shadow-sm);
 }
 
 [data-theme="dark"] .mobile-header {
@@ -1073,20 +982,18 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    border-radius: 10px;
+    transition: background-color var(--transition-speed) ease;
+    border-radius: var(--border-radius-small);
     width: 40px;
     height: 40px;
 }
 
 .mobile-header .btn:hover {
     background-color: var(--hover-bg);
-    transform: scale(1.05);
 }
 
 .mobile-header .btn:active {
-    transform: scale(0.92);
-    transition: all 0.1s;
+    transform: none;
 }
 
 .mobile-header-title {
@@ -1112,8 +1019,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .modal-content.mobile-menu-content {
     background-color: var(--content-bg);
     border: none;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
 }
 
 .mobile-menu-content .modal-header {
@@ -1141,21 +1046,21 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     font-size: 1rem;
     padding: 1rem 1.25rem;
     margin-bottom: 0.5rem;
-    border-radius: 10px;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    border-radius: var(--border-radius-small);
+    transition: background-color var(--transition-speed) ease,
+                color var(--transition-speed) ease;
 }
 
 .mobile-menu-content .nav-link:active {
-    transform: scale(0.98);
-    transition: all 0.1s;
+    transform: none;
 }
 
 /* Animação do modal mobile com efeito suave */
 .modal.fade .modal-dialog {
     transform: translateX(-100%);
     opacity: 0;
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                opacity 0.4s ease;
+    transition: transform 0.3s ease,
+                opacity 0.3s ease;
 }
 
 .modal.show .modal-dialog {
@@ -1164,8 +1069,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .modal-backdrop {
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background-color: rgba(0, 0, 0, 0.4);
 }
 
 /* ============================================================
@@ -1173,7 +1077,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 ============================================================ */
 .card .table-responsive, .card .table { background-color: transparent; }
 .card .table { --bs-table-bg: transparent; --bs-table-striped-bg: rgba(0, 0, 0, 0.05); }
-.modal-content { background-color: var(--content-bg) !important; border-radius: var(--border-radius-large) !important; border: 1px solid var(--border-color) !important; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+.modal-content { background-color: var(--content-bg) !important; border-radius: var(--border-radius-large) !important; border: 1px solid var(--border-color) !important; }
 .modal-header { border-bottom-color: var(--border-color) !important; }
 .modal-footer { border-top-color: var(--border-color) !important; }
 .nav-tabs {
@@ -1207,9 +1111,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 #form-filtros-dashboard .form-label {
     font-size: 0.8rem;
     font-weight: 500;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+    text-transform: none;
+    letter-spacing: 0.2px;
     margin-bottom: 0.5rem; /* Espaçamento consistente */
 }
 
@@ -1225,58 +1129,38 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 #form-filtros-dashboard .btn-group .btn {
     background-color: transparent !important;
     border: none !important;
-    color: var(--text-muted) !important;
+    color: var(--text-secondary) !important;
     font-weight: 500;
     box-shadow: none !important;
-    transition: all 0.2s ease-in-out;
+    transition: background-color var(--transition-speed) ease,
+                color var(--transition-speed) ease;
     border-radius: 6px !important; /* Bordas arredondadas para todos */
     padding-top: 0.375rem; /* Ajuste para alinhamento vertical */
     padding-bottom: 0.375rem;
 }
 
 #form-filtros-dashboard .btn-group .btn:hover {
-    color: var(--text-light) !important;
-    background-color: rgba(255, 255, 255, 0.05) !important;
+    color: var(--text-primary) !important;
+    background-color: var(--hover-bg) !important;
 }
 
 /* Botão ATIVO no controle */
 #form-filtros-dashboard .btn-group .btn.active {
     background-color: var(--hover-bg) !important;
-    color: var(--text-light) !important;
+    color: var(--text-primary) !important;
     font-weight: 600;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+    box-shadow: var(--shadow-sm) !important;
 }
 
 .input-group-text {
     background-color: var(--border-color) !important; /* Um cinza um pouco mais escuro para destaque */
     border-color: var(--border-color) !important;
-    color: var(--text-muted) !important;
+    color: var(--text-secondary) !important;
     font-weight: 600;
 }
 
 .btn:hover {
-    transform: translateY(-2px);
-    opacity: 0.95;
-}
-
-/* Aplica o brilho laranja ao passar o mouse sobre botões primários */
-.btn-primary:hover {
-    box-shadow: 0 0 12px var(--glow-color);
-}
-
-/* Aplica um brilho verde ao passar o mouse sobre botões de sucesso */
-.btn-success:hover {
-    box-shadow: 0 0 12px rgba(46, 160, 67, 0.6);
-}
-
-/* Aplica um brilho vermelho ao passar o mouse sobre botões de perigo */
-.btn-danger:hover, .btn-outline-danger:hover {
-    box-shadow: 0 0 12px rgba(248, 113, 113, 0.6);
-}
-
-/* Aplica um brilho cinza ao passar o mouse sobre botões secundários */
-.btn-secondary:hover, .btn-outline-secondary:hover {
-    box-shadow: 0 0 12px rgba(108, 117, 125, 0.4);
+    opacity: 0.92;
 }
 
 /* ============================================================
