@@ -18,15 +18,11 @@
     "dashboard",
     "vendas"
   ],
-
   "scripts": {
     "start": "node server.js"
   },
-
   "bin": "server.js",
-
   "dependencies": {
-    "archiver": "^7.0.1",
     "axios": "^1.13.2",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
@@ -36,7 +32,6 @@
     "express-rate-limit": "^8.2.1",
     "express-session": "^1.18.2",
     "express-validator": "^7.3.0",
-    "googleapis": "^165.0.0",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.2",
@@ -48,7 +43,5 @@
     "pg": "^8.16.3",
     "sqlite3": "^5.1.7",
     "uuid": "^13.0.0"
-  },
-
-  "devDependencies": {}
+  }
 }

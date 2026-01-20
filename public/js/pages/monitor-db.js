@@ -143,9 +143,10 @@ function atualizarInformacoesDoSistema(systemInfo) {
         : '<span class="text-warning"><i class="bi bi-exclamation-triangle"></i> Não configurado</span>';
     document.getElementById('info-backup-email').innerHTML = emailStatus;
     
-    const driveStatus = systemInfo.googleDriveConfigured 
-        ? '<span class="text-success"><i class="bi bi-check-circle"></i> Configurado</span>' 
-        : '<span class="text-warning"><i class="bi bi-exclamation-triangle"></i> Não configurado</span>';
+    const storageLabel = systemInfo.storageProvider 
+        ? `${systemInfo.storageProvider}`
+        : 'Armazenamento local';
+    const driveStatus = `<span class="text-info"><i class="bi bi-hdd-stack"></i> ${storageLabel}</span>`;
     document.getElementById('info-google-drive').innerHTML = driveStatus;
     
     document.getElementById('info-last-update').textContent = new Date().toLocaleTimeString('pt-BR');
