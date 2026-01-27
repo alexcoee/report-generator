@@ -1719,3 +1719,90 @@ img {
     background-color: var(--content-bg);
     color: var(--text-primary);
 }
+
+/* Metric cards (Monitoramento / Bluve) */
+:root {
+    --metric-monitoramento-border: #3b82f6;
+    --metric-monitoramento-bg: #f0f7ff;
+    --metric-monitoramento-title: #2563eb;
+    --metric-bluve-border: #ff6600;
+    --metric-bluve-bg: #fff5ed;
+    --metric-bluve-title: #ff5500;
+}
+
+[data-theme="dark"] {
+    --metric-monitoramento-bg: rgba(59, 130, 246, 0.18);
+    --metric-monitoramento-title: #93c5fd;
+    --metric-bluve-bg: rgba(255, 102, 0, 0.16);
+    --metric-bluve-title: #fdba74;
+}
+
+.metric-card {
+    border-left: 4px solid var(--metric-border);
+}
+
+.metric-card .card-header {
+    background-color: var(--metric-header-bg);
+    border-bottom: 2px solid var(--metric-border);
+}
+
+.metric-card .metric-title {
+    color: var(--metric-title);
+    font-weight: 600;
+}
+
+.metric-card.metric-card--monitoramento {
+    --metric-border: var(--metric-monitoramento-border);
+    --metric-header-bg: var(--metric-monitoramento-bg);
+    --metric-title: var(--metric-monitoramento-title);
+}
+
+.metric-card.metric-card--bluve {
+    --metric-border: var(--metric-bluve-border);
+    --metric-header-bg: var(--metric-bluve-bg);
+    --metric-title: var(--metric-bluve-title);
+}
+
+.metric-select {
+    width: 180px;
+    font-size: 0.875rem;
+}
+
+/* Tabs - mais compactas e navegáveis */
+.nav-tabs {
+    gap: 0.5rem;
+    border-bottom: 0;
+}
+
+.nav-tabs .nav-link {
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    background: var(--content-bg);
+    color: var(--text-secondary);
+}
+
+.nav-tabs .nav-link:hover {
+    background: var(--hover-bg);
+    color: var(--text-primary);
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--text-primary);
+    background: var(--hover-bg);
+    border-color: var(--border-color);
+    box-shadow: none;
+}
+
+/* Dark mode fixes for tables/cards */
+[data-theme="dark"] .table,
+[data-theme="dark"] .table thead,
+[data-theme="dark"] .table tbody,
+[data-theme="dark"] .table td,
+[data-theme="dark"] .table th {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .table-light {
+    --bs-table-bg: transparent;
+    color: var(--text-secondary);
+}
