@@ -44,8 +44,6 @@ yarn-error.log*
 .pnpm-debug.log*
 .local/
 data/
-services/
-src/
 .editorconfig
 
 # Arquivos temporários
