@@ -19,6 +19,7 @@ function init() {
 
 async function initBackupTab() {
     await carregarConfigBackup();
+    await carregarConfigSmtp();
     await carregarHistoricoBackup();
 
     document.getElementById('btn-criar-backup').addEventListener('click', criarBackupManual);
@@ -29,6 +30,18 @@ async function initBackupTab() {
         e.preventDefault();
         await salvarConfigBackup();
     });
+
+    const smtpForm = document.getElementById('form-config-smtp');
+    const smtpTestBtn = document.getElementById('btn-testar-smtp');
+    if (smtpForm) {
+        smtpForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await salvarConfigSmtp();
+        });
+    }
+    if (smtpTestBtn) {
+        smtpTestBtn.addEventListener('click', testarSmtp);
+    }
 }
 
 async function carregarConfigBackup() {
@@ -69,6 +82,105 @@ async function salvarConfigBackup() {
     } catch (error) {
         console.error('Erro ao salvar configurações:', error);
         showToast('Erro ao salvar configurações', 'danger');
+    }
+}
+
+let smtpPassMasked = false;
+
+async function carregarConfigSmtp() {
+    const hostInput = document.getElementById('smtp-host');
+    if (!hostInput) return;
+
+    try {
+        const response = await fetch('/api/settings/email/config', {
+            headers: await getAuthHeaders()
+        });
+        if (!response.ok) throw new Error('Erro ao carregar SMTP');
+
+        const smtp = await response.json();
+        document.getElementById('smtp-host').value = smtp.host || '';
+        document.getElementById('smtp-port').value = smtp.port || 587;
+        document.getElementById('smtp-secure').checked = Boolean(smtp.secure);
+        document.getElementById('smtp-user').value = smtp.user || '';
+        document.getElementById('smtp-from').value = smtp.from || '';
+        document.getElementById('smtp-test-email').value = smtp.user || '';
+
+        const passInput = document.getElementById('smtp-pass');
+        passInput.value = smtp.pass || '';
+        smtpPassMasked = smtp.pass === '********';
+    } catch (error) {
+        console.error('Erro ao carregar SMTP:', error);
+    }
+}
+
+async function salvarConfigSmtp() {
+    const btn = document.getElementById('btn-salvar-smtp');
+    if (!btn) return;
+    const originalText = btn.innerHTML;
+
+    try {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Salvando...';
+
+        const passInput = document.getElementById('smtp-pass');
+        const passValue = passInput.value.trim();
+        const passToSend = passValue ? passValue : (smtpPassMasked ? '********' : '');
+
+        const payload = {
+            host: document.getElementById('smtp-host').value.trim(),
+            port: parseInt(document.getElementById('smtp-port').value || '587', 10),
+            secure: document.getElementById('smtp-secure').checked,
+            user: document.getElementById('smtp-user').value.trim(),
+            pass: passToSend,
+            from: document.getElementById('smtp-from').value.trim()
+        };
+
+        const response = await fetch('/api/settings/email/config', {
+            method: 'POST',
+            headers: await getAuthHeaders(),
+            body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Erro ao salvar SMTP');
+
+        showToast('Configuracao SMTP salva', 'success');
+        await carregarConfigSmtp();
+    } catch (error) {
+        console.error('Erro ao salvar SMTP:', error);
+        showToast(error.message, 'danger');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+    }
+}
+
+async function testarSmtp() {
+    const btn = document.getElementById('btn-testar-smtp');
+    if (!btn) return;
+    const originalText = btn.innerHTML;
+
+    try {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Testando...';
+
+        const emailTo = document.getElementById('smtp-test-email').value.trim()
+            || document.getElementById('smtp-user').value.trim();
+
+        const response = await fetch('/api/settings/email/test', {
+            method: 'POST',
+            headers: await getAuthHeaders(),
+            body: JSON.stringify({ emailTo })
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Falha no teste SMTP');
+
+        showToast('Email de teste enviado', 'success');
+    } catch (error) {
+        console.error('Erro ao testar SMTP:', error);
+        showToast(error.message, 'danger');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
     }
 }
 

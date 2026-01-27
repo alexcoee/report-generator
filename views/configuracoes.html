@@ -1,11 +1,11 @@
-<div class="container-fluid" style="max-width: 1400px;">
+﻿<div class="container-fluid" style="max-width: 1400px;">
     <div id="secao-configuracoes" style="display: none;">
         <div class="mb-4">
-            <h1 class="h3 mb-1">Configurações do Sistema</h1>
-            <p class="text-muted">Gerencie backups, integrações e estatísticas do Google Drive</p>
+            <h1 class="h3 mb-1">ConfiguraÃ§Ãµes do Sistema</h1>
+            <p class="text-muted">Gerencie backups e a configuracao de email (SMTP)</p>
         </div>
 
-        <!-- Tabs de navegação -->
+        <!-- Tabs de navegaÃ§Ã£o -->
         <ul class="nav nav-tabs mb-4" id="configTabs" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="backup-tab" data-bs-toggle="tab" data-bs-target="#backup-panel" type="button" role="tab">
@@ -15,26 +15,26 @@
             
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="integrations-tab" data-bs-toggle="tab" data-bs-target="#integrations-panel" type="button" role="tab">
-                    <i class="bi bi-plug me-2"></i>Integrações
+                    <i class="bi bi-plug me-2"></i>IntegraÃ§Ãµes
                 </button>
             </li>
         </ul>
 
-        <!-- Conteúdo das Tabs -->
+        <!-- ConteÃºdo das Tabs -->
         <div class="tab-content" id="configTabsContent">
             <!-- Tab de Backup -->
             <div class="tab-pane fade show active" id="backup-panel" role="tabpanel">
                 <div class="row">
-                    <!-- Ações de Backup -->
+                    <!-- AÃ§Ãµes de Backup -->
                     <div class="col-md-6 mb-4">
                         <div class="card h-100">
                             <div class="card-header">
-                                <h5 class="mb-0"><i class="bi bi-gear me-2"></i>Ações de Backup</h5>
+                                <h5 class="mb-0"><i class="bi bi-gear me-2"></i>AÃ§Ãµes de Backup</h5>
                             </div>
                             <div class="card-body">
                                 <div class="mb-3">
                                     <h6>Criar Backup Manual</h6>
-                                    <p class="text-muted small mb-2">Gera uma cópia do banco de dados atual</p>
+                                    <p class="text-muted small mb-2">Gera uma cÃ³pia do banco de dados atual</p>
                                     <button class="btn btn-primary" id="btn-criar-backup">
                                         <i class="bi bi-download me-1"></i>Criar Backup
                                     </button>
@@ -42,7 +42,7 @@
                                 <hr>
                                 <div class="mb-3">
                                     <h6>Enviar Backup por Email</h6>
-                                    <p class="text-muted small mb-2">Envia uma cópia do banco de dados para seu email</p>
+                                    <p class="text-muted small mb-2">Envia uma cÃ³pia do banco de dados para seu email</p>
                                     <div class="input-group">
                                         <input type="email" class="form-control" id="email-backup" placeholder="seu@email.com">
                                         <button class="btn btn-success" id="btn-enviar-email">
@@ -54,11 +54,11 @@
                         </div>
                     </div>
 
-                    <!-- Configurações Automáticas -->
+                    <!-- ConfiguraÃ§Ãµes AutomÃ¡ticas -->
                     <div class="col-md-6 mb-4">
                         <div class="card h-100">
                             <div class="card-header">
-                                <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Backup Automático</h5>
+                                <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Backup AutomÃ¡tico</h5>
                             </div>
                             <div class="card-body">
                                 <form id="form-config-backup">
@@ -66,12 +66,12 @@
                                         <div class="form-check form-switch">
                                             <input class="form-check-input" type="checkbox" id="auto-backup-enabled">
                                             <label class="form-check-label" for="auto-backup-enabled">
-                                                Habilitar backup automático
+                                                Habilitar backup automÃ¡tico
                                             </label>
                                         </div>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label">Frequência</label>
+                                        <label class="form-label">FrequÃªncia</label>
                                         <select class="form-select" id="auto-backup-frequency">
                                             <option value="daily">Diariamente</option>
                                             <option value="weekly">Semanalmente</option>
@@ -83,7 +83,7 @@
                                         <input type="email" class="form-control" id="auto-backup-email" placeholder="backup@empresa.com">
                                     </div>
                                     <button type="submit" class="btn btn-primary">
-                                        <i class="bi bi-save me-1"></i>Salvar Configurações
+                                        <i class="bi bi-save me-1"></i>Salvar ConfiguraÃ§Ãµes
                                     </button>
                                 </form>
                             </div>
@@ -91,10 +91,66 @@
                     </div>
                 </div>
 
-                <!-- Histórico de Backups -->
+                <!-- Configuracao de Email (SMTP) -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-envelope-gear me-2"></i>Email (SMTP)</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="form-config-smtp">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label">Host</label>
+                                    <input type="text" class="form-control" id="smtp-host" placeholder="smtp.gmail.com">
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Porta</label>
+                                    <input type="number" class="form-control" id="smtp-port" placeholder="587">
+                                </div>
+                                <div class="col-md-2 d-flex align-items-end">
+                                    <div class="form-check form-switch mb-2">
+                                        <input class="form-check-input" type="checkbox" id="smtp-secure">
+                                        <label class="form-check-label" for="smtp-secure">SSL/TLS</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Remetente (From)</label>
+                                    <input type="email" class="form-control" id="smtp-from" placeholder="seu@email.com">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Usuario</label>
+                                    <input type="text" class="form-control" id="smtp-user" placeholder="seu@email.com">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Senha / App Password</label>
+                                    <input type="password" class="form-control" id="smtp-pass" placeholder="cole aqui sua senha de app">
+                                </div>
+                            </div>
+
+                            <div class="row g-3 mt-1">
+                                <div class="col-md-6">
+                                    <label class="form-label">Email para teste</label>
+                                    <input type="email" class="form-control" id="smtp-test-email" placeholder="destino@empresa.com">
+                                </div>
+                                <div class="col-md-6 d-flex align-items-end gap-2">
+                                    <button type="submit" class="btn btn-primary" id="btn-salvar-smtp">
+                                        <i class="bi bi-save me-1"></i>Salvar SMTP
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" id="btn-testar-smtp">
+                                        <i class="bi bi-send-check me-1"></i>Testar envio
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        <p class="text-muted small mt-3 mb-0">
+                            Dica: no Gmail, use uma App Password com 2FA habilitado.
+                        </p>
+                    </div>
+                </div>
+                <!-- HistÃ³rico de Backups -->
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0"><i class="bi bi-list-ul me-2"></i>Histórico de Backups</h5>
+                        <h5 class="mb-0"><i class="bi bi-list-ul me-2"></i>HistÃ³rico de Backups</h5>
                         <button class="btn btn-sm btn-outline-primary" id="btn-refresh-history">
                             <i class="bi bi-arrow-clockwise"></i>
                         </button>
@@ -109,7 +165,7 @@
                                         <th>Tamanho</th>
                                         <th>Status</th>
                                         <th>Criado por</th>
-                                        <th class="text-center">Ações</th>
+                                        <th class="text-center">AÃ§Ãµes</th>
                                     </tr>
                                 </thead>
                                 <tbody id="backup-history-table">
@@ -125,17 +181,19 @@
                 </div>
             </div>
 
-            <!-- Tab de Integrações -->
+            <!-- Tab de IntegraÃ§Ãµes -->
             <div class="tab-pane fade" id="integrations-panel" role="tabpanel">
                 <div class="row" id="integrations-container">
                     <div class="col-12 text-center py-5">
-                        <span class="spinner-border spinner-border-sm me-2"></span>Carregando integrações...
+                        <span class="spinner-border spinner-border-sm me-2"></span>Carregando integraÃ§Ãµes...
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
 
 
 

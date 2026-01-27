@@ -1,6 +1,6 @@
-import { showToast } from '../utils.js';
+﻿import { showToast } from '../utils.js';
 
-// --- Variáveis de Estado Globais no Módulo ---
+// --- VariÃ¡veis de Estado Globais no MÃ³dulo ---
 let dashboardLineChart = null;
 let dashboardBarChart = null;
 let dashboardDonutChart = null;
@@ -10,7 +10,7 @@ let storeTicketChart = null;
 let storePaChart = null;
 let paymentDistributionChart = null;
 
-// --- Funções Auxiliares ---
+// --- FunÃ§Ãµes Auxiliares ---
 const getCssVar = (varName) => getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
 const toISODateString = (date) => date.toISOString().split('T')[0];
 
@@ -42,12 +42,12 @@ function getComparisonHtml(current, previous, unit = '') {
     const previousNum = parseFloat(previous);
     if (isNaN(currentNum) || isNaN(previousNum)) return '';
 
-    if (previousNum === 0) return currentNum > 0 ? '<span class="text-success">▲ Novo</span>' : '';
+    if (previousNum === 0) return currentNum > 0 ? '<span class="text-success">â–² Novo</span>' : '';
     
     const diff = ((currentNum - previousNum) / previousNum) * 100;
     if (Math.abs(diff) < 0.1) return '';
 
-    const icon = diff > 0 ? '▲' : '▼';
+    const icon = diff > 0 ? 'â–²' : 'â–¼';
     const colorClass = diff > 0 ? 'text-success' : 'text-danger';
     
     const previousFormatted = unit === '%' ? previousNum.toFixed(2) : previousNum.toLocaleString('pt-BR');
@@ -56,7 +56,7 @@ function getComparisonHtml(current, previous, unit = '') {
     return `<span class="${colorClass}" data-bs-toggle="tooltip" data-bs-title="${tooltipTitle}">${icon} ${diff.toFixed(1)}%</span>`;
 }
 
-// --- Funções de Renderização de Gráficos ---
+// --- FunÃ§Ãµes de RenderizaÃ§Ã£o de GrÃ¡ficos ---
 
 function renderBarChart(rankingData) {
     const ctx = document.getElementById('dashboard-bar-chart').getContext('2d');
@@ -86,7 +86,7 @@ function renderBarChart(rankingData) {
         backgroundColor = getCssVar('--color-success');
     } else {
         data = topLojas.map(l => parseFloat(l.tx_loja));
-        label = 'Taxa de Conversão (%)';
+        label = 'Taxa de ConversÃ£o (%)';
         backgroundColor = '#4169E1';
     }
 
@@ -150,7 +150,7 @@ function renderDonutChart(rankingData) {
     const labels = topLojas.map(l => l.loja.length > 15 ? l.loja.substring(0, 15) + '...' : l.loja);
     const data = topLojas.map(l => parseFloat(l.tx_loja));
     
-    // Cores claras e vibrantes (diferentes do gráfico de linha)
+    // Cores claras e vibrantes (diferentes do grÃ¡fico de linha)
     const colors = ['#f472b6', '#60a5fa', '#fbbf24', '#a78bfa', '#34d399'];
 
     if (dashboardDonutChart) dashboardDonutChart.destroy();
@@ -224,7 +224,7 @@ function renderStoreSalesChart(data) {
         data: {
             labels: labels,
             datasets: [{
-                label: 'Vendas Médias por Dia',
+                label: 'Vendas MÃ©dias por Dia',
                 data: values,
                 backgroundColor: getCssVar('--accent-color'),
                 borderRadius: 6,
@@ -242,9 +242,9 @@ function renderStoreSalesChart(data) {
                             const index = context.dataIndex;
                             const store = topStores[index];
                             return [
-                                'Média/dia: ' + store.vendas_media_dia.toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
+                                'MÃ©dia/dia: ' + store.vendas_media_dia.toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
                                 'Total: ' + store.total_vendas.toLocaleString('pt-BR'),
-                                'Relatórios: ' + store.dias_registrados
+                                'RelatÃ³rios: ' + store.dias_registrados
                             ];
                         }
                     }
@@ -278,7 +278,7 @@ function renderStoreTicketChart(data) {
         data: {
             labels: labels,
             datasets: [{
-                label: 'Ticket Médio (R$)',
+                label: 'Ticket MÃ©dio (R$)',
                 data: values,
                 backgroundColor: '#10b981',
                 borderRadius: 6,
@@ -297,8 +297,8 @@ function renderStoreTicketChart(data) {
                             const index = context.dataIndex;
                             const store = topStores[index];
                             return [
-                                'Ticket Médio: R$ ' + store.ticket_medio.toFixed(2),
-                                'Baseado em ' + store.dias_registrados + ' relatório(s)'
+                                'Ticket MÃ©dio: R$ ' + store.ticket_medio.toFixed(2),
+                                'Baseado em ' + store.dias_registrados + ' relatÃ³rio(s)'
                             ];
                         }
                     }
@@ -332,7 +332,7 @@ function renderStorePaChart(data) {
         data: {
             labels: labels,
             datasets: [{
-                label: 'Peças por Venda (PA)',
+                label: 'PeÃ§as por Venda (PA)',
                 data: values,
                 backgroundColor: '#f59e0b',
                 borderRadius: 6,
@@ -351,7 +351,7 @@ function renderStorePaChart(data) {
                             const store = topStores[index];
                             return [
                                 'PA: ' + store.pa.toFixed(2),
-                                'Baseado em ' + store.dias_registrados + ' relatório(s)'
+                                'Baseado em ' + store.dias_registrados + ' relatÃ³rio(s)'
                             ];
                         }
                     }
@@ -383,7 +383,7 @@ function renderPaymentDistributionChart(data) {
     paymentDistributionChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
-            labels: ['Cartão', 'PIX', 'Dinheiro'],
+            labels: ['CartÃ£o', 'PIX', 'Dinheiro'],
             datasets: [{
                 data: [totalCartao, totalPix, totalDinheiro],
                 backgroundColor: ['#3b82f6', '#10b981', '#f59e0b'],
@@ -460,7 +460,7 @@ async function loadDemandas() {
                                     </h6>
                                     <p class="mb-1 small">${demanda.descricao}</p>
                                     <small class="text-muted">
-                                        <i class="bi bi-person me-1"></i>${demanda.criado_por_usuario} • ${dataFormatada}
+                                        <i class="bi bi-person me-1"></i>${demanda.criado_por_usuario} â€¢ ${dataFormatada}
                                     </small>
                                 </div>
                                 <span class="badge bg-${tagColor} ms-2">${demanda.tag}</span>
@@ -505,7 +505,7 @@ function renderLineChart(currentChartData, comparisonChartData, hideMonitData = 
         }
     ];
     
-    // Adicionar dados de monitoramento apenas se não for gerente
+    // Adicionar dados de monitoramento apenas se nÃ£o for gerente
     if (!hideMonitData) {
         datasets.push(
             {
@@ -550,7 +550,7 @@ function updateOverviewCards(rankingData, currentData) {
     // Total de lojas ativas
     document.getElementById('overview-total-lojas').textContent = rankingData.length;
     
-    // Melhor loja (por taxa de conversão)
+    // Melhor loja (por taxa de conversÃ£o)
     if (rankingData.length > 0) {
         const melhorLoja = [...rankingData].sort((a, b) => parseFloat(b.tx_loja) - parseFloat(a.tx_loja))[0];
         const nomeLoja = melhorLoja.loja.length > 25 ? melhorLoja.loja.substring(0, 25) + '...' : melhorLoja.loja;
@@ -559,7 +559,7 @@ function updateOverviewCards(rankingData, currentData) {
         document.getElementById('overview-melhor-loja').textContent = '-';
     }
     
-    // Média de conversão
+    // MÃ©dia de conversÃ£o
     if (rankingData.length > 0) {
         const somaConversao = rankingData.reduce((acc, loja) => acc + parseFloat(loja.tx_loja), 0);
         const media = somaConversao / rankingData.length;
@@ -573,7 +573,7 @@ function updateOverviewCards(rankingData, currentData) {
     document.getElementById('overview-total-vendas').textContent = totalVendas.toLocaleString('pt-BR');
 }
 
-// Função para popular os dropdowns de loja nos cards Monitoramento e Bluve
+// FunÃ§Ã£o para popular os dropdowns de loja nos cards Monitoramento e Bluve
 async function populateStoreDropdowns() {
     try {
         const response = await fetch('/api/lojas');
@@ -583,7 +583,7 @@ async function populateStoreDropdowns() {
         const filtroBluve = document.getElementById('filtro-loja-bluve');
         
         if (filtroMonitoramento && filtroBluve) {
-            // Limpar opções existentes (exceto "Geral")
+            // Limpar opÃ§Ãµes existentes (exceto "Geral")
             filtroMonitoramento.innerHTML = '<option value="">Geral</option>';
             filtroBluve.innerHTML = '<option value="">Geral</option>';
             
@@ -605,7 +605,7 @@ async function populateStoreDropdowns() {
     }
 }
 
-// Função para atualizar apenas o card Monitoramento
+// FunÃ§Ã£o para atualizar apenas o card Monitoramento
 async function updateMonitoramentoCard(loja = '') {
     try {
         // Obter a loja selecionada no dropdown Bluve para manter seus dados
@@ -625,11 +625,11 @@ async function updateMonitoramentoCard(loja = '') {
         document.getElementById('monitoramento-vendas').textContent = (data.monitoramento.vendas || 0).toLocaleString('pt-BR');
         document.getElementById('monitoramento-tx-conversao').textContent = `${data.monitoramento.tx_conversao}%`;
     } catch (error) {
-        console.error('Erro ao carregar métricas de Monitoramento:', error);
+        console.error('Erro ao carregar mÃ©tricas de Monitoramento:', error);
     }
 }
 
-// Função para atualizar apenas o card Bluve
+// FunÃ§Ã£o para atualizar apenas o card Bluve
 async function updateBluveCard(loja = '') {
     try {
         // Obter a loja selecionada no dropdown Monitoramento para manter seus dados
@@ -649,18 +649,18 @@ async function updateBluveCard(loja = '') {
         document.getElementById('bluve-vendas').textContent = (data.bluve.vendas || 0).toLocaleString('pt-BR');
         document.getElementById('bluve-tx-conversao').textContent = `${data.bluve.tx_conversao}%`;
     } catch (error) {
-        console.error('Erro ao carregar métricas de Bluve:', error);
+        console.error('Erro ao carregar mÃ©tricas de Bluve:', error);
     }
 }
 
-// Inicializar dropdowns e métricas
+// Inicializar dropdowns e mÃ©tricas
 function initMetricsCards() {
     // Popular dropdowns
     populateStoreDropdowns();
     populateOmniStoresDropdown();
     populateAssistenciasStoresDropdown();
     
-    // Carregar métricas gerais inicialmente para ambos os cards
+    // Carregar mÃ©tricas gerais inicialmente para ambos os cards
     updateMonitoramentoCard();
     updateBluveCard();
     
@@ -695,7 +695,7 @@ function initMetricsCards() {
     }
 }
 
-// Popular dropdown de lojas com função Omni
+// Popular dropdown de lojas com funÃ§Ã£o Omni
 async function populateOmniStoresDropdown() {
     try {
         const response = await fetch('/api/lojas');
@@ -719,7 +719,7 @@ async function populateOmniStoresDropdown() {
     }
 }
 
-// Popular dropdown de lojas com função Assistência Técnica
+// Popular dropdown de lojas com funÃ§Ã£o AssistÃªncia TÃ©cnica
 async function populateAssistenciasStoresDropdown() {
     try {
         const response = await fetch('/api/lojas');
@@ -739,11 +739,11 @@ async function populateAssistenciasStoresDropdown() {
                 });
         }
     } catch (error) {
-        console.error('Erro ao carregar lojas de Assistências:', error);
+        console.error('Erro ao carregar lojas de AssistÃªncias:', error);
     }
 }
 
-// Atualizar card de Assistências de forma independente (sempre mostra dados de HOJE)
+// Atualizar card de AssistÃªncias de forma independente (sempre mostra dados de HOJE)
 async function updateAssistenciasCard() {
     try {
         const hoje = toISODateString(new Date());
@@ -764,7 +764,7 @@ async function updateAssistenciasCard() {
         
         document.getElementById('card-assistencias-total').textContent = assistenciasTotal.toLocaleString('pt-BR');
     } catch (error) {
-        console.error('Erro ao carregar card de Assistências:', error);
+        console.error('Erro ao carregar card de AssistÃªncias:', error);
         document.getElementById('card-assistencias-total').textContent = '0';
     }
 }
@@ -795,7 +795,7 @@ async function updateOmniCard() {
     }
 }
 
-// Atualizar cards estáticos (Relatórios Hoje e Última Loja)
+// Atualizar cards estÃ¡ticos (RelatÃ³rios Hoje e Ãšltima Loja)
 async function updateStaticCards() {
     try {
         const hoje = toISODateString(new Date());
@@ -814,7 +814,7 @@ async function updateStaticCards() {
                 document.getElementById('card-ultima-loja-data').textContent = `Enviado em ${dataFormatada}`;
             } else {
                 document.getElementById('card-ultima-loja').textContent = '-';
-                document.getElementById('card-ultima-loja-data').textContent = 'Nenhum relatório';
+                document.getElementById('card-ultima-loja-data').textContent = 'Nenhum relatÃ³rio';
             }
         } else {
             document.getElementById('card-ultima-loja').textContent = '-';
@@ -829,7 +829,7 @@ async function updateStaticCards() {
         
         document.getElementById('card-relatorios-hoje').textContent = relatoriosHojeTotal.toLocaleString('pt-BR');
     } catch (error) {
-        console.error('Erro ao carregar cards estáticos:', error);
+        console.error('Erro ao carregar cards estÃ¡ticos:', error);
         document.getElementById('card-ultima-loja').textContent = 'Erro';
         document.getElementById('card-ultima-loja-data').textContent = 'Erro ao carregar';
         document.getElementById('card-relatorios-hoje').textContent = '0';
@@ -851,13 +851,13 @@ function updateUI(results, hideMonitData = false, dataInicio = null, dataFim = n
     // Armazenar rankingData globalmente
     lastRankingData = rankingData;
 
-    // Atualizar cards de visão geral
+    // Atualizar cards de visÃ£o geral
     updateOverviewCards(rankingData, currentData);
     
     // Atualizar cards de indicadores de performance
     updatePerformanceCards(dataInicio, dataFim);
 
-    // Atualizar métricas principais (apenas se não for gerente e dados existirem)
+    // Atualizar mÃ©tricas principais (apenas se nÃ£o for gerente e dados existirem)
     if (!hideMonitData && currentData.total_clientes_monitoramento !== undefined) {
         document.getElementById('geral-clientes').textContent = (currentData.total_clientes_monitoramento || 0).toLocaleString('pt-BR');
         document.getElementById('geral-vendas').textContent = ((currentData.total_vendas_monitoramento || 0) + (currentData.total_omni || 0)).toLocaleString('pt-BR');
@@ -867,7 +867,7 @@ function updateUI(results, hideMonitData = false, dataInicio = null, dataFim = n
         document.getElementById('geral-tx-conversao-comp').innerHTML = getComparisonHtml(currentData.tx_conversao_monitoramento, comparisonData.tx_conversao_monitoramento || 0, '%');
     }
     
-    // Atualizar métricas da loja
+    // Atualizar mÃ©tricas da loja
     const lojaClientes = document.getElementById('loja-clientes');
     const lojaVendas = document.getElementById('loja-vendas');
     const lojaTxConversao = document.getElementById('loja-tx-conversao');
@@ -882,7 +882,7 @@ function updateUI(results, hideMonitData = false, dataInicio = null, dataFim = n
     if (lojaVendasComp) lojaVendasComp.innerHTML = getComparisonHtml(currentData.total_vendas_loja, comparisonData.total_vendas_loja);
     if (lojaTxConversaoComp) lojaTxConversaoComp.innerHTML = getComparisonHtml(currentData.tx_conversao_loja, comparisonData.tx_conversao_loja, '%');
 
-    // Renderizar gráficos
+    // Renderizar grÃ¡ficos
     renderLineChart(currentChartData, comparisonChartData, hideMonitData);
     renderBarChart(rankingData);
     renderDonutChart(rankingData);
@@ -892,7 +892,7 @@ function updateUI(results, hideMonitData = false, dataInicio = null, dataFim = n
     [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
 }
 
-// --- Lógica Principal e Eventos ---
+// --- LÃ³gica Principal e Eventos ---
 export function initAdminPage(currentUser) {
     const form = document.getElementById('form-filtros-dashboard');
     if (!form) return;
@@ -904,9 +904,10 @@ export function initAdminPage(currentUser) {
     const barChartMetricSelect = document.getElementById('bar-chart-metric-select');
     
     const allowedMonitoramentoRoles = ['admin', 'monitoramento', 'dev', 'consultor'];
-    const canViewMonitoramento = currentUser && allowedMonitoramentoRoles.includes(currentUser.role);
-    const isGerente = currentUser && currentUser.role === 'gerente';
-    const isTecnico = currentUser && currentUser.role === 'tecnico';
+    const role = currentUser?.role || 'admin';
+    const canViewMonitoramento = allowedMonitoramentoRoles.includes(role);
+    const isGerente = role === 'gerente';
+    const isTecnico = role === 'tecnico';
     const isNotAdmin = isGerente || isTecnico;
     
     // Controlar visibilidade do card de Monitoramento
@@ -926,24 +927,24 @@ export function initAdminPage(currentUser) {
             lojaCardCol.classList.add('full-width');
         }
         
-        console.log(`Dashboard adaptado para ${currentUser.role} - card Monitoramento oculto (visível apenas para admin, monitoramento, dev, consultor)`);
+        console.log(`Dashboard adaptado para ${role} - card Monitoramento oculto (visivel apenas para admin, monitoramento, dev, consultor)`);
     } else if (monitoramentoCard) {
         monitoramentoCard.style.display = 'block';
         monitoramentoCard.classList.remove('d-none', 'hidden', 'invisible');
     }
 
-    // Garantir que o card Bluve esteja SEMPRE visível (FORÇADO)
+    // Garantir que o card Bluve esteja SEMPRE visÃ­vel (FORÃ‡ADO)
     if (lojaCardCol) {
         lojaCardCol.style.display = 'block';
         lojaCardCol.style.visibility = 'visible';
         lojaCardCol.style.opacity = '1';
         lojaCardCol.classList.remove('d-none', 'hidden', 'invisible', 'full-width');
-        console.log('✅ Card Bluve garantido como visível - display:', lojaCardCol.style.display);
+        console.log('âœ… Card Bluve garantido como visÃ­vel - display:', lojaCardCol.style.display);
     } else {
-        console.error('❌ ERRO CRÍTICO: Elemento loja-card-col não encontrado no DOM!');
+        console.error('âŒ ERRO CRÃTICO: Elemento loja-card-col nÃ£o encontrado no DOM!');
     }
     
-    // Verificação adicional após delay para garantir que o card permanece visível
+    // VerificaÃ§Ã£o adicional apÃ³s delay para garantir que o card permanece visÃ­vel
     setTimeout(() => {
         const lojaCardCheck = document.getElementById('loja-card-col');
         if (lojaCardCheck) {
@@ -951,10 +952,10 @@ export function initAdminPage(currentUser) {
             lojaCardCheck.style.visibility = 'visible';
             lojaCardCheck.style.opacity = '1';
             const computedDisplay = window.getComputedStyle(lojaCardCheck).display;
-            console.log('✅ Card Bluve RE-verificado - computedDisplay:', computedDisplay);
+            console.log('âœ… Card Bluve RE-verificado - computedDisplay:', computedDisplay);
             
             if (computedDisplay === 'none') {
-                console.error('❌ ALERTA: Card Bluve ainda está com display:none. Forçando novamente...');
+                console.error('âŒ ALERTA: Card Bluve ainda estÃ¡ com display:none. ForÃ§ando novamente...');
                 lojaCardCheck.style.setProperty('display', 'block', 'important');
             }
         }
@@ -1014,7 +1015,7 @@ export function initAdminPage(currentUser) {
             const startDate = new Date(dataInicio + 'T00:00:00');
             const endDate = new Date(dataFim + 'T00:00:00');
             
-            // Comparar com período anterior
+            // Comparar com perÃ­odo anterior
             const diff = endDate.getTime() - startDate.getTime();
             const compEndDate = new Date(startDate.getTime() - 86400000);
             const compStartDate = new Date(compEndDate.getTime() - diff);
@@ -1051,11 +1052,11 @@ export function initAdminPage(currentUser) {
 
             updateUI(results, isNotAdmin, dataInicio, dataFim);
             
-            // Atualizar gráficos de desempenho das lojas
+            // Atualizar grÃ¡ficos de desempenho das lojas
             loadStorePerformance(dataInicio, dataFim);
         } catch (error) {
             console.error("Erro ao analisar dados:", error.message, error.stack);
-            showToast("Erro", "Não foi possível carregar os dados do dashboard.", "danger");
+            showToast("Erro", "NÃ£o foi possÃ­vel carregar os dados do dashboard.", "danger");
         } finally {
             setLoadingState(false);
         }
@@ -1080,7 +1081,7 @@ export function initAdminPage(currentUser) {
         });
     }
 
-    // Inicialização
+    // InicializaÃ§Ã£o
     async function inicializar() {
         console.log('Inicializando dashboard...');
         await carregarLojas();
@@ -1092,7 +1093,7 @@ export function initAdminPage(currentUser) {
         loadDemandas(); // Carregar demandas pendentes
         
         // Carregar todos os dados sem filtro de data
-        console.log('Carregando todos os relatórios...');
+        console.log('Carregando todos os relatÃ³rios...');
         loadStorePerformance();
         analisarDados();
     }
@@ -1100,6 +1101,8 @@ export function initAdminPage(currentUser) {
     console.log('Iniciando admin page...');
     inicializar();
 }
+
+
 
 
 
