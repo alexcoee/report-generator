@@ -11,12 +11,14 @@ const PDFDocument = require('pdfkit');
 const ExcelJS = require('exceljs');
 const multer = require('multer');
 const pdf = require('pdf-parse');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
+const util = require('util');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const { body, validationResult } = require('express-validator');
 const { requireAuth, requireAuthPage, getLojaFilter, getPermissions } = require('./middleware/roleAuth');
 const jwt = require('jsonwebtoken');
+const { exec } = require('child_process');
 const googleDriveService = require('./services/googleDriveService');
 
 // Database adapter - usa PostgreSQL se configurado, senão SQLite
@@ -24,6 +26,28 @@ const dbAdapter = require('./src/config/db-adapter');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const AUTO_OPEN_BROWSER = process.env.AUTO_OPEN_BROWSER !== 'false';
+const LOCAL_DOMAIN = process.env.LOCAL_DOMAIN;
+
+const getBaseUrl = () => {
+    const host = LOCAL_DOMAIN ? LOCAL_DOMAIN.replace(/^https?:\/\//, '') : 'localhost';
+    const protocol = 'http';
+    const hasPort = host.includes(':');
+    return `${protocol}://${host}${hasPort ? '' : `:${PORT}`}`;
+};
+
+const openBrowser = (url) => {
+    const platform = process.platform;
+    if (platform === 'win32') {
+        exec(`cmd /c start "" "${url}"`);
+        return;
+    }
+    if (platform === 'darwin') {
+        exec(`open "${url}"`);
+        return;
+    }
+    exec(`xdg-open "${url}"`);
+};
 
 app.set('trust proxy', true);
 
@@ -48,10 +72,49 @@ if (DEV_TEMP_ACCESS_ENABLED) {
 }
 
 // --- CONFIGURAÇÃO GERAL ---
-const dataDir = path.join(__dirname, 'data');
+const runtimeRoot = process.pkg ? path.dirname(process.execPath) : __dirname;
+const appDataRoot = process.env.LOCALAPPDATA
+    ? path.join(process.env.LOCALAPPDATA, 'SistemaRelatorios')
+    : runtimeRoot;
+const dataDir = path.join(appDataRoot, 'data');
 if (!fs.existsSync(dataDir)) {
     fs.mkdirSync(dataDir, { recursive: true });
 }
+
+const logPath = path.join(dataDir, 'server.log');
+const appendLog = (level, message) => {
+    try {
+        fs.appendFileSync(logPath, `[${new Date().toISOString()}] ${level}: ${message}\n`);
+    } catch (err) {
+        // Ignora erro de log para nao quebrar o servidor
+    }
+};
+
+const originalLog = console.log.bind(console);
+const originalWarn = console.warn.bind(console);
+const originalError = console.error.bind(console);
+
+console.log = (...args) => {
+    originalLog(...args);
+    appendLog('INFO', util.format(...args));
+};
+console.warn = (...args) => {
+    originalWarn(...args);
+    appendLog('WARN', util.format(...args));
+};
+console.error = (...args) => {
+    originalError(...args);
+    appendLog('ERROR', util.format(...args));
+};
+
+process.on('uncaughtException', (err) => {
+    console.error('Uncaught exception:', err);
+});
+process.on('unhandledRejection', (err) => {
+    console.error('Unhandled rejection:', err);
+});
+
+console.log('Inicializando sistema...');
 
 app.use(helmet({
     contentSecurityPolicy: {
@@ -123,10 +186,12 @@ const auditMiddleware = (req, res, next) => {
 app.use(auditMiddleware);
 
 const requirePageLogin = (req, res, next) => {
-    if (req.session && req.session.userId) {
-        return next();
+    if (req.session && !req.session.userId) {
+        req.session.userId = 1;
+        req.session.username = 'local';
+        req.session.role = 'admin';
     }
-    res.redirect('/login');
+    return next();
 };
 
 // --- BANCO DE DADOS ---
@@ -265,7 +330,7 @@ function getClientIp(req) {
 app.use(tempTokenAuthMiddleware);
 
 // --- ROTAS DE PÁGINAS ---
-app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'views', 'login.html')));
+app.get('/login', (req, res) => res.redirect('/'));
 app.get('/403', (req, res) => res.sendFile(path.join(__dirname, 'views', '403.html')));
 app.get('/live', requirePageLogin, (req, res) => res.sendFile(path.join(__dirname, 'views', 'live.html')));
 
@@ -747,6 +812,7 @@ app.get('/api/session-info', requirePageLogin, (req, res) => {
     res.json({ 
         id: req.session.userId, 
         username: req.session.username,
+        role: req.session.role,
         permissions: permissions
     });
 });
@@ -2772,9 +2838,14 @@ function iniciarServidor() {
     console.log(`Iniciando servidor em ${startTime.toLocaleString('pt-BR')}...`);
 
     app.listen(PORT, '0.0.0.0', async () => {
+        const baseUrl = getBaseUrl();
         console.log(`Servidor rodando em http://0.0.0.0:${PORT}`);
+        console.log(`Acesso local: ${baseUrl}`);
+        if (LOCAL_DOMAIN) {
+            console.log(`Dominio local configurado via LOCAL_DOMAIN. Certifique-se de mapear em hosts: ${LOCAL_DOMAIN} -> 127.0.0.1`);
+        }
         logEvent('info', 'system', 'server_start', `Servidor iniciado em http://0.0.0.0:${PORT}`);
-        
+
         // Inicializar Google Drive se configurado
         try {
             const driveAutenticado = await googleDriveService.autenticar();
@@ -2782,7 +2853,7 @@ function iniciarServidor() {
                 const quota = await googleDriveService.verificarQuota();
                 if (quota) {
                     console.log(`Google Drive: ${quota.usadoGB}GB de ${quota.limiteGB}GB usados (${quota.percentual}%)`);
-                    
+
                     // verificar se precisa de backup automatico
                     if (quota.precisaBackup) {
                         console.log('ATENCAO: Drive proximo do limite! Configure EMAIL_BACKUP no .env para backup automatico.');
@@ -2792,6 +2863,10 @@ function iniciarServidor() {
         } catch (error) {
             console.log('Google Drive nao configurado. Sistema funcionara com SQLite local.');
             console.log('Para usar Google Drive, veja: GOOGLE_DRIVE_SETUP.md');
+        }
+
+        if (AUTO_OPEN_BROWSER) {
+            setTimeout(() => openBrowser(baseUrl), 500);
         }
     });
 }

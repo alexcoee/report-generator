@@ -150,6 +150,8 @@ PORT=5000
 NODE_ENV=production
 SESSION_SECRET=sua-chave-secreta
 JWT_SECRET=sua-chave-jwt
+AUTO_OPEN_BROWSER=true
+LOCAL_DOMAIN=monitoramento.local
 ```
 
 ### Banco de Dados
@@ -166,6 +168,11 @@ Configure credenciais OAuth 2.0 para backup automático na nuvem.
 
 #### Integração DVR/NVR
 Suporte para sistemas Intelbras de monitoramento.
+
+### Atalho de Acesso Local (domínio personalizado)
+
+Se quiser acessar o sistema usando um domínio local amigável (ex.: `monitoramento.local`), adicione esse domínio no arquivo hosts apontando para `127.0.0.1` e defina `LOCAL_DOMAIN` no `.env`.  
+Quando `AUTO_OPEN_BROWSER=true`, o sistema abre o navegador automaticamente no domínio configurado ao iniciar.
 
 ## Segurança
 

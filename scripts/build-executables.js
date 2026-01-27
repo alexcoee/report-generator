@@ -35,13 +35,13 @@ function installPkg() {
   }
 }
 
-function buildExecutable(target, outputName, platform) {
+function buildExecutable(target, outputName, platform, options = '') {
   console.log(`🔨 Gerando executável para ${platform}...`);
   console.log(`   Target: ${target}`);
   console.log(`   Output: ${outputName}\n`);
 
   try {
-    const cmd = `pkg . --targets ${target} --output ${outputName}`;
+    const cmd = `pkg . --targets ${target} --output ${outputName}${options ? ` ${options}` : ''}`;
     execSync(cmd, { stdio: 'inherit' });
     console.log(`\n✅ ${platform} gerado com sucesso!\n`);
     return true;
@@ -67,10 +67,6 @@ function createReadme() {
 
   Linux/
     └── SistemaRelatorios-Linux
-
-  Arquivos Comuns/
-    └── (copie views/, public/, middleware/, services/ do projeto original)
-
 ═══════════════════════════════════════════════════════════════
   COMO USAR
 ═══════════════════════════════════════════════════════════════
@@ -87,6 +83,8 @@ function createReadme() {
    EMAIL_REMETENTE=seu_email@gmail.com
    EMAIL_BACKUP=seu_email@gmail.com
    PORT=5000
+   AUTO_OPEN_BROWSER=true
+   # LOCAL_DOMAIN=monitoramento.local
 
    📖 Veja GOOGLE_DRIVE_SETUP.md para obter as credenciais
 
@@ -103,9 +101,7 @@ function createReadme() {
 
    Abra no navegador: http://localhost:5000
    
-   Login padrão:
-     Usuário: admin
-     Senha: admin
+   Acesso direto (sem login).
 
 ═══════════════════════════════════════════════════════════════
   SINCRONIZAÇÃO COM GOOGLE DRIVE
@@ -165,6 +161,12 @@ EMAIL_BACKUP=seu_email@gmail.com
 # Porta do servidor (padrão: 5000)
 PORT=5000
 
+# Abrir navegador automaticamente (true/false)
+AUTO_OPEN_BROWSER=true
+
+# Dominio local personalizado (opcional)
+# LOCAL_DOMAIN=monitoramento.local
+
 # ═══════════════════════════════════════════════════════
 #  COMO OBTER AS CREDENCIAIS DO GOOGLE?
 # ═══════════════════════════════════════════════════════
@@ -202,24 +204,15 @@ function showSummary(results) {
   console.log('  📦 PRÓXIMOS PASSOS');
   console.log('═══════════════════════════════════════════════════\n');
 
-  console.log('1. Copie estas pastas para dist/:');
-  console.log('   - views/');
-  console.log('   - public/');
-  console.log('   - middleware/');
-  console.log('   - services/');
-  console.log('');
-  console.log('2. Arquivos de documentação criados:');
+  console.log('1. Arquivos de documentação criados:');
   console.log('   - dist/LEIA-ME.txt');
   console.log('   - dist/.env.example');
   console.log('');
-  console.log('3. Para distribuir, inclua:');
+  console.log('2. Para distribuir, inclua:');
   console.log('   - Executável da plataforma desejada');
-  console.log('   - Pastas necessárias (views, public, etc)');
   console.log('   - .env.example (modelo de configuração)');
-  console.log('   - EXECUTAVEL_STANDALONE.md (documentação)');
-  console.log('   - GOOGLE_DRIVE_SETUP.md (configuração)');
   console.log('');
-  console.log('4. O usuário final deve:');
+  console.log('3. O usuário final deve:');
   console.log('   - Criar arquivo .env com suas credenciais');
   console.log('   - Executar o programa');
   console.log('   - Acessar http://localhost:5000');
@@ -228,28 +221,7 @@ function showSummary(results) {
 }
 
 function copyRequiredFolders() {
-  console.log('📁 Copiando arquivos necessários para dist/...\n');
-
-  const folders = ['views', 'public', 'middleware', 'services'];
-  const foldersPath = path.join(DIST_DIR, 'Arquivos-Comuns');
-
-  ensureDir(foldersPath);
-
-  folders.forEach(folder => {
-    const sourcePath = path.join(process.cwd(), folder);
-    const destPath = path.join(foldersPath, folder);
-
-    if (fs.existsSync(sourcePath)) {
-      try {
-        fs.cpSync(sourcePath, destPath, { recursive: true });
-        console.log(`  ✅ ${folder}/ copiado`);
-      } catch (error) {
-        console.log(`  ⚠️  Erro ao copiar ${folder}/:`, error.message);
-      }
-    } else {
-      console.log(`  ⚠️  ${folder}/ não encontrado`);
-    }
-  });
+  console.log('📁 Copiando arquivos auxiliares para dist/...\n');
 
   const docs = ['EXECUTAVEL_STANDALONE.md', 'GOOGLE_DRIVE_SETUP.md', 'COMO_RODAR_EM_QUALQUER_MAQUINA.md'];
   docs.forEach(doc => {
@@ -279,17 +251,18 @@ async function main() {
 
   const builds = [
     {
-      target: 'node20-win-x64',
+      target: 'node18-win-x64',
       output: path.join(DIST_DIR, 'Windows', 'SistemaRelatorios-Windows.exe'),
-      platform: 'Windows (64-bit)'
+      platform: 'Windows (64-bit)',
+      options: '--options no-console'
     },
     {
-      target: 'node20-macos-x64',
+      target: 'node18-macos-x64',
       output: path.join(DIST_DIR, 'Mac', 'SistemaRelatorios-Mac'),
       platform: 'macOS (64-bit)'
     },
     {
-      target: 'node20-linux-x64',
+      target: 'node18-linux-x64',
       output: path.join(DIST_DIR, 'Linux', 'SistemaRelatorios-Linux'),
       platform: 'Linux (64-bit)'
     }
@@ -302,7 +275,7 @@ async function main() {
   const results = [];
 
   for (const build of builds) {
-    const success = buildExecutable(build.target, build.output, build.platform);
+    const success = buildExecutable(build.target, build.output, build.platform, build.options);
     results.push({
       platform: build.platform,
       path: build.output,
@@ -325,3 +298,9 @@ main().catch(error => {
   console.error('\n❌ ERRO CRÍTICO:', error.message);
   process.exit(1);
 });
+
+
+
+
+
+

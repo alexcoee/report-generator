@@ -1713,3 +1713,9 @@ img {
         max-height: 300px !important;
     }
 }
+
+[data-theme="dark"] .form-select option,
+[data-theme="dark"] .form-control option {
+    background-color: var(--content-bg);
+    color: var(--text-primary);
+}

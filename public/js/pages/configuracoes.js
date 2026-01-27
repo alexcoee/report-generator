@@ -14,7 +14,6 @@ export function initConfiguracoesPage() {
 
 function init() {
     initBackupTab();
-    initDriveTab();
     initIntegrationsTab();
 }
 
@@ -191,140 +190,6 @@ async function carregarHistoricoBackup() {
     }
 }
 
-let driveTimelineChart = null;
-
-async function initDriveTab() {
-    await carregarUsoDrive();
-    await carregarTimelineDrive();
-    await carregarUltimaSinc();
-
-    document.getElementById('timeline-period').addEventListener('change', async (e) => {
-        await carregarTimelineDrive(e.target.value);
-    });
-
-    setInterval(carregarUsoDrive, 60000);
-}
-
-async function carregarUsoDrive() {
-    try {
-        const response = await fetch('/api/settings/drive/usage', {
-            headers: await getAuthHeaders()
-        });
-
-        if (!response.ok) throw new Error('Erro ao carregar uso do Drive');
-
-        const data = await response.json();
-
-        document.getElementById('drive-usado-gb').textContent = data.usadoGB + ' GB';
-        document.getElementById('drive-limite-gb').textContent = data.limiteGB + ' GB';
-        document.getElementById('drive-percentual').textContent = data.percentual + '%';
-        document.getElementById('drive-disponivel-gb').textContent = data.disponivelGB.toFixed(2) + ' GB';
-    } catch (error) {
-        console.error('Erro ao carregar uso do Drive:', error);
-        document.getElementById('drive-usado-gb').textContent = 'Erro';
-    }
-}
-
-async function carregarTimelineDrive(periodo = 30) {
-    try {
-        const response = await fetch(`/api/settings/drive/timeline?periodo=${periodo}`, {
-            headers: await getAuthHeaders()
-        });
-
-        if (!response.ok) throw new Error('Erro ao carregar timeline');
-
-        const data = await response.json();
-
-        const ctx = document.getElementById('drive-timeline-chart').getContext('2d');
-
-        if (driveTimelineChart) {
-            driveTimelineChart.destroy();
-        }
-
-        driveTimelineChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: data.labels.map(d => new Date(d).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })),
-                datasets: [{
-                    label: 'Arquivos Enviados',
-                    data: data.data,
-                    borderColor: '#4285f4',
-                    backgroundColor: 'rgba(66, 133, 244, 0.1)',
-                    borderWidth: 2,
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        display: true
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: (context) => {
-                                return `${context.parsed.y} arquivo(s)`;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 1
-                        }
-                    }
-                }
-            }
-        });
-    } catch (error) {
-        console.error('Erro ao carregar timeline:', error);
-    }
-}
-
-async function carregarUltimaSinc() {
-    const container = document.getElementById('last-sync-info');
-    
-    try {
-        const response = await fetch('/api/settings/drive/last-sync', {
-            headers: await getAuthHeaders()
-        });
-
-        if (!response.ok) throw new Error('Erro ao verificar sincronização');
-
-        const data = await response.json();
-
-        if (data.lastSync) {
-            const date = new Date(data.lastSync).toLocaleString('pt-BR');
-            container.innerHTML = `
-                <div class="d-flex align-items-center">
-                    <i class="bi bi-check-circle text-success me-2" style="font-size: 1.5rem;"></i>
-                    <div>
-                        <strong>Última sincronização:</strong> ${date}<br>
-                        <small class="text-muted">Status: Online</small>
-                    </div>
-                </div>
-            `;
-        } else {
-            container.innerHTML = `
-                <div class="d-flex align-items-center">
-                    <i class="bi bi-exclamation-circle text-warning me-2" style="font-size: 1.5rem;"></i>
-                    <div>
-                        <strong>Nenhuma sincronização encontrada</strong><br>
-                        <small class="text-muted">Ainda não há dados</small>
-                    </div>
-                </div>
-            `;
-        }
-    } catch (error) {
-        console.error('Erro ao verificar sincronização:', error);
-        container.innerHTML = '<span class="text-danger">Erro ao verificar</span>';
-    }
-}
-
 async function initIntegrationsTab() {
     await carregarIntegracoes();
 }
@@ -385,3 +250,4 @@ async function carregarIntegracoes() {
         container.innerHTML = '<div class="col-12"><div class="alert alert-danger">Erro ao carregar integrações</div></div>';
     }
 }
+

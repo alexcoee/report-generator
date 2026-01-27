@@ -927,14 +927,17 @@ export function initAdminPage(currentUser) {
         }
         
         console.log(`Dashboard adaptado para ${currentUser.role} - card Monitoramento oculto (visível apenas para admin, monitoramento, dev, consultor)`);
+    } else if (monitoramentoCard) {
+        monitoramentoCard.style.display = 'block';
+        monitoramentoCard.classList.remove('d-none', 'hidden', 'invisible');
     }
-    
+
     // Garantir que o card Bluve esteja SEMPRE visível (FORÇADO)
     if (lojaCardCol) {
         lojaCardCol.style.display = 'block';
         lojaCardCol.style.visibility = 'visible';
         lojaCardCol.style.opacity = '1';
-        lojaCardCol.classList.remove('d-none', 'hidden', 'invisible');
+        lojaCardCol.classList.remove('d-none', 'hidden', 'invisible', 'full-width');
         console.log('✅ Card Bluve garantido como visível - display:', lojaCardCol.style.display);
     } else {
         console.error('❌ ERRO CRÍTICO: Elemento loja-card-col não encontrado no DOM!');
@@ -1057,32 +1060,7 @@ export function initAdminPage(currentUser) {
             setLoadingState(false);
         }
     }
-    
-    // Carregar dados do Google Drive
-    async function loadDriveStats() {
-        try {
-            const response = await fetch('/api/settings/drive/usage');
-            if (!response.ok) throw new Error('Erro ao carregar Drive');
-            
-            const data = await response.json();
-            
-            document.getElementById('dash-drive-usado').textContent = data.usadoGB + ' GB';
-            document.getElementById('dash-drive-disponivel').textContent = data.disponivelGB.toFixed(2) + ' GB';
-            document.getElementById('dash-drive-percentual').textContent = data.percentual + '%';
-            
-            const statusBadge = document.getElementById('dash-drive-status');
-            if (data.precisaBackup) {
-                statusBadge.textContent = 'Atenção';
-                statusBadge.className = 'badge bg-warning';
-            } else {
-                statusBadge.textContent = 'Online';
-                statusBadge.className = 'badge bg-success';
-            }
-        } catch (error) {
-            console.error('Erro ao carregar stats do Drive:', error);
-        }
-    }
-    
+
     // Event Listeners
     form.addEventListener('submit', analisarDados);
     
@@ -1093,9 +1071,6 @@ export function initAdminPage(currentUser) {
             setDateRange(e.currentTarget.dataset.period);
         });
     });
-    
-    // Carregar dados do Drive ao iniciar
-    loadDriveStats();
 
     if (barChartMetricSelect) {
         barChartMetricSelect.addEventListener('change', () => {
@@ -1125,3 +1100,6 @@ export function initAdminPage(currentUser) {
     console.log('Iniciando admin page...');
     inicializar();
 }
+
+
+

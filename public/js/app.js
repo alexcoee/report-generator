@@ -87,8 +87,11 @@ function navigateTo(path) {
 async function setupSessionAndUI() {
     try {
         const response = await fetch('/api/session-info');
-        if (!response.ok) { window.location.href = '/login'; return; }
-        currentUser = await response.json();
+        if (!response.ok) {
+            currentUser = { username: 'local', role: 'admin', permissions: {} };
+        } else {
+            currentUser = await response.json();
+        }
         window.currentUser = currentUser; // Expor para outras páginas
         // Todos os menus estão visíveis para todos os usuários
         const menuIds = ['nav-dashboard', 'nav-consulta', 'nav-lojas', 'nav-demandas'];
@@ -121,7 +124,6 @@ async function setupSessionAndUI() {
                 <div class="user-actions">
                     ${actionButtons}
                     <button id="theme-toggle-desktop" class="btn" title="Alternar Tema"><i class="bi bi-moon-fill"></i></button>
-                    <a href="/logout" class="btn" title="Sair"><i class="bi bi-box-arrow-right"></i></a>
                 </div>`;
             
             // Reinicializar o theme manager para o botão injetado dinamicamente
@@ -129,7 +131,10 @@ async function setupSessionAndUI() {
                 window.themeManager.setupToggleButton();
             }
         }
-    } catch (e) { console.error("Falha na sessão:", e); window.location.href = '/login'; }
+    } catch (e) {
+        console.error("Falha na sessão:", e);
+        currentUser = { username: 'local', role: 'admin', permissions: {} };
+    }
 }
 
 // =================================================================
