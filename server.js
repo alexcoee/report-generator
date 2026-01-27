@@ -126,7 +126,7 @@ app.use(helmet({
             fontSrc: ["'self'", "https://cdn.jsdelivr.net", "https://fonts.gstatic.com"],
             objectSrc: ["'none'"],
             mediaSrc: ["'self'"],
-            frameSrc: ['self', 'blob:'],
+            frameSrc: ["'self'", "blob:"],
             'upgrade-insecure-requests': null,
         },
     },
@@ -2797,6 +2797,7 @@ function iniciarServidor() {
         }
     });
 }
+
 
 
 
