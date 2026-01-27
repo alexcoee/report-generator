@@ -129,6 +129,8 @@ app.use(helmet({
             frameSrc: ["'self'", "blob:"],
         },
     },
+    crossOriginOpenerPolicy: false,
+    originAgentCluster: false,
     crossOriginEmbedderPolicy: false,
 }));
 
@@ -2793,4 +2795,5 @@ function iniciarServidor() {
         }
     });
 }
+
 
