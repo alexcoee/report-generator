@@ -1061,11 +1061,8 @@ export function initAdminPage(currentUser) {
             setLoadingState(false);
         }
     }
-<<<<<<< HEAD
 
-=======
     
->>>>>>> 027e36057b879b2113268e74a728c16363385b6e
     // Event Listeners
     form.addEventListener('submit', analisarDados);
     
@@ -1076,11 +1073,8 @@ export function initAdminPage(currentUser) {
             setDateRange(e.currentTarget.dataset.period);
         });
     });
-<<<<<<< HEAD
 
-=======
     
->>>>>>> 027e36057b879b2113268e74a728c16363385b6e
     if (barChartMetricSelect) {
         barChartMetricSelect.addEventListener('change', () => {
             if (lastRankingData.length > 0) {
@@ -1109,6 +1103,7 @@ export function initAdminPage(currentUser) {
     console.log('Iniciando admin page...');
     inicializar();
 }
+
 
 
 

@@ -1,5 +1,5 @@
-// =================================================================
-// SISTEMA DE GESTÃO PARA LOJAS DE VAREJO
+﻿// =================================================================
+// SISTEMA DE GESTÃƒO PARA LOJAS DE VAREJO
 // =================================================================
 require('dotenv').config();
 const express = require('express');
@@ -18,13 +18,10 @@ const rateLimit = require('express-rate-limit');
 const { body, validationResult } = require('express-validator');
 const { requireAuth, requireAuthPage, getLojaFilter, getPermissions } = require('./middleware/roleAuth');
 const jwt = require('jsonwebtoken');
-<<<<<<< HEAD
 const { exec } = require('child_process');
 const googleDriveService = require('./services/googleDriveService');
-=======
->>>>>>> 027e36057b879b2113268e74a728c16363385b6e
 
-// Database adapter - usa PostgreSQL se configurado, senão SQLite
+// Database adapter - usa PostgreSQL se configurado, senÃ£o SQLite
 const dbAdapter = require('./src/config/db-adapter');
 
 const app = express();
@@ -74,7 +71,7 @@ if (DEV_TEMP_ACCESS_ENABLED) {
     console.log('Acesso temporario de desenvolvimento DESABILITADO');
 }
 
-// --- CONFIGURAÇÃO GERAL ---
+// --- CONFIGURAÃ‡ÃƒO GERAL ---
 const runtimeRoot = process.pkg ? path.dirname(process.execPath) : __dirname;
 const appDataRoot = process.env.LOCALAPPDATA
     ? path.join(process.env.LOCALAPPDATA, 'SistemaRelatorios')
@@ -153,7 +150,7 @@ app.use(session({
     proxy: true
 }));
 
-// --- CONFIGURAÇÃO DO MULTER ---
+// --- CONFIGURAÃ‡ÃƒO DO MULTER ---
 const upload = multer({ storage: multer.memoryStorage() });
 
 // --- MIDDLEWARES ---
@@ -177,7 +174,7 @@ const auditMiddleware = (req, res, next) => {
     if (req.session && req.session.username) {
         if (mutatingMethods.includes(req.method) && !req.path.includes('/api/login')) {
             const action = `${req.method} ${req.path}`;
-            const details = `Ação executada por usuário autenticado`;
+            const details = `AÃ§Ã£o executada por usuÃ¡rio autenticado`;
             logEvent('audit', req.session.username, action, details, req);
         }
     }
@@ -213,7 +210,7 @@ dbAdapter.initDatabase((err) => {
 });
 
 // =================================================================
-// SISTEMA DE TOKENS JWT TEMPORÁRIOS PARA DESENVOLVIMENTO
+// SISTEMA DE TOKENS JWT TEMPORÃRIOS PARA DESENVOLVIMENTO
 // =================================================================
 
 function generateTempToken(expiresInHours = 1, ipRestricted = null) {
@@ -271,10 +268,10 @@ async function validateTempTokenInDb(token, currentIp) {
             [tokenHash],
             (err, row) => {
                 if (err) return reject(err);
-                if (!row) return resolve({ valid: false, reason: 'Token não encontrado ou expirado' });
+                if (!row) return resolve({ valid: false, reason: 'Token nÃ£o encontrado ou expirado' });
                 
                 if (row.ip_restrito && row.ip_restrito !== currentIp) {
-                    return resolve({ valid: false, reason: 'IP não autorizado' });
+                    return resolve({ valid: false, reason: 'IP nÃ£o autorizado' });
                 }
                 
                 db.run(
@@ -302,7 +299,7 @@ const tempTokenAuthMiddleware = async (req, res, next) => {
     
     const jwtVerification = verifyTempToken(token);
     if (!jwtVerification.valid) {
-        return res.status(401).json({ error: 'Token inválido ou expirado' });
+        return res.status(401).json({ error: 'Token invÃ¡lido ou expirado' });
     }
     
     const currentIp = getClientIp(req);
@@ -317,7 +314,7 @@ const tempTokenAuthMiddleware = async (req, res, next) => {
     req.session.username = 'temp_dev_access';
     req.session.tempToken = true;
     
-    logEvent('auth', 'temp_dev_access', 'temp_token_used', `Token temporário utilizado (IP: ${currentIp})`, req);
+    logEvent('auth', 'temp_dev_access', 'temp_token_used', `Token temporÃ¡rio utilizado (IP: ${currentIp})`, req);
     
     next();
 };
@@ -332,7 +329,7 @@ function getClientIp(req) {
 
 app.use(tempTokenAuthMiddleware);
 
-// --- ROTAS DE PÁGINAS ---
+// --- ROTAS DE PÃGINAS ---
 app.get('/login', (req, res) => res.redirect('/'));
 app.get('/403', (req, res) => res.sendFile(path.join(__dirname, 'views', '403.html')));
 app.get('/live', requirePageLogin, (req, res) => res.sendFile(path.join(__dirname, 'views', 'live.html')));
@@ -347,7 +344,7 @@ app.get('/consulta', requirePageLogin, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
-// Novo Relatório - apenas monitoramento, admin e dev
+// Novo RelatÃ³rio - apenas monitoramento, admin e dev
 app.get('/novo-relatorio', requirePageLogin, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
@@ -367,7 +364,7 @@ app.get('/monitor-db', requirePageLogin, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
-// Gerenciar Usuários - apenas admin e dev
+// Gerenciar UsuÃ¡rios - apenas admin e dev
 app.get('/gerenciar-usuarios', requirePageLogin, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
@@ -383,7 +380,7 @@ app.get('/backup', requirePageLogin, (req, res) => {
 });
 
 app.get('/dev/system', requirePageLogin, (req, res) => {
-    logEvent('dev_access', req.session.username, 'system_access', 'Usuário acessou painel de sistema', req);
+    logEvent('dev_access', req.session.username, 'system_access', 'UsuÃ¡rio acessou painel de sistema', req);
     res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
@@ -392,7 +389,7 @@ app.get('/content/:page', requirePageLogin, (req, res) => {
     if (allowedPages.includes(req.params.page)) {
         res.sendFile(path.join(__dirname, 'views', `${req.params.page}.html`));
     } else {
-        res.status(404).send('Página não encontrada');
+        res.status(404).send('PÃ¡gina nÃ£o encontrada');
     }
 });
 
@@ -412,7 +409,7 @@ app.post('/api/process-pdf', requirePageLogin, upload.single('pdfFile'), async (
         const text = data.text;
         const lines = text.split('\n').map(line => line.trim()).filter(Boolean);
 
-        // Função para converter valores no formato "1.234,56" para número
+        // FunÃ§Ã£o para converter valores no formato "1.234,56" para nÃºmero
         const parseBrazilianNumber = (str) => {
             if (!str) return 0;
             return parseFloat(String(str).replace(/\./g, '').replace(',', '.'));
@@ -422,29 +419,29 @@ app.post('/api/process-pdf', requirePageLogin, upload.single('pdfFile'), async (
 
         // VERIFICA O TIPO DE PDF
         if (text.includes("Desempenho de vendedores")) {
-            // --- LÓGICA PARA PDF TIPO OMNI ---
+            // --- LÃ“GICA PARA PDF TIPO OMNI ---
             console.log("Processando PDF estilo Omni (Desempenho de vendedores)...");
 
             const linhaTotais = lines.find(l => l.startsWith('Totais:'));
             if (!linhaTotais) {
-                throw new Error("Linha 'Totais:' não encontrada no PDF.");
+                throw new Error("Linha 'Totais:' nÃ£o encontrada no PDF.");
             }
 
-            // Extrai todos os números da linha de totais
+            // Extrai todos os nÃºmeros da linha de totais
             const valores = linhaTotais.replace('Totais:', '').trim().split(/\s+/);
             
-            // CORREÇÃO: Procura o cabeçalho para identificar as colunas corretamente
-            const headerLine = lines.find(l => l.includes('Peças/Venda') || l.includes('P.A'));
+            // CORREÃ‡ÃƒO: Procura o cabeÃ§alho para identificar as colunas corretamente
+            const headerLine = lines.find(l => l.includes('PeÃ§as/Venda') || l.includes('P.A'));
             
-            // Mapeia os valores com validação melhorada
+            // Mapeia os valores com validaÃ§Ã£o melhorada
             const vendas_loja = Math.round(parseBrazilianNumber(valores[1])); // Total de Vendas
             
-            // CORREÇÃO PARA PA = 1: Procura por valores decimais pequenos (PA geralmente é entre 0.5 e 5.0)
-            let pa = parseBrazilianNumber(valores[2]); // Posição padrão
+            // CORREÃ‡ÃƒO PARA PA = 1: Procura por valores decimais pequenos (PA geralmente Ã© entre 0.5 e 5.0)
+            let pa = parseBrazilianNumber(valores[2]); // PosiÃ§Ã£o padrÃ£o
             
-            // Validação: se o PA não está em um range razoável, procura no array
+            // ValidaÃ§Ã£o: se o PA nÃ£o estÃ¡ em um range razoÃ¡vel, procura no array
             if (pa < 0.3 || pa > 10) {
-                // Procura um valor decimal entre 0.3 e 10 (range típico de PA)
+                // Procura um valor decimal entre 0.3 e 10 (range tÃ­pico de PA)
                 for (let i = 0; i < valores.length; i++) {
                     const valor = parseBrazilianNumber(valores[i]);
                     if (valor >= 0.3 && valor <= 10 && valores[i].includes(',')) {
@@ -456,14 +453,14 @@ app.post('/api/process-pdf', requirePageLogin, upload.single('pdfFile'), async (
             }
             
             const total_vendas_dinheiro = parseBrazilianNumber(valores[3]); // Vl. Vendas
-            const ticket_medio = parseBrazilianNumber(valores[4]); // Ticket Médio
+            const ticket_medio = parseBrazilianNumber(valores[4]); // Ticket MÃ©dio
             const clientes_loja = parseInt(valores[5], 10); // Abordagens
 
             // Extrai dados 
             const storeNameMatch = text.match(/(\d{1,}-\d{6}-.+)/);
-            const storeName = storeNameMatch ? storeNameMatch[1].trim() : "Loja não identificada";
+            const storeName = storeNameMatch ? storeNameMatch[1].trim() : "Loja nÃ£o identificada";
             
-            const dateMatch = text.match(/Período: (\d{2}\/\d{2}\/\d{4})/);
+            const dateMatch = text.match(/PerÃ­odo: (\d{2}\/\d{2}\/\d{4})/);
             const reportDate = dateMatch ? new Date(dateMatch[1].split('/').reverse().join('-')).toISOString().split('T')[0] : null;
 
             const vendorLines = lines.filter(line => line.match(/^\d+\s+.+\s+\(\d+\)/));
@@ -492,8 +489,8 @@ app.post('/api/process-pdf', requirePageLogin, upload.single('pdfFile'), async (
             };
 
         } else {
-            // --- LÓGICA PARA PDF TIPO BUSCA TÉCNICA ---
-            console.log("Processando PDF estilo Busca Técnica...");
+            // --- LÃ“GICA PARA PDF TIPO BUSCA TÃ‰CNICA ---
+            console.log("Processando PDF estilo Busca TÃ©cnica...");
             
             const linhaTotais = lines.find(l => l.includes('Totais:'));
             const idxTotais = lines.indexOf(linhaTotais);
@@ -502,17 +499,17 @@ app.post('/api/process-pdf', requirePageLogin, upload.single('pdfFile'), async (
             const valoresTotais = linhaLimpa.match(/(\d{1,3}(?:\.\d{3})*,\d{2})|(\d+\.\d{2})|(\d+,\d{2})|(\d+)/g);
             
             if (!valoresTotais || valoresTotais.length < 7) {
-                throw new Error("Não foi possível extrair os valores corretamente da linha Totais do PDF.");
+                throw new Error("NÃ£o foi possÃ­vel extrair os valores corretamente da linha Totais do PDF.");
             }
             
             const totalVendasValor = parseBrazilianNumber(valoresTotais[0]);
             
-            // CORREÇÃO PARA PA = 1: Busca valores decimais típicos de PA
-            let pa = parseBrazilianNumber(valoresTotais[valoresTotais.length - 4]); // Posição padrão
+            // CORREÃ‡ÃƒO PARA PA = 1: Busca valores decimais tÃ­picos de PA
+            let pa = parseBrazilianNumber(valoresTotais[valoresTotais.length - 4]); // PosiÃ§Ã£o padrÃ£o
             let ticketMedio = parseBrazilianNumber(valoresTotais[valoresTotais.length - 3]);
             
-            // Validação inteligente do PA
-            // PA geralmente está entre 0.3 e 10, e tem formato decimal (ex: 1,00 ou 2,50)
+            // ValidaÃ§Ã£o inteligente do PA
+            // PA geralmente estÃ¡ entre 0.3 e 10, e tem formato decimal (ex: 1,00 ou 2,50)
             const possiveisPAs = valoresTotais
                 .map((v, idx) => ({ valor: parseBrazilianNumber(v), original: v, index: idx }))
                 .filter(item => {
@@ -521,24 +518,24 @@ app.post('/api/process-pdf', requirePageLogin, upload.single('pdfFile'), async (
                            (item.original.includes(',') || item.original.includes('.'));
                 });
             
-            // Se encontrou candidatos a PA, pega o mais provável
+            // Se encontrou candidatos a PA, pega o mais provÃ¡vel
             if (possiveisPAs.length > 0 && (pa < 0.3 || pa > 10)) {
-                // Prefere valores próximos ao final do array (geralmente onde está o PA)
+                // Prefere valores prÃ³ximos ao final do array (geralmente onde estÃ¡ o PA)
                 pa = possiveisPAs[possiveisPAs.length - 1].valor;
                 console.log(`PA ajustado para: ${pa} (encontrado em possiveisPAs)`);
             }
             
-            // Validação do Ticket Médio (geralmente é um valor maior, acima de 50 reais)
+            // ValidaÃ§Ã£o do Ticket MÃ©dio (geralmente Ã© um valor maior, acima de 50 reais)
             if (ticketMedio < 10) {
-                // Procura um valor maior que pareça ticket médio
+                // Procura um valor maior que pareÃ§a ticket mÃ©dio
                 const possivelTicket = valoresTotais
                     .map(v => parseBrazilianNumber(v))
                     .filter(v => v >= 10 && v <= 10000)
-                    .find(v => v > 50); // Ticket médio geralmente > 50 reais
+                    .find(v => v > 50); // Ticket mÃ©dio geralmente > 50 reais
                 
                 if (possivelTicket) {
                     ticketMedio = possivelTicket;
-                    console.log(`Ticket médio ajustado para: ${ticketMedio}`);
+                    console.log(`Ticket mÃ©dio ajustado para: ${ticketMedio}`);
                 }
             }
             
@@ -547,12 +544,12 @@ app.post('/api/process-pdf', requirePageLogin, upload.single('pdfFile'), async (
             const totalAtendimentos = parseInt(linhaSplitada[indexDoValorTotal + 2], 10) || 0;
             
             const storeNameMatch = text.match(/^\s*\d{3}\s*-\s*(.+)/m);
-            const storeName = storeNameMatch ? storeNameMatch[1].trim().replace(/\s+STORE$/, "") : "Loja não identificada";
+            const storeName = storeNameMatch ? storeNameMatch[1].trim().replace(/\s+STORE$/, "") : "Loja nÃ£o identificada";
             
-            const dateMatch = text.match(/Período de (\d{2}\/\d{2}\/\d{4}) a (\d{2}\/\d{2}\/\d{4})/);
+            const dateMatch = text.match(/PerÃ­odo de (\d{2}\/\d{2}\/\d{4}) a (\d{2}\/\d{2}\/\d{4})/);
             const reportDate = dateMatch ? new Date(dateMatch[1].split('/').reverse().join('-')).toISOString().split('T')[0] : null;
 
-            const vendorLines = lines.filter(line => /^\d+º/.test(line));
+            const vendorLines = lines.filter(line => /^\d+Âº/.test(line));
             const vendedores = vendorLines.map(line => {
                 const vendorParts = line.trim().split(/\s+/);
                 const nome = vendorParts.slice(2, -7).join(' ');
@@ -590,9 +587,9 @@ app.post('/api/process-pdf', requirePageLogin, upload.single('pdfFile'), async (
 const settingsRouter = require('./src/routes/settings');
 app.use('/api/settings', requirePageLogin, settingsRouter);
 
-// APIs DE SESSÃO E USUÁRIOS
+// APIs DE SESSÃƒO E USUÃRIOS
 app.get('/api/csrf-token', (req, res) => {
-    // Garantir que a sessão seja salva antes de retornar o token
+    // Garantir que a sessÃ£o seja salva antes de retornar o token
     if (!req.session.csrfToken) {
         req.session.csrfToken = generateCsrfToken();
     }
@@ -603,7 +600,7 @@ app.get('/api/csrf-token', (req, res) => {
     req.session.save((err) => {
         if (err) {
             console.error('Erro ao salvar sessao CSRF:', err);
-            return res.status(500).json({ error: 'Erro ao gerar token de segurança' });
+            return res.status(500).json({ error: 'Erro ao gerar token de seguranÃ§a' });
         }
         console.log('Sessao CSRF salva com sucesso');
         res.json({ csrfToken: req.session.csrfToken });
@@ -624,7 +621,7 @@ app.post('/api/login', loginLimiter, validateCsrf, async (req, res) => {
     
     if (!username || !password) {
         logEvent('security', username || 'unknown', 'login_failed', 'Tentativa de login sem credenciais', req);
-        return res.status(400).json({ message: 'Username e senha são obrigatórios.' });
+        return res.status(400).json({ message: 'Username e senha sÃ£o obrigatÃ³rios.' });
     }
     
     db.get('SELECT * FROM usuarios WHERE username = ?', [username], async (err, user) => { 
@@ -634,8 +631,8 @@ app.post('/api/login', loginLimiter, validateCsrf, async (req, res) => {
         }
         
         if (!user) {
-            logEvent('security', username, 'login_failed', 'Usuário não encontrado', req);
-            return res.status(401).json({ message: 'Credenciais inválidas.' }); 
+            logEvent('security', username, 'login_failed', 'UsuÃ¡rio nÃ£o encontrado', req);
+            return res.status(401).json({ message: 'Credenciais invÃ¡lidas.' }); 
         }
         
         try {
@@ -660,7 +657,7 @@ app.post('/api/login', loginLimiter, validateCsrf, async (req, res) => {
             
             if (!passwordMatch) {
                 logEvent('security', username, 'login_failed', 'Senha incorreta', req);
-                return res.status(401).json({ message: 'Credenciais inválidas.' }); 
+                return res.status(401).json({ message: 'Credenciais invÃ¡lidas.' }); 
             }
             
             req.session.userId = user.id; 
@@ -669,11 +666,11 @@ app.post('/api/login', loginLimiter, validateCsrf, async (req, res) => {
             req.session.save((err) => {
                 if (err) {
                     console.error('Erro ao salvar sessao:', err);
-                    logEvent('error', username, 'login_error', `Erro ao salvar sessão: ${err.message}`, req);
-                    return res.status(500).json({ message: 'Erro ao salvar sessão.' });
+                    logEvent('error', username, 'login_error', `Erro ao salvar sessÃ£o: ${err.message}`, req);
+                    return res.status(500).json({ message: 'Erro ao salvar sessÃ£o.' });
                 }
                 console.log(`Login bem-sucedido - Usuario: ${user.username}, Session ID: ${req.sessionID}`);
-                logEvent('access', user.username, 'login_success', `Usuário ${user.username} fez login com sucesso`, req);
+                logEvent('access', user.username, 'login_success', `UsuÃ¡rio ${user.username} fez login com sucesso`, req);
                 res.json({ success: true });
             }); 
         } catch (error) {
@@ -685,19 +682,19 @@ app.post('/api/login', loginLimiter, validateCsrf, async (req, res) => {
 app.get('/logout', (req, res) => { 
     const username = req.session?.username;
     if (username) {
-        logEvent('access', username, 'logout', `Usuário ${username} fez logout`, req);
+        logEvent('access', username, 'logout', `UsuÃ¡rio ${username} fez logout`, req);
     }
     req.session.destroy(() => res.redirect('/login')); 
 });
 
 // =================================================================
-// ENDPOINTS DE GERENCIAMENTO DE TOKENS TEMPORÁRIOS
+// ENDPOINTS DE GERENCIAMENTO DE TOKENS TEMPORÃRIOS
 // =================================================================
 
 app.post('/api/dev/generate-temp-token', requirePageLogin, async (req, res) => {
     if (!DEV_TEMP_ACCESS_ENABLED) {
         return res.status(403).json({ 
-            error: 'Acesso temporário desabilitado',
+            error: 'Acesso temporÃ¡rio desabilitado',
             message: 'Configure DEV_TEMP_ACCESS=true em ambiente de desenvolvimento'
         });
     }
@@ -707,7 +704,7 @@ app.post('/api/dev/generate-temp-token', requirePageLogin, async (req, res) => {
         
         if (expiresInHours < 0.1 || expiresInHours > 24) {
             return res.status(400).json({ 
-                error: 'Validade inválida. Use entre 0.1 e 24 horas.' 
+                error: 'Validade invÃ¡lida. Use entre 0.1 e 24 horas.' 
             });
         }
         
@@ -723,7 +720,7 @@ app.post('/api/dev/generate-temp-token', requirePageLogin, async (req, res) => {
         );
         
         logEvent('security', req.session.username, 'temp_token_generated', 
-            `Token temporário gerado (validade: ${expiresInHours}h, IP restrito: ${ipRestricted || 'não'})`, 
+            `Token temporÃ¡rio gerado (validade: ${expiresInHours}h, IP restrito: ${ipRestricted || 'nÃ£o'})`, 
             req
         );
         
@@ -736,22 +733,22 @@ app.post('/api/dev/generate-temp-token', requirePageLogin, async (req, res) => {
             warning: 'Este token tem acesso completo de desenvolvedor. Mantenha-o seguro!'
         });
     } catch (error) {
-        console.error('Erro ao gerar token temporário:', error);
+        console.error('Erro ao gerar token temporÃ¡rio:', error);
         logEvent('error', req.session.username, 'temp_token_error', error.message, req);
-        res.status(500).json({ error: 'Erro ao gerar token temporário' });
+        res.status(500).json({ error: 'Erro ao gerar token temporÃ¡rio' });
     }
 });
 
 app.delete('/api/dev/revoke-temp-token', requirePageLogin, async (req, res) => {
     if (!DEV_TEMP_ACCESS_ENABLED) {
-        return res.status(403).json({ error: 'Acesso temporário desabilitado' });
+        return res.status(403).json({ error: 'Acesso temporÃ¡rio desabilitado' });
     }
     
     try {
         const { tokenId } = req.body;
         
         if (!tokenId) {
-            return res.status(400).json({ error: 'ID do token não fornecido' });
+            return res.status(400).json({ error: 'ID do token nÃ£o fornecido' });
         }
         
         db.run(
@@ -764,11 +761,11 @@ app.delete('/api/dev/revoke-temp-token', requirePageLogin, async (req, res) => {
                 }
                 
                 if (this.changes === 0) {
-                    return res.status(404).json({ error: 'Token não encontrado' });
+                    return res.status(404).json({ error: 'Token nÃ£o encontrado' });
                 }
                 
                 logEvent('security', req.session.username, 'temp_token_revoked', 
-                    `Token temporário #${tokenId} revogado manualmente`, 
+                    `Token temporÃ¡rio #${tokenId} revogado manualmente`, 
                     req
                 );
                 
@@ -784,7 +781,7 @@ app.delete('/api/dev/revoke-temp-token', requirePageLogin, async (req, res) => {
 
 app.get('/api/dev/temp-tokens', requirePageLogin, (req, res) => {
     if (!DEV_TEMP_ACCESS_ENABLED) {
-        return res.status(403).json({ error: 'Acesso temporário desabilitado' });
+        return res.status(403).json({ error: 'Acesso temporÃ¡rio desabilitado' });
     }
     
     db.all(
@@ -827,7 +824,7 @@ app.get('/api/usuarios', requirePageLogin, (req, res) => {
 });
 app.post('/api/usuarios', requirePageLogin, validateCsrf, async (req, res) => { 
     const { username, password } = req.body; 
-    if (!username || !password) return res.status(400).json({ error: 'Username e senha são obrigatórios.' }); 
+    if (!username || !password) return res.status(400).json({ error: 'Username e senha sÃ£o obrigatÃ³rios.' }); 
     
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -836,10 +833,10 @@ app.post('/api/usuarios', requirePageLogin, validateCsrf, async (req, res) => {
             [username, hashedPassword], 
             function (err) { 
                 if (err) {
-                    logEvent('error', req.session.username, 'user_creation_failed', `Erro ao criar usuário ${username}: ${err.message}`, req);
-                    return res.status(500).json({ error: 'Erro ao criar usuário. O nome de usuário já pode existir.' }); 
+                    logEvent('error', req.session.username, 'user_creation_failed', `Erro ao criar usuÃ¡rio ${username}: ${err.message}`, req);
+                    return res.status(500).json({ error: 'Erro ao criar usuÃ¡rio. O nome de usuÃ¡rio jÃ¡ pode existir.' }); 
                 }
-                logEvent('admin', req.session.username, 'user_created', `Usuário ${username} criado`, req);
+                logEvent('admin', req.session.username, 'user_created', `UsuÃ¡rio ${username} criado`, req);
                 res.status(201).json({ success: true, id: this.lastID }); 
             }
         );
@@ -851,7 +848,7 @@ app.post('/api/usuarios', requirePageLogin, validateCsrf, async (req, res) => {
 app.put('/api/usuarios/:id', requirePageLogin, validateCsrf, async (req, res) => { 
     const { id } = req.params; 
     const { username, password } = req.body; 
-    if (!username) return res.status(400).json({ error: 'Username é obrigatório.' }); 
+    if (!username) return res.status(400).json({ error: 'Username Ã© obrigatÃ³rio.' }); 
     
     try {
         let sql, params;
@@ -867,10 +864,10 @@ app.put('/api/usuarios/:id', requirePageLogin, validateCsrf, async (req, res) =>
         
         db.run(sql, params, function (err) { 
             if (err) {
-                logEvent('error', req.session.username, 'user_update_failed', `Erro ao atualizar usuário ${username}: ${err.message}`, req);
-                return res.status(500).json({ error: 'Erro ao atualizar usuário.' }); 
+                logEvent('error', req.session.username, 'user_update_failed', `Erro ao atualizar usuÃ¡rio ${username}: ${err.message}`, req);
+                return res.status(500).json({ error: 'Erro ao atualizar usuÃ¡rio.' }); 
             }
-            logEvent('admin', req.session.username, 'user_updated', `Usuário ${username} atualizado`, req);
+            logEvent('admin', req.session.username, 'user_updated', `UsuÃ¡rio ${username} atualizado`, req);
             res.json({ success: true }); 
         }); 
     } catch (error) {
@@ -880,10 +877,10 @@ app.put('/api/usuarios/:id', requirePageLogin, validateCsrf, async (req, res) =>
 });
 app.delete('/api/usuarios/:id', requirePageLogin, validateCsrf, (req, res) => { 
     const { id } = req.params; 
-    if (id == req.session.userId) return res.status(403).json({ error: 'Não é permitido excluir o próprio usuário logado.' }); 
+    if (id == req.session.userId) return res.status(403).json({ error: 'NÃ£o Ã© permitido excluir o prÃ³prio usuÃ¡rio logado.' }); 
     db.run("DELETE FROM usuarios WHERE id = ?", [id], function (err) { 
-        if (err) return res.status(500).json({ error: 'Erro ao excluir usuário.' }); 
-        if (this.changes === 0) return res.status(404).json({ error: "Usuário não encontrado." }); 
+        if (err) return res.status(500).json({ error: 'Erro ao excluir usuÃ¡rio.' }); 
+        if (this.changes === 0) return res.status(404).json({ error: "UsuÃ¡rio nÃ£o encontrado." }); 
         res.json({ success: true }); 
     }); 
 });
@@ -921,7 +918,7 @@ app.post('/api/lojas', requirePageLogin, (req, res) => {
     db.run('INSERT INTO lojas (nome, status, funcao_especial, tecnico_username, observacoes, cargo, cep, numero_contato, gerente) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', 
         [nome, status, funcao_especial, tecnico_username, observacoes, cargo, cep, numero_contato, gerente], 
         function (err) { 
-            if (err) return res.status(500).json({ error: 'Erro ao criar loja. O nome já pode existir.' }); 
+            if (err) return res.status(500).json({ error: 'Erro ao criar loja. O nome jÃ¡ pode existir.' }); 
             res.status(201).json({ success: true, id: this.lastID }); 
         }); 
 });
@@ -935,11 +932,11 @@ app.put('/api/lojas/:id', requirePageLogin, (req, res) => {
             res.json({ success: true }); 
         }); 
 });
-app.delete('/api/lojas/:id', requirePageLogin, (req, res) => { db.run("DELETE FROM lojas WHERE id = ?", [req.params.id], function (err) { if (err) return res.status(500).json({ error: 'Erro ao excluir loja.' }); if (this.changes === 0) return res.status(404).json({ error: "Loja não encontrada." }); res.json({ success: true }); }); });
+app.delete('/api/lojas/:id', requirePageLogin, (req, res) => { db.run("DELETE FROM lojas WHERE id = ?", [req.params.id], function (err) { if (err) return res.status(500).json({ error: 'Erro ao excluir loja.' }); if (this.changes === 0) return res.status(404).json({ error: "Loja nÃ£o encontrada." }); res.json({ success: true }); }); });
 
 // APIs DE VENDEDORES - REMOVIDAS (funcionalidade descontinuada)
 
-// API de métricas agregadas para dashboard - suporta filtros independentes
+// API de mÃ©tricas agregadas para dashboard - suporta filtros independentes
 app.get('/api/dashboard/metrics', requirePageLogin, (req, res) => {
     const { loja_monitoramento, loja_bluve } = req.query;
     
@@ -978,17 +975,17 @@ app.get('/api/dashboard/metrics', requirePageLogin, (req, res) => {
     // Executar ambas as queries
     db.get(queryMonit, paramsMonit, (err1, rowMonit) => {
         if (err1) {
-            console.error('Erro ao buscar métricas de Monitoramento:', err1);
+            console.error('Erro ao buscar mÃ©tricas de Monitoramento:', err1);
             return res.status(500).json({ error: err1.message });
         }
         
         db.get(queryBluve, paramsBluve, (err2, rowBluve) => {
             if (err2) {
-                console.error('Erro ao buscar métricas de Bluve:', err2);
+                console.error('Erro ao buscar mÃ©tricas de Bluve:', err2);
                 return res.status(500).json({ error: err2.message });
             }
             
-            // Calcular métricas de Monitoramento
+            // Calcular mÃ©tricas de Monitoramento
             const clientesMonitoramento = parseInt(rowMonit.total_clientes_monitoramento) || 0;
             const vendasMonitoramento = parseInt(rowMonit.total_vendas_monitoramento) || 0;
             const omni = parseInt(rowMonit.total_omni) || 0;
@@ -997,7 +994,7 @@ app.get('/api/dashboard/metrics', requirePageLogin, (req, res) => {
                 ? ((vendasMonitoramentoTotal / clientesMonitoramento) * 100).toFixed(2)
                 : '0.00';
             
-            // Calcular métricas de Bluve
+            // Calcular mÃ©tricas de Bluve
             const clientesLoja = parseInt(rowBluve.total_clientes_loja) || 0;
             const vendasLoja = parseInt(rowBluve.total_vendas_loja) || 0;
             const txConversaoLoja = clientesLoja > 0 
@@ -1020,7 +1017,7 @@ app.get('/api/dashboard/metrics', requirePageLogin, (req, res) => {
     });
 });
 
-// APIs DE RELATÓRIOS
+// APIs DE RELATÃ“RIOS
 const processarRelatorio = (r) => { if (!r) return null; const vendas_monitoramento_total = (parseInt(r.vendas_monitoramento, 10) || 0) + (parseInt(r.quantidade_omni, 10) || 0); const tx_conversao_monitoramento = (parseInt(r.clientes_monitoramento, 10) || 0) > 0 ? (vendas_monitoramento_total / r.clientes_monitoramento) * 100 : 0; const tx_conversao_loja = (parseInt(r.clientes_loja, 10) || 0) > 0 ? ((parseInt(r.vendas_loja, 10) || 0) / r.clientes_loja) * 100 : 0; let vendedores_processados = []; try { const vendedores = JSON.parse(r.vendedores || '[]'); vendedores_processados = vendedores.map(v => ({ ...v, tx_conversao: (v.atendimentos > 0 ? ((v.vendas / v.atendimentos) * 100) : 0).toFixed(2) })); } catch (e) {} return { ...r, vendas_monitoramento_total, tx_conversao_monitoramento: tx_conversao_monitoramento.toFixed(2), tx_conversao_loja: tx_conversao_loja.toFixed(2), vendedores_processados }; };
 app.get('/api/relatorios', requirePageLogin, (req, res) => { 
     const whereClauses = []; 
@@ -1054,7 +1051,7 @@ app.get('/api/relatorios', requirePageLogin, (req, res) => {
         }); 
     }); 
 });
-app.post('/api/relatorios', requirePageLogin, validateCsrf, (req, res) => { const d = req.body; const sql = `INSERT INTO relatorios (loja, data, hora_abertura, hora_fechamento, gerente_entrada, gerente_saida, clientes_monitoramento, vendas_monitoramento, clientes_loja, vendas_loja, total_vendas_dinheiro, ticket_medio, pa, quantidade_trocas, quantidade_omni, quantidade_funcao_especial, vendedores, enviado_por_usuario, vendas_cartao, vendas_pix, vendas_dinheiro) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`; const params = [ d.loja, d.data, d.hora_abertura, d.hora_fechamento, d.gerente_entrada, d.gerente_saida, parseInt(d.clientes_monitoramento, 10) || 0, parseInt(d.vendas_monitoramento, 10) || 0, parseInt(d.clientes_loja, 10) || 0, parseInt(d.vendas_loja, 10) || 0, parseFloat(String(d.total_vendas_dinheiro).replace(/[R$\s.]/g, '').replace(',', '.')) || 0, d.ticket_medio || 'R$ 0,00', d.pa || '0.00', parseInt(d.quantidade_trocas, 10) || 0, parseInt(d.quantidade_omni, 10) || 0, parseInt(d.quantidade_funcao_especial, 10) || 0, d.vendedores || '[]', req.session.username, parseInt(d.vendas_cartao, 10) || 0, parseInt(d.vendas_pix, 10) || 0, parseInt(d.vendas_dinheiro, 10) || 0 ]; db.run(sql, params, function (err) { if (err) { console.error("Erro ao inserir relatório:", err.message); return res.status(500).json({ error: 'Falha ao salvar relatório.' }); } res.status(201).json({ success: true, id: this.lastID }); }); });
+app.post('/api/relatorios', requirePageLogin, validateCsrf, (req, res) => { const d = req.body; const sql = `INSERT INTO relatorios (loja, data, hora_abertura, hora_fechamento, gerente_entrada, gerente_saida, clientes_monitoramento, vendas_monitoramento, clientes_loja, vendas_loja, total_vendas_dinheiro, ticket_medio, pa, quantidade_trocas, quantidade_omni, quantidade_funcao_especial, vendedores, enviado_por_usuario, vendas_cartao, vendas_pix, vendas_dinheiro) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`; const params = [ d.loja, d.data, d.hora_abertura, d.hora_fechamento, d.gerente_entrada, d.gerente_saida, parseInt(d.clientes_monitoramento, 10) || 0, parseInt(d.vendas_monitoramento, 10) || 0, parseInt(d.clientes_loja, 10) || 0, parseInt(d.vendas_loja, 10) || 0, parseFloat(String(d.total_vendas_dinheiro).replace(/[R$\s.]/g, '').replace(',', '.')) || 0, d.ticket_medio || 'R$ 0,00', d.pa || '0.00', parseInt(d.quantidade_trocas, 10) || 0, parseInt(d.quantidade_omni, 10) || 0, parseInt(d.quantidade_funcao_especial, 10) || 0, d.vendedores || '[]', req.session.username, parseInt(d.vendas_cartao, 10) || 0, parseInt(d.vendas_pix, 10) || 0, parseInt(d.vendas_dinheiro, 10) || 0 ]; db.run(sql, params, function (err) { if (err) { console.error("Erro ao inserir relatÃ³rio:", err.message); return res.status(500).json({ error: 'Falha ao salvar relatÃ³rio.' }); } res.status(201).json({ success: true, id: this.lastID }); }); });
 app.get('/api/relatorios/ultima-loja', requirePageLogin, (req, res) => { 
     db.get("SELECT loja, enviado_em FROM relatorios ORDER BY enviado_em DESC LIMIT 1", [], (err, relatorio) => { 
         if (err) return res.status(500).json({ error: err.message }); 
@@ -1062,9 +1059,9 @@ app.get('/api/relatorios/ultima-loja', requirePageLogin, (req, res) => {
         res.json(relatorio); 
     }); 
 });
-app.get('/api/relatorios/:id', requirePageLogin, (req, res) => { db.get("SELECT * FROM relatorios WHERE id = ?", [req.params.id], (err, relatorio) => { if (err) return res.status(500).json({ error: err.message }); if (!relatorio) return res.status(404).json({ error: "Relatório não encontrado" }); res.json({ relatorio }); }); });
-app.put('/api/relatorios/:id', requirePageLogin, validateCsrf, (req, res) => { const { id } = req.params; const d = req.body; const sql = `UPDATE relatorios SET loja=?, data=?, hora_abertura=?, hora_fechamento=?, gerente_entrada=?, gerente_saida=?, clientes_monitoramento=?, vendas_monitoramento=?, clientes_loja=?, vendas_loja=?, total_vendas_dinheiro=?, ticket_medio=?, pa=?, quantidade_trocas=?, quantidade_omni=?, quantidade_funcao_especial=?, vendedores=?, vendas_cartao=?, vendas_pix=?, vendas_dinheiro=? WHERE id=?`; const params = [ d.loja, d.data, d.hora_abertura, d.hora_fechamento, d.gerente_entrada, d.gerente_saida, parseInt(d.clientes_monitoramento, 10) || 0, parseInt(d.vendas_monitoramento, 10) || 0, parseInt(d.clientes_loja, 10) || 0, parseInt(d.vendas_loja, 10) || 0, parseFloat(String(d.total_vendas_dinheiro).replace(/[R$\s.]/g, '').replace(',', '.')) || 0, d.ticket_medio || 'R$ 0,00', d.pa || '0.00', parseInt(d.quantidade_trocas, 10) || 0, parseInt(d.quantidade_omni, 10) || 0, parseInt(d.quantidade_funcao_especial, 10) || 0, d.vendedores || '[]', parseInt(d.vendas_cartao, 10) || 0, parseInt(d.vendas_pix, 10) || 0, parseInt(d.vendas_dinheiro, 10) || 0, id ]; db.run(sql, params, function (err) { if (err) { console.error("Erro ao atualizar relatório:", err.message); return res.status(500).json({ error: 'Falha ao atualizar o relatório.' }); } if (this.changes === 0) return res.status(404).json({ error: "Relatório não encontrado." }); res.json({ success: true, id: id }); }); });
-app.delete('/api/relatorios/:id', requirePageLogin, validateCsrf, (req, res) => { db.run("DELETE FROM relatorios WHERE id = ?", [req.params.id], function (err) { if (err) return res.status(500).json({ error: err.message }); if (this.changes === 0) return res.status(404).json({ error: "Relatório não encontrado" }); res.json({ success: true, message: "Relatório excluído." }); }); });
+app.get('/api/relatorios/:id', requirePageLogin, (req, res) => { db.get("SELECT * FROM relatorios WHERE id = ?", [req.params.id], (err, relatorio) => { if (err) return res.status(500).json({ error: err.message }); if (!relatorio) return res.status(404).json({ error: "RelatÃ³rio nÃ£o encontrado" }); res.json({ relatorio }); }); });
+app.put('/api/relatorios/:id', requirePageLogin, validateCsrf, (req, res) => { const { id } = req.params; const d = req.body; const sql = `UPDATE relatorios SET loja=?, data=?, hora_abertura=?, hora_fechamento=?, gerente_entrada=?, gerente_saida=?, clientes_monitoramento=?, vendas_monitoramento=?, clientes_loja=?, vendas_loja=?, total_vendas_dinheiro=?, ticket_medio=?, pa=?, quantidade_trocas=?, quantidade_omni=?, quantidade_funcao_especial=?, vendedores=?, vendas_cartao=?, vendas_pix=?, vendas_dinheiro=? WHERE id=?`; const params = [ d.loja, d.data, d.hora_abertura, d.hora_fechamento, d.gerente_entrada, d.gerente_saida, parseInt(d.clientes_monitoramento, 10) || 0, parseInt(d.vendas_monitoramento, 10) || 0, parseInt(d.clientes_loja, 10) || 0, parseInt(d.vendas_loja, 10) || 0, parseFloat(String(d.total_vendas_dinheiro).replace(/[R$\s.]/g, '').replace(',', '.')) || 0, d.ticket_medio || 'R$ 0,00', d.pa || '0.00', parseInt(d.quantidade_trocas, 10) || 0, parseInt(d.quantidade_omni, 10) || 0, parseInt(d.quantidade_funcao_especial, 10) || 0, d.vendedores || '[]', parseInt(d.vendas_cartao, 10) || 0, parseInt(d.vendas_pix, 10) || 0, parseInt(d.vendas_dinheiro, 10) || 0, id ]; db.run(sql, params, function (err) { if (err) { console.error("Erro ao atualizar relatÃ³rio:", err.message); return res.status(500).json({ error: 'Falha ao atualizar o relatÃ³rio.' }); } if (this.changes === 0) return res.status(404).json({ error: "RelatÃ³rio nÃ£o encontrado." }); res.json({ success: true, id: id }); }); });
+app.delete('/api/relatorios/:id', requirePageLogin, validateCsrf, (req, res) => { db.run("DELETE FROM relatorios WHERE id = ?", [req.params.id], function (err) { if (err) return res.status(500).json({ error: err.message }); if (this.changes === 0) return res.status(404).json({ error: "RelatÃ³rio nÃ£o encontrado" }); res.json({ success: true, message: "RelatÃ³rio excluÃ­do." }); }); });
 
 // =================================================================
 // ENDPOINTS GOOGLE DRIVE - Armazenamento em Nuvem Gratuito
@@ -1073,7 +1070,7 @@ app.delete('/api/relatorios/:id', requirePageLogin, validateCsrf, (req, res) => 
 // Verificar quota do Google Drive
 const formatCurrency = (value) => { const numberValue = Number(value) || 0; return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(numberValue); };
 
-// Função para desenhar um gráfico de rosquinha (donut chart)
+// FunÃ§Ã£o para desenhar um grÃ¡fico de rosquinha (donut chart)
 function desenharGraficoRosquinha(doc, centerX, centerY, radius, dados, cores) {
     const total = dados.reduce((sum, item) => sum + item.valor, 0);
     if (total === 0) return;
@@ -1106,11 +1103,11 @@ function desenharGraficoRosquinha(doc, centerX, centerY, radius, dados, cores) {
        .text(`${total}`, centerX - 20, centerY - 5, { width: 40, align: 'center' });
 }
 
-// Função para gerar PDF do relatório com cores do sistema (laranja e cinza)
+// FunÃ§Ã£o para gerar PDF do relatÃ³rio com cores do sistema (laranja e cinza)
 function gerarRelatorioPDFProfissional(doc, r) {
     const rp = processarRelatorio(r);
     if (!rp) {
-        doc.fontSize(14).text('Erro ao processar relatório.');
+        doc.fontSize(14).text('Erro ao processar relatÃ³rio.');
         return;
     }
     
@@ -1129,18 +1126,18 @@ function gerarRelatorioPDFProfissional(doc, r) {
     const maxY = pageHeight - 25;
     let y = 25;
     
-    // === CABEÇALHO COM COR LARANJA ===
+    // === CABEÃ‡ALHO COM COR LARANJA ===
     doc.rect(0, 0, pageWidth, 85).fill(cores.laranja);
     doc.fontSize(24).font('Helvetica-Bold').fillColor(cores.branco)
        .text(r.loja.toUpperCase(), margin, 22, { align: 'center', width: pageWidth - margin * 2 });
     const dataFormatada = new Date(rp.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' });
     doc.fontSize(13).font('Helvetica').fillColor(cores.branco)
-       .text(`Relatório de ${dataFormatada}`, margin, 56, { align: 'center', width: pageWidth - margin * 2 });
+       .text(`RelatÃ³rio de ${dataFormatada}`, margin, 56, { align: 'center', width: pageWidth - margin * 2 });
     
     y = 100;
     doc.fillColor(cores.texto);
     
-    // === MÉTRICAS PRINCIPAIS (2 colunas maiores) + GRÁFICO ===
+    // === MÃ‰TRICAS PRINCIPAIS (2 colunas maiores) + GRÃFICO ===
     const colWidth = (pageWidth - margin * 2 - 12) / 3;
     const metricHeight = 70;
     
@@ -1156,25 +1153,25 @@ function gerarRelatorioPDFProfissional(doc, r) {
     doc.fontSize(22).font('Helvetica-Bold').fillColor(cores.laranja).text(`${rp.tx_conversao_loja}%`, margin + colWidth + 14, y + 28);
     doc.fontSize(9).font('Helvetica').fillColor(cores.cinzaEscuro).text(`${rp.clientes_loja || 0} cli | ${rp.vendas_loja || 0} vnd`, margin + colWidth + 14, y + 55);
     
-    // GRÁFICO DE ROSQUINHA (Formas de Pagamento)
+    // GRÃFICO DE ROSQUINHA (Formas de Pagamento)
     const graficoX = margin + colWidth * 2 + 12;
     const graficoCenterX = graficoX + colWidth / 2;
     const graficoCenterY = y + 28;
     
     const dadosGrafico = [
-        { valor: rp.vendas_cartao || 0, cor: cores.laranja, label: 'Cartão' },
+        { valor: rp.vendas_cartao || 0, cor: cores.laranja, label: 'CartÃ£o' },
         { valor: rp.vendas_pix || 0, cor: '#60a5fa', label: 'Pix' },
         { valor: rp.vendas_dinheiro || 0, cor: '#a78bfa', label: 'Dinheiro' }
     ];
     
-    // Título do gráfico
+    // TÃ­tulo do grÃ¡fico
     const totalVendasQtd = (rp.vendas_cartao || 0) + (rp.vendas_pix || 0) + (rp.vendas_dinheiro || 0);
     doc.fontSize(9).font('Helvetica-Bold').fillColor(cores.cinza).text('PAGAMENTOS', graficoX, y + 4);
     
-    // Desenhar gráfico maior e mais visível
+    // Desenhar grÃ¡fico maior e mais visÃ­vel
     desenharGraficoRosquinha(doc, graficoCenterX, graficoCenterY, 24, dadosGrafico, cores);
     
-    // Legenda compacta abaixo do gráfico
+    // Legenda compacta abaixo do grÃ¡fico
     let legendaY = y + 52;
     dadosGrafico.forEach((item, idx) => {
         doc.circle(graficoX + 8, legendaY + 3, 3).fill(item.cor);
@@ -1191,7 +1188,7 @@ function gerarRelatorioPDFProfissional(doc, r) {
     doc.fontSize(20).font('Helvetica-Bold').fillColor(cores.laranja).text(formatCurrency(rp.total_vendas_dinheiro), margin + 10, y + 30);
     doc.fontSize(9).font('Helvetica').fillColor(cores.cinzaEscuro).text(`TM: ${rp.ticket_medio} | PA: ${rp.pa}`, margin + 10, y + 53);
     
-    // === INFORMAÇÕES OPERACIONAIS ===
+    // === INFORMAÃ‡Ã•ES OPERACIONAIS ===
     const infoX = margin + (pageWidth - margin * 2) / 2 + 6;
     doc.fontSize(11).font('Helvetica-Bold').fillColor(cores.cinza).text('OPERACIONAL', infoX, y + 10);
     y += 26;
@@ -1221,7 +1218,7 @@ function gerarRelatorioPDFProfissional(doc, r) {
         const headerHeight = 24;
         const rowHeight = 20;
         
-        // Cabeçalho
+        // CabeÃ§alho
         doc.roundedRect(margin, y, pageWidth - margin * 2, headerHeight, 3).fill(cores.laranja);
         doc.fontSize(11).font('Helvetica-Bold').fillColor(cores.branco);
         doc.text('VENDEDOR', colX[0] + 6, y + 8, { width: 210 });
@@ -1258,17 +1255,17 @@ function gerarRelatorioPDFProfissional(doc, r) {
            .text('Nenhum vendedor registrado.', margin, y);
     }
     
-    // === RODAPÉ ===
+    // === RODAPÃ‰ ===
     doc.fontSize(9).font('Helvetica').fillColor(cores.cinza)
        .text(`Gerado em ${new Date().toLocaleDateString('pt-BR')}`, margin, maxY, { align: 'left' });
 }
 
-const formatarRelatorioTexto = (r) => { const rp = processarRelatorio(r); if (!rp) return "Erro ao processar relatório."; let equipeInfo = 'Nenhum vendedor registrado.\n'; if (rp.vendedores_processados && rp.vendedores_processados.length > 0) { equipeInfo = rp.vendedores_processados.map(v => { return `${v.nome}: ${v.atendimentos} Atendimentos / ${v.vendas} Vendas / ${v.tx_conversao}%`; }).join('\n'); } let funcaoEspecialInfo = ''; if (rp.funcao_especial === "Omni") { funcaoEspecialInfo = `Omni: ${rp.quantidade_omni || 0}\n`; } else if (rp.funcao_especial === "Busca por Assist. Tec.") { funcaoEspecialInfo = `Busca por assist tec: ${rp.quantidade_funcao_especial || 0}\n`; } const totalVendasQuantidade = (rp.vendas_cartao || 0) + (rp.vendas_pix || 0) + (rp.vendas_dinheiro || 0); const content = `${rp.loja.toUpperCase()}\nDATA: ${new Date(rp.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })} \n\nClientes: ${rp.clientes_monitoramento || 0}\nBluve: ${rp.clientes_loja || 0}\nVendas / Monitoramento: ${rp.vendas_monitoramento_total || 0}\nVendas / Loja: ${rp.vendas_loja || 0}\nTaxa de conversão da loja: ${rp.tx_conversao_loja || '0.00'}%\nTaxa de conversão do monitoramento: ${rp.tx_conversao_monitoramento || '0.00'}%\n\nAbertura: ${rp.hora_abertura || '--:--'} - ${rp.hora_fechamento || '--:--'}\nGerente: ${rp.gerente_entrada || '--:--'} - ${rp.gerente_saida || '--:--'}\nVendas em Cartão: ${rp.vendas_cartao || 0}\nVendas em Pix: ${rp.vendas_pix || 0}\nVendas em Dinheiro: ${rp.vendas_dinheiro || 0}\n${funcaoEspecialInfo}Total vendas: ${totalVendasQuantidade}\nTroca/Devolução: ${rp.quantidade_trocas || 0}\n\nDesempenho Equipe:\n\n${equipeInfo}\n\nTM: ${rp.ticket_medio || 'R$ 0,00'} / P.A: ${rp.pa || '0.00'} / Total: ${formatCurrency(rp.total_vendas_dinheiro)} / `; return content.trim(); };
-app.get('/api/relatorios/:id/txt', requirePageLogin, (req, res) => { const sql = ` SELECT r.*, l.funcao_especial FROM relatorios r LEFT JOIN lojas l ON r.loja = l.nome WHERE r.id = ? `; db.get(sql, [req.params.id], (err, r) => { if (err || !r) return res.status(404).send('Relatório não encontrado'); res.setHeader('Content-disposition', `attachment; filename=relatorio_${r.loja.replace(/ /g, '_')}_${r.data}.txt`); res.setHeader('Content-type', 'text/plain; charset=utf-8'); res.send(formatarRelatorioTexto(r)); }); });
+const formatarRelatorioTexto = (r) => { const rp = processarRelatorio(r); if (!rp) return "Erro ao processar relatÃ³rio."; let equipeInfo = 'Nenhum vendedor registrado.\n'; if (rp.vendedores_processados && rp.vendedores_processados.length > 0) { equipeInfo = rp.vendedores_processados.map(v => { return `${v.nome}: ${v.atendimentos} Atendimentos / ${v.vendas} Vendas / ${v.tx_conversao}%`; }).join('\n'); } let funcaoEspecialInfo = ''; if (rp.funcao_especial === "Omni") { funcaoEspecialInfo = `Omni: ${rp.quantidade_omni || 0}\n`; } else if (rp.funcao_especial === "Busca por Assist. Tec.") { funcaoEspecialInfo = `Busca por assist tec: ${rp.quantidade_funcao_especial || 0}\n`; } const totalVendasQuantidade = (rp.vendas_cartao || 0) + (rp.vendas_pix || 0) + (rp.vendas_dinheiro || 0); const content = `${rp.loja.toUpperCase()}\nDATA: ${new Date(rp.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })} \n\nClientes: ${rp.clientes_monitoramento || 0}\nBluve: ${rp.clientes_loja || 0}\nVendas / Monitoramento: ${rp.vendas_monitoramento_total || 0}\nVendas / Loja: ${rp.vendas_loja || 0}\nTaxa de conversÃ£o da loja: ${rp.tx_conversao_loja || '0.00'}%\nTaxa de conversÃ£o do monitoramento: ${rp.tx_conversao_monitoramento || '0.00'}%\n\nAbertura: ${rp.hora_abertura || '--:--'} - ${rp.hora_fechamento || '--:--'}\nGerente: ${rp.gerente_entrada || '--:--'} - ${rp.gerente_saida || '--:--'}\nVendas em CartÃ£o: ${rp.vendas_cartao || 0}\nVendas em Pix: ${rp.vendas_pix || 0}\nVendas em Dinheiro: ${rp.vendas_dinheiro || 0}\n${funcaoEspecialInfo}Total vendas: ${totalVendasQuantidade}\nTroca/DevoluÃ§Ã£o: ${rp.quantidade_trocas || 0}\n\nDesempenho Equipe:\n\n${equipeInfo}\n\nTM: ${rp.ticket_medio || 'R$ 0,00'} / P.A: ${rp.pa || '0.00'} / Total: ${formatCurrency(rp.total_vendas_dinheiro)} / `; return content.trim(); };
+app.get('/api/relatorios/:id/txt', requirePageLogin, (req, res) => { const sql = ` SELECT r.*, l.funcao_especial FROM relatorios r LEFT JOIN lojas l ON r.loja = l.nome WHERE r.id = ? `; db.get(sql, [req.params.id], (err, r) => { if (err || !r) return res.status(404).send('RelatÃ³rio nÃ£o encontrado'); res.setHeader('Content-disposition', `attachment; filename=relatorio_${r.loja.replace(/ /g, '_')}_${r.data}.txt`); res.setHeader('Content-type', 'text/plain; charset=utf-8'); res.send(formatarRelatorioTexto(r)); }); });
 app.get('/api/relatorios/:id/pdf', requirePageLogin, (req, res) => { 
     const sql = ` SELECT r.*, l.funcao_especial FROM relatorios r LEFT JOIN lojas l ON r.loja = l.nome WHERE r.id = ? `; 
     db.get(sql, [req.params.id], (err, r) => { 
-        if (err || !r) return res.status(404).send('Relatório não encontrado'); 
+        if (err || !r) return res.status(404).send('RelatÃ³rio nÃ£o encontrado'); 
         const doc = new PDFDocument({ margin: 50, size: 'A4' }); 
         res.setHeader('Content-disposition', `inline; filename="relatorio_${r.loja.replace(/ /g, '_')}_${r.data}.pdf"`); 
         res.setHeader('Content-type', 'application/pdf'); 
@@ -1282,7 +1279,7 @@ app.get('/api/relatorios/:id/pdf', requirePageLogin, (req, res) => {
 // ROTAS DE PROCESSAMENTO DE PDF
 // =================================================================
 
-// Configuração do multer para upload de PDFs
+// ConfiguraÃ§Ã£o do multer para upload de PDFs
 const pdfStorage = multer.memoryStorage();
 const pdfUpload = multer({
     storage: pdfStorage,
@@ -1291,29 +1288,29 @@ const pdfUpload = multer({
         if (file.mimetype === 'application/pdf') {
             cb(null, true);
         } else {
-            cb(new Error('Apenas arquivos PDF são permitidos'));
+            cb(new Error('Apenas arquivos PDF sÃ£o permitidos'));
         }
     }
 });
 
-// Função auxiliar para extrair dados do PDF de Ranking
+// FunÃ§Ã£o auxiliar para extrair dados do PDF de Ranking
 function extractRankingData(pdfText) {
     const lines = pdfText.split('\n').map(l => l.trim()).filter(l => l);
     
-    // Extrair nome da loja (formato: "103 - LOFT ITAGUAÇU STORE")
+    // Extrair nome da loja (formato: "103 - LOFT ITAGUAÃ‡U STORE")
     let lojaMatch = null;
     for (const line of lines) {
-        const match = line.match(/^\d+\s*-\s*(.+?)(?:\s+Emissão:|\s+Ranking)/);
+        const match = line.match(/^\d+\s*-\s*(.+?)(?:\s+EmissÃ£o:|\s+Ranking)/);
         if (match) {
             lojaMatch = match[1].trim();
             break;
         }
     }
     
-    // Extrair período/data (formato: "Período de 04/11/2025 a 04/11/2025")
+    // Extrair perÃ­odo/data (formato: "PerÃ­odo de 04/11/2025 a 04/11/2025")
     let dataMatch = null;
     for (const line of lines) {
-        const match = line.match(/Período de (\d{2}\/\d{2}\/\d{4})/);
+        const match = line.match(/PerÃ­odo de (\d{2}\/\d{2}\/\d{4})/);
         if (match) {
             const [dia, mes, ano] = match[1].split('/');
             dataMatch = `${ano}-${mes}-${dia}`; // Formato ISO
@@ -1322,29 +1319,29 @@ function extractRankingData(pdfText) {
     }
     
     // Procurar linha de "Totais:" e extrair valores
-    // No PDF real, a linha é: "     Totais:\n1.109,00       0,00         0,00 %       3,33 %      1.109,00      10         4          2,50         110,90   277,25"
+    // No PDF real, a linha Ã©: "     Totais:\n1.109,00       0,00         0,00 %       3,33 %      1.109,00      10         4          2,50         110,90   277,25"
     let pa = null, precoMedio = null, atendimentoMedio = null;
     
     for (let i = 0; i < lines.length; i++) {
-        // Procurar linha que contém "Totais:"
+        // Procurar linha que contÃ©m "Totais:"
         if (lines[i].includes('Totais:')) {
-            // Verificar se os valores estão na mesma linha ou na linha seguinte
+            // Verificar se os valores estÃ£o na mesma linha ou na linha seguinte
             let dataLine = lines[i];
             
-            // Se a linha só tem "Totais:", pegar a próxima linha
+            // Se a linha sÃ³ tem "Totais:", pegar a prÃ³xima linha
             if (dataLine.trim() === 'Totais:') {
                 dataLine = lines[i + 1] || '';
             }
             
-            // Extrair todos os números no formato brasileiro
-            // Formato: \d{1,3}(?:\.\d{3})*(?:,\d+)? captura números como 1.109,00 ou 2,50 ou 10
+            // Extrair todos os nÃºmeros no formato brasileiro
+            // Formato: \d{1,3}(?:\.\d{3})*(?:,\d+)? captura nÃºmeros como 1.109,00 ou 2,50 ou 10
             // Ex: "1.109,00 0,00 0,00 % 3,33 % 1.109,00 10 4 2,50 110,90 277,25"
             const numberPattern = /\d{1,3}(?:\.\d{3})*(?:,\d+)?/g;
             const numbers = dataLine.match(numberPattern);
             
             if (numbers && numbers.length >= 3) {
-                // Os últimos 3 valores são: PA, Preço Médio, Atendimento Médio
-                // Converter formato brasileiro (1.000,50) para formato padrão (1000.50)
+                // Os Ãºltimos 3 valores sÃ£o: PA, PreÃ§o MÃ©dio, Atendimento MÃ©dio
+                // Converter formato brasileiro (1.000,50) para formato padrÃ£o (1000.50)
                 const convertBrazilianNumber = (num) => {
                     return num.replace(/\./g, '').replace(',', '.');
                 };
@@ -1376,7 +1373,7 @@ app.post('/api/pdf/ranking', requirePageLogin, pdfUpload.single('pdf'), async (r
         const { loja, data } = req.body;
         
         if (!loja || !data) {
-            return res.status(400).json({ error: 'Loja e data são obrigatórios' });
+            return res.status(400).json({ error: 'Loja e data sÃ£o obrigatÃ³rios' });
         }
         
         // Extrair texto do PDF
@@ -1389,7 +1386,7 @@ app.post('/api/pdf/ranking', requirePageLogin, pdfUpload.single('pdf'), async (r
         // Validar se a loja corresponde
         if (extractedData.loja && !loja.includes(extractedData.loja) && !extractedData.loja.includes(loja)) {
             return res.status(400).json({
-                error: 'O PDF selecionado não corresponde à loja atual.',
+                error: 'O PDF selecionado nÃ£o corresponde Ã  loja atual.',
                 pdfLoja: extractedData.loja,
                 lojaAtual: loja
             });
@@ -1398,7 +1395,7 @@ app.post('/api/pdf/ranking', requirePageLogin, pdfUpload.single('pdf'), async (r
         // Validar se a data corresponde
         if (extractedData.data && extractedData.data !== data) {
             return res.status(400).json({
-                error: 'O PDF selecionado não corresponde à data atual.',
+                error: 'O PDF selecionado nÃ£o corresponde Ã  data atual.',
                 pdfData: extractedData.data,
                 dataAtual: data
             });
@@ -1407,12 +1404,12 @@ app.post('/api/pdf/ranking', requirePageLogin, pdfUpload.single('pdf'), async (r
         // Verificar se conseguiu extrair os valores
         if (!extractedData.pa || !extractedData.preco_medio || !extractedData.atendimento_medio) {
             return res.status(400).json({
-                error: 'Não foi possível extrair os dados do PDF. Verifique se o arquivo está no formato correto.',
+                error: 'NÃ£o foi possÃ­vel extrair os dados do PDF. Verifique se o arquivo estÃ¡ no formato correto.',
                 extracted: extractedData
             });
         }
         
-        // Criar diretório se não existir
+        // Criar diretÃ³rio se nÃ£o existir
         const rankingsDir = path.join(__dirname, 'data', 'pdfs', 'rankings');
         if (!fs.existsSync(rankingsDir)) {
             fs.mkdirSync(rankingsDir, { recursive: true });
@@ -1471,10 +1468,10 @@ app.post('/api/pdf/ticket', requirePageLogin, pdfUpload.single('pdf'), async (re
         const { loja, data } = req.body;
         
         if (!loja || !data) {
-            return res.status(400).json({ error: 'Loja e data são obrigatórios' });
+            return res.status(400).json({ error: 'Loja e data sÃ£o obrigatÃ³rios' });
         }
         
-        // Criar diretório se não existir
+        // Criar diretÃ³rio se nÃ£o existir
         const ticketsDir = path.join(__dirname, 'data', 'pdfs', 'tickets');
         if (!fs.existsSync(ticketsDir)) {
             fs.mkdirSync(ticketsDir, { recursive: true });
@@ -1561,11 +1558,11 @@ app.get('/api/pdf/tickets/:id/download', requirePageLogin, (req, res) => {
     
     db.get(sql, [req.params.id], (err, row) => {
         if (err || !row) {
-            return res.status(404).json({ error: 'PDF não encontrado' });
+            return res.status(404).json({ error: 'PDF nÃ£o encontrado' });
         }
         
         if (!fs.existsSync(row.filepath)) {
-            return res.status(404).json({ error: 'Arquivo PDF não encontrado no servidor' });
+            return res.status(404).json({ error: 'Arquivo PDF nÃ£o encontrado no servidor' });
         }
         
         res.setHeader('Content-Type', 'application/pdf');
@@ -1614,11 +1611,11 @@ app.get('/api/pdf/rankings/:id/download', requirePageLogin, (req, res) => {
     
     db.get(sql, [req.params.id], (err, row) => {
         if (err || !row) {
-            return res.status(404).json({ error: 'PDF não encontrado' });
+            return res.status(404).json({ error: 'PDF nÃ£o encontrado' });
         }
         
         if (!fs.existsSync(row.filepath)) {
-            return res.status(404).json({ error: 'Arquivo PDF não encontrado no servidor' });
+            return res.status(404).json({ error: 'Arquivo PDF nÃ£o encontrado no servidor' });
         }
         
         res.setHeader('Content-Type', 'application/pdf');
@@ -1632,19 +1629,19 @@ app.get('/api/pdf/rankings/:id/download', requirePageLogin, (req, res) => {
 // =================================================================
 
 
-// ROTA DE EXPORTAÇÃO PARA EXCEL 
-app.get('/api/export/excel', requirePageLogin, async (req, res) => { const { month, year } = req.query; if (!month || !year) { return res.status(400).json({ error: 'Mês e ano são obrigatórios.' }); } const monthFormatted = month.toString().padStart(2, '0'); const sql = ` SELECT r.*, l.funcao_especial FROM relatorios r LEFT JOIN lojas l ON r.loja = l.nome WHERE strftime('%Y-%m', r.data) = ? ORDER BY r.loja, r.data `; db.all(sql, [`${year}-${monthFormatted}`], async (err, rows) => { if (err) { console.error("Erro ao buscar relatórios para Excel:", err); return res.status(500).json({ error: 'Erro ao buscar relatórios.' }); } if (rows.length === 0) { return res.status(404).json({ error: 'Nenhum relatório encontrado para o período.' }); } const workbook = new ExcelJS.Workbook(); const safeParseFloat = (value) => { if (typeof value === 'number') { return value; } if (typeof value === 'string') { const cleaned = value.replace(/[R$\s]/g, '').replace(/\./g, '').replace(',', '.'); const num = parseFloat(cleaned); return isNaN(num) ? 0 : num; } return 0; }; const relatoriosPorLoja = rows.reduce((acc, row) => { const loja = row.loja; if (!acc[loja]) { acc[loja] = { funcao_especial: row.funcao_especial || 'Não definido', relatorios: [] }; } acc[loja].relatorios.push(processarRelatorio(row)); return acc; }, {}); for (const lojaNome in relatoriosPorLoja) { const lojaData = relatoriosPorLoja[lojaNome]; const worksheet = workbook.addWorksheet(lojaNome.substring(0, 30)); worksheet.mergeCells('A1:M1'); const tituloCell = worksheet.getCell('A1'); tituloCell.value = lojaNome.toUpperCase(); tituloCell.font = { name: 'Arial Black', size: 16, bold: true, color: { argb: 'FF44546A' } }; tituloCell.alignment = { vertical: 'middle', horizontal: 'center' }; worksheet.getRow(1).height = 30; const headers = [ 'DATA', 'BLUVE', 'VENDAS (L)', 'TX DE CONVERSÃO (L)', 'CLIENTES (M)', 'VENDAS (M)', 'TX DE CONVERSÃO (M)', 'P.A', 'TM', 'VALOR TOTAL', 'TROCAS' ]; let funcaoEspecialHeader = 'FUNÇÃO ESPECIAL'; if (lojaData.funcao_especial === 'Omni') { funcaoEspecialHeader = 'OMNI'; } else if (lojaData.funcao_especial === 'Busca por Assist. Tec.') { funcaoEspecialHeader = 'BUSCA P/ ASSIST. TEC.'; } headers.push(funcaoEspecialHeader); headers.push('ENVIADO POR'); const headerRow = worksheet.getRow(3); headerRow.values = headers; headerRow.height = 35; headerRow.eachCell(cell => { cell.font = { bold: true, color: { argb: 'FFFFFFFF' }, size: 10 }; cell.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true }; cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF4472C4' } }; cell.border = { top: { style: 'thin', color: { argb: 'FFBFBFBF' } }, left: { style: 'thin', color: { argb: 'FFBFBFBF' } }, bottom: { style: 'thin', color: { argb: 'FFBFBFBF' } }, right: { style: 'thin', color: { argb: 'FFBFBFBF' } } }; }); lojaData.relatorios.forEach(r => { const rowData = [ new Date(r.data + 'T00:00:00'), parseInt(r.clientes_loja, 10) || 0, parseInt(r.vendas_loja, 10) || 0, parseFloat(r.tx_conversao_loja) / 100, parseInt(r.clientes_monitoramento, 10) || 0, parseInt(r.vendas_monitoramento_total, 10) || 0, parseFloat(r.tx_conversao_monitoramento) / 100, parseFloat(String(r.pa).replace(',', '.')) || 0, safeParseFloat(r.ticket_medio), r.total_vendas_dinheiro, parseInt(r.quantidade_trocas, 10) || 0 ]; if (lojaData.funcao_especial === 'Omni') { rowData.push(parseInt(r.quantidade_omni, 10) || 0); } else if (lojaData.funcao_especial === 'Busca por Assist. Tec.') { rowData.push(parseInt(r.quantidade_funcao_especial, 10) || 0); } else { rowData.push(0); } rowData.push(r.enviado_por_usuario || '-'); const row = worksheet.addRow(rowData); row.getCell(1).numFmt = 'DD/MM/YYYY'; row.getCell(4).numFmt = '0.00%'; row.getCell(7).numFmt = '0.00%'; row.getCell(8).numFmt = '0.00'; row.getCell(9).numFmt = 'R$ #,##0.00'; row.getCell(10).numFmt = 'R$ #,##0.00'; row.eachCell(cell => { cell.alignment = { vertical: 'middle', horizontal: 'center' }; }); }); worksheet.columns.forEach(column => { let maxLength = 0; column.eachCell({ includeEmpty: true }, cell => { const length = cell.value ? cell.value.toString().length : 10; if (length > maxLength) { maxLength = length; } }); column.width = Math.max(12, maxLength + 3); }); worksheet.getColumn(4).width = 20; worksheet.getColumn(7).width = 20; worksheet.getColumn(12).width = 22; } res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); res.setHeader('Content-Disposition', `attachment; filename="Relatorios_${year}-${monthFormatted}.xlsx"`); await workbook.xlsx.write(res); res.end(); }); });
+// ROTA DE EXPORTAÃ‡ÃƒO PARA EXCEL 
+app.get('/api/export/excel', requirePageLogin, async (req, res) => { const { month, year } = req.query; if (!month || !year) { return res.status(400).json({ error: 'MÃªs e ano sÃ£o obrigatÃ³rios.' }); } const monthFormatted = month.toString().padStart(2, '0'); const sql = ` SELECT r.*, l.funcao_especial FROM relatorios r LEFT JOIN lojas l ON r.loja = l.nome WHERE strftime('%Y-%m', r.data) = ? ORDER BY r.loja, r.data `; db.all(sql, [`${year}-${monthFormatted}`], async (err, rows) => { if (err) { console.error("Erro ao buscar relatÃ³rios para Excel:", err); return res.status(500).json({ error: 'Erro ao buscar relatÃ³rios.' }); } if (rows.length === 0) { return res.status(404).json({ error: 'Nenhum relatÃ³rio encontrado para o perÃ­odo.' }); } const workbook = new ExcelJS.Workbook(); const safeParseFloat = (value) => { if (typeof value === 'number') { return value; } if (typeof value === 'string') { const cleaned = value.replace(/[R$\s]/g, '').replace(/\./g, '').replace(',', '.'); const num = parseFloat(cleaned); return isNaN(num) ? 0 : num; } return 0; }; const relatoriosPorLoja = rows.reduce((acc, row) => { const loja = row.loja; if (!acc[loja]) { acc[loja] = { funcao_especial: row.funcao_especial || 'NÃ£o definido', relatorios: [] }; } acc[loja].relatorios.push(processarRelatorio(row)); return acc; }, {}); for (const lojaNome in relatoriosPorLoja) { const lojaData = relatoriosPorLoja[lojaNome]; const worksheet = workbook.addWorksheet(lojaNome.substring(0, 30)); worksheet.mergeCells('A1:M1'); const tituloCell = worksheet.getCell('A1'); tituloCell.value = lojaNome.toUpperCase(); tituloCell.font = { name: 'Arial Black', size: 16, bold: true, color: { argb: 'FF44546A' } }; tituloCell.alignment = { vertical: 'middle', horizontal: 'center' }; worksheet.getRow(1).height = 30; const headers = [ 'DATA', 'BLUVE', 'VENDAS (L)', 'TX DE CONVERSÃƒO (L)', 'CLIENTES (M)', 'VENDAS (M)', 'TX DE CONVERSÃƒO (M)', 'P.A', 'TM', 'VALOR TOTAL', 'TROCAS' ]; let funcaoEspecialHeader = 'FUNÃ‡ÃƒO ESPECIAL'; if (lojaData.funcao_especial === 'Omni') { funcaoEspecialHeader = 'OMNI'; } else if (lojaData.funcao_especial === 'Busca por Assist. Tec.') { funcaoEspecialHeader = 'BUSCA P/ ASSIST. TEC.'; } headers.push(funcaoEspecialHeader); headers.push('ENVIADO POR'); const headerRow = worksheet.getRow(3); headerRow.values = headers; headerRow.height = 35; headerRow.eachCell(cell => { cell.font = { bold: true, color: { argb: 'FFFFFFFF' }, size: 10 }; cell.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true }; cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF4472C4' } }; cell.border = { top: { style: 'thin', color: { argb: 'FFBFBFBF' } }, left: { style: 'thin', color: { argb: 'FFBFBFBF' } }, bottom: { style: 'thin', color: { argb: 'FFBFBFBF' } }, right: { style: 'thin', color: { argb: 'FFBFBFBF' } } }; }); lojaData.relatorios.forEach(r => { const rowData = [ new Date(r.data + 'T00:00:00'), parseInt(r.clientes_loja, 10) || 0, parseInt(r.vendas_loja, 10) || 0, parseFloat(r.tx_conversao_loja) / 100, parseInt(r.clientes_monitoramento, 10) || 0, parseInt(r.vendas_monitoramento_total, 10) || 0, parseFloat(r.tx_conversao_monitoramento) / 100, parseFloat(String(r.pa).replace(',', '.')) || 0, safeParseFloat(r.ticket_medio), r.total_vendas_dinheiro, parseInt(r.quantidade_trocas, 10) || 0 ]; if (lojaData.funcao_especial === 'Omni') { rowData.push(parseInt(r.quantidade_omni, 10) || 0); } else if (lojaData.funcao_especial === 'Busca por Assist. Tec.') { rowData.push(parseInt(r.quantidade_funcao_especial, 10) || 0); } else { rowData.push(0); } rowData.push(r.enviado_por_usuario || '-'); const row = worksheet.addRow(rowData); row.getCell(1).numFmt = 'DD/MM/YYYY'; row.getCell(4).numFmt = '0.00%'; row.getCell(7).numFmt = '0.00%'; row.getCell(8).numFmt = '0.00'; row.getCell(9).numFmt = 'R$ #,##0.00'; row.getCell(10).numFmt = 'R$ #,##0.00'; row.eachCell(cell => { cell.alignment = { vertical: 'middle', horizontal: 'center' }; }); }); worksheet.columns.forEach(column => { let maxLength = 0; column.eachCell({ includeEmpty: true }, cell => { const length = cell.value ? cell.value.toString().length : 10; if (length > maxLength) { maxLength = length; } }); column.width = Math.max(12, maxLength + 3); }); worksheet.getColumn(4).width = 20; worksheet.getColumn(7).width = 20; worksheet.getColumn(12).width = 22; } res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); res.setHeader('Content-Disposition', `attachment; filename="Relatorios_${year}-${monthFormatted}.xlsx"`); await workbook.xlsx.write(res); res.end(); }); });
 
-// ROTA DE EXPORTAÇÃO PARA EXCEL - TODOS OS RELATÓRIOS
+// ROTA DE EXPORTAÃ‡ÃƒO PARA EXCEL - TODOS OS RELATÃ“RIOS
 app.get('/api/export/excel/all', requirePageLogin, async (req, res) => { 
     const sql = ` SELECT r.*, l.funcao_especial FROM relatorios r LEFT JOIN lojas l ON r.loja = l.nome ORDER BY r.loja, r.data `; 
     db.all(sql, [], async (err, rows) => { 
         if (err) { 
-            console.error("Erro ao buscar relatórios para Excel:", err); 
-            return res.status(500).json({ error: 'Erro ao buscar relatórios.' }); 
+            console.error("Erro ao buscar relatÃ³rios para Excel:", err); 
+            return res.status(500).json({ error: 'Erro ao buscar relatÃ³rios.' }); 
         } 
         if (rows.length === 0) { 
-            return res.status(404).json({ error: 'Nenhum relatório encontrado no sistema.' }); 
+            return res.status(404).json({ error: 'Nenhum relatÃ³rio encontrado no sistema.' }); 
         } 
         const workbook = new ExcelJS.Workbook(); 
         const safeParseFloat = (value) => { 
@@ -1659,7 +1656,7 @@ app.get('/api/export/excel/all', requirePageLogin, async (req, res) => {
         const relatoriosPorLoja = rows.reduce((acc, row) => { 
             const loja = row.loja; 
             if (!acc[loja]) { 
-                acc[loja] = { funcao_especial: row.funcao_especial || 'Não definido', relatorios: [] }; 
+                acc[loja] = { funcao_especial: row.funcao_especial || 'NÃ£o definido', relatorios: [] }; 
             } 
             acc[loja].relatorios.push(processarRelatorio(row)); 
             return acc; 
@@ -1673,8 +1670,8 @@ app.get('/api/export/excel/all', requirePageLogin, async (req, res) => {
             tituloCell.font = { name: 'Arial Black', size: 16, bold: true, color: { argb: 'FF44546A' } }; 
             tituloCell.alignment = { vertical: 'middle', horizontal: 'center' }; 
             worksheet.getRow(1).height = 30; 
-            const headers = [ 'DATA', 'BLUVE', 'VENDAS (L)', 'TX DE CONVERSÃO (L)', 'CLIENTES (M)', 'VENDAS (M)', 'TX DE CONVERSÃO (M)', 'P.A', 'TM', 'VALOR TOTAL', 'TROCAS' ]; 
-            let funcaoEspecialHeader = 'FUNÇÃO ESPECIAL'; 
+            const headers = [ 'DATA', 'BLUVE', 'VENDAS (L)', 'TX DE CONVERSÃƒO (L)', 'CLIENTES (M)', 'VENDAS (M)', 'TX DE CONVERSÃƒO (M)', 'P.A', 'TM', 'VALOR TOTAL', 'TROCAS' ]; 
+            let funcaoEspecialHeader = 'FUNÃ‡ÃƒO ESPECIAL'; 
             if (lojaData.funcao_especial === 'Omni') { 
                 funcaoEspecialHeader = 'OMNI'; 
             } else if (lojaData.funcao_especial === 'Busca por Assist. Tec.') { 
@@ -1866,7 +1863,7 @@ app.get('/api/dashboard/chart-data', requirePageLogin, (req, res) => {
     
     // Aplicar filtro de lojas baseado no role
     
-    // Filtro específico por loja (query param)
+    // Filtro especÃ­fico por loja (query param)
     if (loja && loja !== 'todas' && !lojaFilter) {
         whereClauses.push('TRIM(loja) = ?');
         params.push(loja);
@@ -1882,7 +1879,7 @@ app.get('/api/dashboard/chart-data', requirePageLogin, (req, res) => {
         params.push(data_fim);
     }
     
-    // Se não tem nenhum filtro de data, pegar últimos 30 dias
+    // Se nÃ£o tem nenhum filtro de data, pegar Ãºltimos 30 dias
     if (!data_inicio && !data_fim) {
         const date = new Date();
         date.setDate(date.getDate() - 30);
@@ -1895,7 +1892,7 @@ app.get('/api/dashboard/chart-data', requirePageLogin, (req, res) => {
     const sql = `SELECT data, SUM(clientes_loja) as total_clientes_loja, SUM(vendas_loja) as total_vendas_loja, SUM(clientes_monitoramento) as total_clientes_monitoramento, SUM(vendas_monitoramento) as total_vendas_monitoramento, SUM(quantidade_omni) as total_omni FROM relatorios ${whereString} GROUP BY data ORDER BY data ASC`;
     
     db.all(sql, params, (err, rows) => {
-        if (err) return res.status(500).json({ error: 'Erro ao buscar dados para o gráfico.' });
+        if (err) return res.status(500).json({ error: 'Erro ao buscar dados para o grÃ¡fico.' });
         
         const labels = [];
         const txConversaoLoja = [];
@@ -1966,8 +1963,8 @@ app.get('/api/dashboard/store-performance', requirePageLogin, (req, res) => {
     
     db.all(sql, params, (err, rows) => {
         if (err) {
-            console.error('Erro ao buscar métricas de desempenho:', err);
-            return res.status(500).json({ error: 'Erro ao buscar métricas de desempenho.' });
+            console.error('Erro ao buscar mÃ©tricas de desempenho:', err);
+            return res.status(500).json({ error: 'Erro ao buscar mÃ©tricas de desempenho.' });
         }
         
         const metrics = rows.map(row => {
@@ -2014,34 +2011,34 @@ app.get('/api/demandas/:status', requirePageLogin, (req, res) => {
         res.json(demandas || []); 
     }); 
 });
-app.put('/api/demandas/:id/concluir', requirePageLogin, (req, res) => { db.run("UPDATE demandas SET status = 'concluido', concluido_por_usuario = ?, concluido_em = CURRENT_TIMESTAMP WHERE id = ?", [req.session.username, req.params.id], function (err) { if (err) return res.status(500).json({ error: 'Erro ao concluir demanda.' }); if (this.changes === 0) return res.status(404).json({ error: 'Demanda não encontrada.' }); res.json({ success: true }); }); });
-app.delete('/api/demandas/:id', requirePageLogin, (req, res) => { db.run("DELETE FROM demandas WHERE id = ?", [req.params.id], function (err) { if (err) return res.status(500).json({ error: 'Erro ao excluir demanda.' }); if (this.changes === 0) return res.status(404).json({ error: "Demanda não encontrada." }); res.json({ success: true }); }); });
+app.put('/api/demandas/:id/concluir', requirePageLogin, (req, res) => { db.run("UPDATE demandas SET status = 'concluido', concluido_por_usuario = ?, concluido_em = CURRENT_TIMESTAMP WHERE id = ?", [req.session.username, req.params.id], function (err) { if (err) return res.status(500).json({ error: 'Erro ao concluir demanda.' }); if (this.changes === 0) return res.status(404).json({ error: 'Demanda nÃ£o encontrada.' }); res.json({ success: true }); }); });
+app.delete('/api/demandas/:id', requirePageLogin, (req, res) => { db.run("DELETE FROM demandas WHERE id = ?", [req.params.id], function (err) { if (err) return res.status(500).json({ error: 'Erro ao excluir demanda.' }); if (this.changes === 0) return res.status(404).json({ error: "Demanda nÃ£o encontrada." }); res.json({ success: true }); }); });
 app.get('/api/backup/info', requirePageLogin, (req, res) => {
     try {
         const stats = fs.statSync(DB_PATH);
         const sizeMB = (stats.size / (1024 * 1024)).toFixed(2);
         res.json({ sizeMB });
     } catch (error) {
-        console.error("Erro ao obter informações do backup:", error);
-        res.status(500).json({ error: 'Não foi possível obter informações do banco de dados.' });
+        console.error("Erro ao obter informaÃ§Ãµes do backup:", error);
+        res.status(500).json({ error: 'NÃ£o foi possÃ­vel obter informaÃ§Ãµes do banco de dados.' });
     }
 });
 
-// API para limpar tabelas específicas do banco de dados
+// API para limpar tabelas especÃ­ficas do banco de dados
 app.delete('/api/backup/clear', requirePageLogin, (req, res) => {
     db.serialize(() => {
         db.run("DELETE FROM relatorios", (err) => {
-            if (err) return res.status(500).json({ error: 'Erro ao limpar relatórios.' });
+            if (err) return res.status(500).json({ error: 'Erro ao limpar relatÃ³rios.' });
         });
         db.run("DELETE FROM demandas", (err) => {
             if (err) return res.status(500).json({ error: 'Erro ao limpar demandas.' });
         });
-        res.json({ success: true, message: 'Relatórios e demandas foram limpos.' });
+        res.json({ success: true, message: 'RelatÃ³rios e demandas foram limpos.' });
     });
 });
-// Endpoint desabilitado - não compatível com PostgreSQL
-// app.get('/api/backup/download', requirePageLogin, (req, res) => { const date = new Date().toISOString().slice(0, 10); const fileName = `backup_reports_${date}.db`; res.download(DB_PATH, fileName, (err) => { if (err && !res.headersSent) { res.status(500).send("Não foi possível baixar o arquivo de backup."); } }); });
-// app.post('/api/backup/restore', requirePageLogin, upload.single('backupFile'), (req, res) => { if (!req.file) { return res.status(400).json({ error: "Nenhum arquivo de backup foi enviado." }); } const backupBuffer = req.file.buffer; db.close((err) => { if (err) { console.error("Erro ao fechar o DB antes de restaurar:", err.message); return res.status(500).json({ error: "Não foi possível fechar a conexão com o banco de dados atual." }); } fs.writeFile(DB_PATH, backupBuffer, (err) => { if (err) { console.error("Falha ao escrever o arquivo de backup:", err.message); db = new sqlite3.Database(DB_PATH); return res.status(500).json({ error: "Falha ao substituir o arquivo de banco de dados." }); } db = new sqlite3.Database(DB_PATH, (err) => { if (err) { console.error("DB restaurado, mas falha ao reconectar:", err.message); return res.status(500).json({ error: "Banco de dados restaurado, mas falha ao reconectar. Reinicie o servidor." }); } console.log("Banco de dados restaurado e reconectado com sucesso."); res.json({ success: true, message: "Banco de dados restaurado com sucesso. A página será recarregada." }); }); }); }); });
+// Endpoint desabilitado - nÃ£o compatÃ­vel com PostgreSQL
+// app.get('/api/backup/download', requirePageLogin, (req, res) => { const date = new Date().toISOString().slice(0, 10); const fileName = `backup_reports_${date}.db`; res.download(DB_PATH, fileName, (err) => { if (err && !res.headersSent) { res.status(500).send("NÃ£o foi possÃ­vel baixar o arquivo de backup."); } }); });
+// app.post('/api/backup/restore', requirePageLogin, upload.single('backupFile'), (req, res) => { if (!req.file) { return res.status(400).json({ error: "Nenhum arquivo de backup foi enviado." }); } const backupBuffer = req.file.buffer; db.close((err) => { if (err) { console.error("Erro ao fechar o DB antes de restaurar:", err.message); return res.status(500).json({ error: "NÃ£o foi possÃ­vel fechar a conexÃ£o com o banco de dados atual." }); } fs.writeFile(DB_PATH, backupBuffer, (err) => { if (err) { console.error("Falha ao escrever o arquivo de backup:", err.message); db = new sqlite3.Database(DB_PATH); return res.status(500).json({ error: "Falha ao substituir o arquivo de banco de dados." }); } db = new sqlite3.Database(DB_PATH, (err) => { if (err) { console.error("DB restaurado, mas falha ao reconectar:", err.message); return res.status(500).json({ error: "Banco de dados restaurado, mas falha ao reconectar. Reinicie o servidor." }); } console.log("Banco de dados restaurado e reconectado com sucesso."); res.json({ success: true, message: "Banco de dados restaurado com sucesso. A pÃ¡gina serÃ¡ recarregada." }); }); }); }); });
 
 // APIs DE LOGS (apenas para Dev)
 app.get('/api/logs', requirePageLogin, (req, res) => {
@@ -2076,7 +2073,7 @@ app.get('/api/logs', requirePageLogin, (req, res) => {
             (err, logs) => {
                 if (err) return res.status(500).json({ error: err.message });
                 
-                // Buscar estatísticas (últimas 24h)
+                // Buscar estatÃ­sticas (Ãºltimas 24h)
                 const last24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
                 db.all(`SELECT type, COUNT(*) as count FROM logs WHERE timestamp >= ? GROUP BY type`, [last24h], (err, statsRows) => {
                     const stats = {
@@ -2093,7 +2090,7 @@ app.get('/api/logs', requirePageLogin, (req, res) => {
                         });
                     }
                     
-                    // Contar usuários ativos (última hora)
+                    // Contar usuÃ¡rios ativos (Ãºltima hora)
                     const lastHour = new Date(Date.now() - 60 * 60 * 1000).toISOString();
                     db.get(`SELECT COUNT(DISTINCT username) as count FROM logs WHERE timestamp >= ? AND type = 'access'`, [lastHour], (err, userRow) => {
                         if (!err && userRow) stats.activeUsers = userRow.count;
@@ -2159,7 +2156,7 @@ app.get('/api/monitor/database', requirePageLogin, async (req, res) => {
     }
 });
 
-// Função auxiliar para obter IP real do cliente
+// FunÃ§Ã£o auxiliar para obter IP real do cliente
 function getClientIp(req) {
     return req.headers['x-forwarded-for']?.split(',')[0]?.trim() || 
            req.headers['x-real-ip'] || 
@@ -2168,14 +2165,14 @@ function getClientIp(req) {
            'unknown';
 }
 
-// Função auxiliar para criar hash de payload (sem expor dados sensíveis)
+// FunÃ§Ã£o auxiliar para criar hash de payload (sem expor dados sensÃ­veis)
 function hashPayload(data) {
     if (!data || typeof data !== 'object') return null;
     const sanitized = JSON.stringify(data);
     return crypto.createHash('sha256').update(sanitized).digest('hex').substring(0, 16);
 }
 
-// Função auxiliar para registrar logs com auditoria completa
+// FunÃ§Ã£o auxiliar para registrar logs com auditoria completa
 function logEvent(type, username, action, details, req = null) {
     const ip_address = req ? getClientIp(req) : null;
     const user_agent = req ? req.headers['user-agent'] : null;
@@ -2195,24 +2192,24 @@ function logEvent(type, username, action, details, req = null) {
     );
 }
 
-// Exportar função de log para usar em outras rotas
+// Exportar funÃ§Ã£o de log para usar em outras rotas
 global.logEvent = logEvent;
 
 // =================================================================
-// ROTAS DE ASSISTÊNCIA TÉCNICA
+// ROTAS DE ASSISTÃŠNCIA TÃ‰CNICA
 // =================================================================
 
-// Página principal de Assistência Técnica
+// PÃ¡gina principal de AssistÃªncia TÃ©cnica
 app.get('/assistencia', requirePageLogin, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'assistencia.html'));
 });
 
-// Página de Alertas para Técnicos (via SPA)
+// PÃ¡gina de Alertas para TÃ©cnicos (via SPA)
 app.get('/alertas-tecnico', requirePageLogin, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
-// API - Listar Estoque Técnico
+// API - Listar Estoque TÃ©cnico
 app.get('/api/estoque-tecnico', requirePageLogin, (req, res) => {
     const search = req.query.search || '';
     const disponivel = req.query.disponivel;
@@ -2243,12 +2240,12 @@ app.get('/api/estoque-tecnico', requirePageLogin, (req, res) => {
     });
 });
 
-// API - Adicionar Peça ao Estoque
+// API - Adicionar PeÃ§a ao Estoque
 app.post('/api/estoque-tecnico', requirePageLogin, (req, res) => {
     const { nome_peca, codigo_interno, quantidade, valor_custo, loja } = req.body;
     
     if (!nome_peca || !codigo_interno || !loja) {
-        return res.status(400).json({ error: 'Nome da peça, código interno e loja são obrigatórios.' });
+        return res.status(400).json({ error: 'Nome da peÃ§a, cÃ³digo interno e loja sÃ£o obrigatÃ³rios.' });
     }
     
     db.run(
@@ -2257,17 +2254,17 @@ app.post('/api/estoque-tecnico', requirePageLogin, (req, res) => {
         function(err) {
             if (err) {
                 if (err.message.includes('UNIQUE')) {
-                    return res.status(400).json({ error: 'Código interno já existe.' });
+                    return res.status(400).json({ error: 'CÃ³digo interno jÃ¡ existe.' });
                 }
                 return res.status(500).json({ error: err.message });
             }
-            logEvent('info', req.session.username, 'estoque_add', `Peça adicionada: ${nome_peca} (Loja: ${loja})`);
+            logEvent('info', req.session.username, 'estoque_add', `PeÃ§a adicionada: ${nome_peca} (Loja: ${loja})`);
             res.status(201).json({ success: true, id: this.lastID });
         }
     );
 });
 
-// API - Atualizar Estoque de Peça
+// API - Atualizar Estoque de PeÃ§a
 app.put('/api/estoque-tecnico/:id', requirePageLogin, (req, res) => {
     const { id } = req.params;
     const { nome_peca, codigo_interno, quantidade, valor_custo, loja } = req.body;
@@ -2284,26 +2281,26 @@ app.put('/api/estoque-tecnico/:id', requirePageLogin, (req, res) => {
         [nome_peca, codigo_interno, quantidade, valor_custo, loja, id],
         function(err) {
             if (err) return res.status(500).json({ error: err.message });
-            if (this.changes === 0) return res.status(404).json({ error: 'Peça não encontrada.' });
+            if (this.changes === 0) return res.status(404).json({ error: 'PeÃ§a nÃ£o encontrada.' });
             logEvent('info', req.session.username, 'estoque_update', `Estoque atualizado: ID ${id} (Loja: ${loja})`);
             res.json({ success: true });
         }
     );
 });
 
-// API - Deletar Peça do Estoque
+// API - Deletar PeÃ§a do Estoque
 app.delete('/api/estoque-tecnico/:id', requirePageLogin, (req, res) => {
     const { id } = req.params;
     
     db.run('DELETE FROM estoque_tecnico WHERE id = ?', [id], function(err) {
         if (err) return res.status(500).json({ error: err.message });
-        if (this.changes === 0) return res.status(404).json({ error: 'Peça não encontrada.' });
-        logEvent('info', req.session.username, 'estoque_delete', `Peça removida: ID ${id}`);
+        if (this.changes === 0) return res.status(404).json({ error: 'PeÃ§a nÃ£o encontrada.' });
+        logEvent('info', req.session.username, 'estoque_delete', `PeÃ§a removida: ID ${id}`);
         res.json({ success: true });
     });
 });
 
-// API - Listar Assistências
+// API - Listar AssistÃªncias
 app.get('/api/assistencias', requirePageLogin, (req, res) => {
     const status = req.query.status;
     const search = req.query.search || '';
@@ -2313,14 +2310,14 @@ app.get('/api/assistencias', requirePageLogin, (req, res) => {
     let whereClauses = [];
     let params = [];
     
-    // Filtro opcional por loja específica
+    // Filtro opcional por loja especÃ­fica
     if (lojaFilter) {
         whereClauses.push('TRIM(loja) = ?');
         params.push(lojaFilter.trim());
     }
     
     if (status && status !== 'todos') {
-        // Suportar múltiplos status separados por vírgula
+        // Suportar mÃºltiplos status separados por vÃ­rgula
         const statusList = status.split(',').map(s => s.trim());
         if (statusList.length === 1) {
             whereClauses.push('status = ?');
@@ -2346,7 +2343,7 @@ app.get('/api/assistencias', requirePageLogin, (req, res) => {
     });
 });
 
-// API - Criar Assistência
+// API - Criar AssistÃªncia
 app.post('/api/assistencias', requirePageLogin, (req, res) => {
     const {
         cliente_nome,
@@ -2363,7 +2360,7 @@ app.post('/api/assistencias', requirePageLogin, (req, res) => {
     } = req.body;
     
     if (!cliente_nome || !cliente_cpf || !data_entrada || !aparelho) {
-        return res.status(400).json({ error: 'Campos obrigatórios: cliente, CPF, data de entrada e aparelho.' });
+        return res.status(400).json({ error: 'Campos obrigatÃ³rios: cliente, CPF, data de entrada e aparelho.' });
     }
     
     db.run(
@@ -2379,13 +2376,13 @@ app.post('/api/assistencias', requirePageLogin, (req, res) => {
         ],
         function(err) {
             if (err) return res.status(500).json({ error: err.message });
-            logEvent('info', req.session.username, 'assistencia_create', `Assistência criada: ${cliente_nome}`);
+            logEvent('info', req.session.username, 'assistencia_create', `AssistÃªncia criada: ${cliente_nome}`);
             res.status(201).json({ success: true, id: this.lastID });
         }
     );
 });
 
-// API - Atualizar Assistência
+// API - Atualizar AssistÃªncia
 app.put('/api/assistencias/:id', requirePageLogin, (req, res) => {
     const { id } = req.params;
     const {
@@ -2420,26 +2417,26 @@ app.put('/api/assistencias/:id', requirePageLogin, (req, res) => {
         ],
         function(err) {
             if (err) return res.status(500).json({ error: err.message });
-            if (this.changes === 0) return res.status(404).json({ error: 'Assistência não encontrada.' });
-            logEvent('info', req.session.username, 'assistencia_update', `Assistência atualizada: ID ${id}`);
+            if (this.changes === 0) return res.status(404).json({ error: 'AssistÃªncia nÃ£o encontrada.' });
+            logEvent('info', req.session.username, 'assistencia_update', `AssistÃªncia atualizada: ID ${id}`);
             res.json({ success: true });
         }
     );
 });
 
-// API - Concluir Assistência (atualiza status e estoque)
+// API - Concluir AssistÃªncia (atualiza status e estoque)
 app.post('/api/assistencias/:id/concluir', requirePageLogin, (req, res) => {
     const { id } = req.params;
     
-    // Buscar assistência
+    // Buscar assistÃªncia
     db.get('SELECT * FROM assistencias WHERE id = ?', [id], (err, assistencia) => {
         if (err) return res.status(500).json({ error: err.message });
-        if (!assistencia) return res.status(404).json({ error: 'Assistência não encontrada.' });
+        if (!assistencia) return res.status(404).json({ error: 'AssistÃªncia nÃ£o encontrada.' });
         
-        // Atualizar assistência para concluída
+        // Atualizar assistÃªncia para concluÃ­da
         db.run(
             `UPDATE assistencias SET 
-                status = 'Concluído',
+                status = 'ConcluÃ­do',
                 data_conclusao = ?,
                 updated_at = CURRENT_TIMESTAMP
             WHERE id = ?`,
@@ -2447,7 +2444,7 @@ app.post('/api/assistencias/:id/concluir', requirePageLogin, (req, res) => {
             function(err) {
                 if (err) return res.status(500).json({ error: err.message });
                 
-                // Se tem peça associada, atualizar estoque
+                // Se tem peÃ§a associada, atualizar estoque
                 if (assistencia.peca_id) {
                     db.run(
                         'UPDATE estoque_tecnico SET quantidade = quantidade - 1 WHERE id = ? AND quantidade > 0',
@@ -2458,22 +2455,22 @@ app.post('/api/assistencias/:id/concluir', requirePageLogin, (req, res) => {
                     );
                 }
                 
-                logEvent('info', req.session.username, 'assistencia_complete', `Assistência concluída: ${assistencia.cliente_nome}`);
-                res.json({ success: true, message: 'Assistência concluída com sucesso!' });
+                logEvent('info', req.session.username, 'assistencia_complete', `AssistÃªncia concluÃ­da: ${assistencia.cliente_nome}`);
+                res.json({ success: true, message: 'AssistÃªncia concluÃ­da com sucesso!' });
             }
         );
     });
 });
 
-// API - Histórico de Assistências (apenas concluídas)
+// API - HistÃ³rico de AssistÃªncias (apenas concluÃ­das)
 app.get('/api/assistencias/historico', requirePageLogin, (req, res) => {
     const search = req.query.search || '';
     const lojaFilter = req.query.loja || '';
     
-    let whereClauses = ["status = 'Concluído'"];
+    let whereClauses = ["status = 'ConcluÃ­do'"];
     let params = [];
     
-    // Filtro opcional por loja específica
+    // Filtro opcional por loja especÃ­fica
     if (lojaFilter) {
         whereClauses.push('TRIM(loja) = ?');
         params.push(lojaFilter.trim());
@@ -2492,32 +2489,32 @@ app.get('/api/assistencias/historico', requirePageLogin, (req, res) => {
     });
 });
 
-// API - Deletar Assistência (apenas concluídas)
+// API - Deletar AssistÃªncia (apenas concluÃ­das)
 app.delete('/api/assistencias/:id', requirePageLogin, (req, res) => {
     const { id } = req.params;
     
-    // Primeiro, verificar se a assistência existe e se está concluída
+    // Primeiro, verificar se a assistÃªncia existe e se estÃ¡ concluÃ­da
     db.get('SELECT id, status FROM assistencias WHERE id = ?', [id], (err, row) => {
         if (err) return res.status(500).json({ error: err.message });
-        if (!row) return res.status(404).json({ error: 'Assistência não encontrada.' });
+        if (!row) return res.status(404).json({ error: 'AssistÃªncia nÃ£o encontrada.' });
         
-        // Verificar se está concluída
-        if (row.status !== 'Concluído') {
+        // Verificar se estÃ¡ concluÃ­da
+        if (row.status !== 'ConcluÃ­do') {
             return res.status(403).json({ 
-                error: 'Apenas assistências concluídas podem ser removidas.' 
+                error: 'Apenas assistÃªncias concluÃ­das podem ser removidas.' 
             });
         }
         
-        // Se estiver concluída, deletar
+        // Se estiver concluÃ­da, deletar
         db.run('DELETE FROM assistencias WHERE id = ?', [id], function(err) {
             if (err) return res.status(500).json({ error: err.message });
-            logEvent('info', req.session.username, 'assistencia_delete', `Assistência concluída removida: ID ${id}`);
+            logEvent('info', req.session.username, 'assistencia_delete', `AssistÃªncia concluÃ­da removida: ID ${id}`);
             res.json({ success: true });
         });
     });
 });
 
-// API - Estatísticas de Assistência Técnica para Dashboard
+// API - EstatÃ­sticas de AssistÃªncia TÃ©cnica para Dashboard
 app.get('/api/assistencias/stats-tecnico', requirePageLogin, (req, res) => {
     const hoje = new Date().toISOString().split('T')[0];
     const mesAtual = hoje.substring(0, 7);
@@ -2530,15 +2527,15 @@ app.get('/api/assistencias/stats-tecnico', requirePageLogin, (req, res) => {
     `, [], (err, emAndamento) => {
         if (err) return res.status(500).json({ error: err.message });
         
-        // Concluídas hoje
+        // ConcluÃ­das hoje
         db.get(`
             SELECT COUNT(*) as total 
             FROM assistencias 
-            WHERE status = 'Concluído' AND DATE(data_saida) = ?
+            WHERE status = 'ConcluÃ­do' AND DATE(data_saida) = ?
         `, [hoje], (err2, concluidasHoje) => {
             if (err2) return res.status(500).json({ error: err2.message });
             
-            // Total do mês
+            // Total do mÃªs
             db.get(`
                 SELECT COUNT(*) as total 
                 FROM assistencias 
@@ -2546,11 +2543,11 @@ app.get('/api/assistencias/stats-tecnico', requirePageLogin, (req, res) => {
             `, [mesAtual], (err3, totalMes) => {
                 if (err3) return res.status(500).json({ error: err3.message });
                 
-                // Aguardando peças
+                // Aguardando peÃ§as
                 db.get(`
                     SELECT COUNT(*) as total 
                     FROM assistencias 
-                    WHERE status = 'Aguardando peças'
+                    WHERE status = 'Aguardando peÃ§as'
                 `, [], (err4, aguardandoPecas) => {
                     if (err4) return res.status(500).json({ error: err4.message });
                     
@@ -2567,7 +2564,7 @@ app.get('/api/assistencias/stats-tecnico', requirePageLogin, (req, res) => {
 });
 
 app.get('/api/assistencias/stats', requirePageLogin, (req, res) => {
-    // Técnico com mais assistências
+    // TÃ©cnico com mais assistÃªncias
     db.get(`
         SELECT tecnico_responsavel, COUNT(*) as total 
         FROM assistencias 
@@ -2578,7 +2575,7 @@ app.get('/api/assistencias/stats', requirePageLogin, (req, res) => {
     `, (err, topTecnico) => {
         if (err) return res.status(500).json({ error: err.message });
         
-        // Loja com mais assistências
+        // Loja com mais assistÃªncias
         db.get(`
             SELECT loja, COUNT(*) as total 
             FROM assistencias 
@@ -2589,11 +2586,11 @@ app.get('/api/assistencias/stats', requirePageLogin, (req, res) => {
         `, (err2, topLoja) => {
             if (err2) return res.status(500).json({ error: err2.message });
             
-            // Total de assistências e valores
+            // Total de assistÃªncias e valores
             db.get(`
                 SELECT 
                     COUNT(*) as total_assistencias,
-                    SUM(CASE WHEN status = 'Concluído' THEN 1 ELSE 0 END) as concluidas,
+                    SUM(CASE WHEN status = 'ConcluÃ­do' THEN 1 ELSE 0 END) as concluidas,
                     SUM(CASE WHEN status = 'Em andamento' THEN 1 ELSE 0 END) as em_andamento,
                     SUM(valor_peca_loja + valor_servico_cliente) as valor_total
                 FROM assistencias
@@ -2610,13 +2607,13 @@ app.get('/api/assistencias/stats', requirePageLogin, (req, res) => {
     });
 });
 
-// API - Assistências por Loja (detalhamento)
+// API - AssistÃªncias por Loja (detalhamento)
 app.get('/api/assistencias/por-loja', requirePageLogin, (req, res) => {
     db.all(`
         SELECT 
             loja,
             COUNT(*) as total,
-            SUM(CASE WHEN status = 'Concluído' THEN 1 ELSE 0 END) as concluidas,
+            SUM(CASE WHEN status = 'ConcluÃ­do' THEN 1 ELSE 0 END) as concluidas,
             SUM(CASE WHEN status = 'Em andamento' THEN 1 ELSE 0 END) as em_andamento,
             SUM(valor_peca_loja + valor_servico_cliente) as valor_total
         FROM assistencias
@@ -2629,7 +2626,7 @@ app.get('/api/assistencias/por-loja', requirePageLogin, (req, res) => {
     });
 });
 
-// API - Estatísticas Diárias de Assistência com Filtro de Loja
+// API - EstatÃ­sticas DiÃ¡rias de AssistÃªncia com Filtro de Loja
 app.get('/api/assistencias/stats-daily', requirePageLogin, (req, res) => {
     const { loja } = req.query;
     const hoje = new Date().toISOString().split('T')[0];
@@ -2646,8 +2643,8 @@ app.get('/api/assistencias/stats-daily', requirePageLogin, (req, res) => {
     
     db.get(`
         SELECT 
-            SUM(CASE WHEN status = 'Concluído' THEN 1 ELSE 0 END) as concluidas_hoje,
-            SUM(CASE WHEN status = 'Concluído' THEN (valor_peca_loja + valor_servico_cliente) ELSE 0 END) as faturamento_hoje
+            SUM(CASE WHEN status = 'ConcluÃ­do' THEN 1 ELSE 0 END) as concluidas_hoje,
+            SUM(CASE WHEN status = 'ConcluÃ­do' THEN (valor_peca_loja + valor_servico_cliente) ELSE 0 END) as faturamento_hoje
         FROM assistencias
         WHERE ${whereString}
     `, params, (err, totais) => {
@@ -2679,11 +2676,11 @@ app.get('/api/assistencias/stats-daily', requirePageLogin, (req, res) => {
     });
 });
 
-// API - Lista de Tickets de Assistência
+// API - Lista de Tickets de AssistÃªncia
 app.get('/api/assistencias/tickets', requirePageLogin, (req, res) => {
     const { loja, limit } = req.query;
     
-    let whereClauses = ["status IN ('Em andamento', 'Aguardando peças')"];
+    let whereClauses = ["status IN ('Em andamento', 'Aguardando peÃ§as')"];
     let params = [];
     
     if (loja && loja !== 'todas') {
@@ -2720,7 +2717,7 @@ app.get('/api/assistencias/tickets', requirePageLogin, (req, res) => {
 });
 
 // =================================================================
-// INICIALIZAÇÃO DO SERVIDOR
+// INICIALIZAÃ‡ÃƒO DO SERVIDOR
 // =================================================================
 function iniciarServidor() {
     const startTime = new Date();
@@ -2734,7 +2731,6 @@ function iniciarServidor() {
             console.log(`Dominio local configurado via LOCAL_DOMAIN. Certifique-se de mapear em hosts: ${LOCAL_DOMAIN} -> 127.0.0.1`);
         }
         logEvent('info', 'system', 'server_start', `Servidor iniciado em http://0.0.0.0:${PORT}`);
-<<<<<<< HEAD
 
         // Inicializar Google Drive se configurado
         try {
@@ -2752,14 +2748,11 @@ function iniciarServidor() {
             }
         } catch (error) {
             console.log('Google Drive nao configurado. Sistema funcionara com SQLite local.');
-            console.log('Para usar Google Drive, veja: GOOGLE_DRIVE_SETUP.md');
         }
 
         if (AUTO_OPEN_BROWSER) {
             setTimeout(() => openBrowser(baseUrl), 500);
         }
-=======
-        
->>>>>>> 027e36057b879b2113268e74a728c16363385b6e
     });
 }
+

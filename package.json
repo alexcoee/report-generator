@@ -1,7 +1,7 @@
-{
+﻿{
   "name": "sistema-gestao-lojas",
   "version": "1.0.0",
-  "description": "Sistema completo de gestão para lojas de varejo com dashboard, relatórios e controle de vendas.",
+  "description": "Sistema completo de gestÃ£o para lojas de varejo com dashboard, relatÃ³rios e controle de vendas.",
   "main": "server.js",
   "author": "",
   "license": "ISC",
@@ -22,24 +22,6 @@
     "start": "node server.js"
   },
   "bin": "server.js",
-<<<<<<< HEAD
-  "pkg": {
-    "assets": [
-      "public/**/*",
-      "views/**/*",
-      "node_modules/sqlite3/lib/binding/**/*",
-      "node_modules/sqlite3/build/Release/*.node"
-    ],
-    "scripts": [
-      "node_modules/es-get-iterator/index.js",
-      "node_modules/es-get-iterator/node.js"
-    ],
-    "options": [
-      "--no-console"
-    ]
-  },
-=======
->>>>>>> 027e36057b879b2113268e74a728c16363385b6e
   "dependencies": {
     "axios": "^1.13.2",
     "bcryptjs": "^2.4.3",
@@ -63,3 +45,5 @@
     "uuid": "^13.0.0"
   }
 }
+
+
