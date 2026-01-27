@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "sistema-gestao-lojas",
   "version": "1.0.0",
   "description": "Sistema completo de gestÃ£o para lojas de varejo com dashboard, relatÃ³rios e controle de vendas.",
@@ -23,6 +23,7 @@
   },
   "bin": "server.js",
   "dependencies": {
+    "archiver": "^7.0.1",
     "axios": "^1.13.2",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.7",
@@ -45,5 +46,3 @@
     "uuid": "^13.0.0"
   }
 }
-
-

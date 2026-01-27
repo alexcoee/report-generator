@@ -2035,9 +2035,51 @@ app.delete('/api/backup/clear', requirePageLogin, (req, res) => {
         res.json({ success: true, message: 'RelatÃ³rios e demandas foram limpos.' });
     });
 });
-// Endpoint desabilitado - nÃ£o compatÃ­vel com PostgreSQL
-// app.get('/api/backup/download', requirePageLogin, (req, res) => { const date = new Date().toISOString().slice(0, 10); const fileName = `backup_reports_${date}.db`; res.download(DB_PATH, fileName, (err) => { if (err && !res.headersSent) { res.status(500).send("NÃ£o foi possÃ­vel baixar o arquivo de backup."); } }); });
-// app.post('/api/backup/restore', requirePageLogin, upload.single('backupFile'), (req, res) => { if (!req.file) { return res.status(400).json({ error: "Nenhum arquivo de backup foi enviado." }); } const backupBuffer = req.file.buffer; db.close((err) => { if (err) { console.error("Erro ao fechar o DB antes de restaurar:", err.message); return res.status(500).json({ error: "NÃ£o foi possÃ­vel fechar a conexÃ£o com o banco de dados atual." }); } fs.writeFile(DB_PATH, backupBuffer, (err) => { if (err) { console.error("Falha ao escrever o arquivo de backup:", err.message); db = new sqlite3.Database(DB_PATH); return res.status(500).json({ error: "Falha ao substituir o arquivo de banco de dados." }); } db = new sqlite3.Database(DB_PATH, (err) => { if (err) { console.error("DB restaurado, mas falha ao reconectar:", err.message); return res.status(500).json({ error: "Banco de dados restaurado, mas falha ao reconectar. Reinicie o servidor." }); } console.log("Banco de dados restaurado e reconectado com sucesso."); res.json({ success: true, message: "Banco de dados restaurado com sucesso. A pÃ¡gina serÃ¡ recarregada." }); }); }); }); });
+// Restaurar backup SQLite (.db/.sqlite) no modo local
+app.post('/api/backup/restore', requirePageLogin, upload.single('backupFile'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ error: "Nenhum arquivo de backup foi enviado." });
+    }
+
+    const name = (req.file.originalname || '').toLowerCase();
+    const isSqliteFile = name.endsWith('.db') || name.endsWith('.sqlite');
+    if (!isSqliteFile) {
+        return res.status(400).json({ error: "Envie um arquivo .db ou .sqlite." });
+    }
+
+    const backupBuffer = req.file.buffer;
+
+    db.close((closeErr) => {
+        if (closeErr) {
+            console.error("Erro ao fechar o DB antes de restaurar:", closeErr.message);
+            return res.status(500).json({ error: "Nao foi possivel fechar a conexao com o banco de dados atual." });
+        }
+
+        fs.writeFile(DB_PATH, backupBuffer, (writeErr) => {
+            if (writeErr) {
+                console.error("Falha ao escrever o arquivo de backup:", writeErr.message);
+                // Tenta reabrir o DB atual para nao deixar o sistema quebrado
+                return dbAdapter.initDatabase((reopenErr) => {
+                    if (!reopenErr) {
+                        db = dbAdapter.getDatabase();
+                    }
+                    res.status(500).json({ error: "Falha ao substituir o arquivo de banco de dados." });
+                });
+            }
+
+            dbAdapter.initDatabase((reopenErr) => {
+                if (reopenErr) {
+                    console.error("DB restaurado, mas falha ao reconectar:", reopenErr.message);
+                    return res.status(500).json({ error: "Banco de dados restaurado, mas falha ao reconectar. Reinicie o servidor." });
+                }
+
+                db = dbAdapter.getDatabase();
+                console.log("Banco de dados restaurado e reconectado com sucesso.");
+                res.json({ success: true, message: "Banco de dados restaurado com sucesso. A pagina sera recarregada." });
+            });
+        });
+    });
+});
 
 // APIs DE LOGS (apenas para Dev)
 app.get('/api/logs', requirePageLogin, (req, res) => {
