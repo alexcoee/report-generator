@@ -645,9 +645,13 @@ async function updateBluveCard(loja = '') {
         const data = await response.json();
         
         // Atualizar card Bluve
-        document.getElementById('bluve-clientes').textContent = (data.bluve.clientes || 0).toLocaleString('pt-BR');
-        document.getElementById('bluve-vendas').textContent = (data.bluve.vendas || 0).toLocaleString('pt-BR');
-        document.getElementById('bluve-tx-conversao').textContent = `${data.bluve.tx_conversao}%`;
+        const bluveClientes = document.getElementById('bluve-clientes');
+        const bluveVendas = document.getElementById('bluve-vendas');
+        const bluveTx = document.getElementById('bluve-tx-conversao');
+        if (!bluveClientes || !bluveVendas || !bluveTx) return;
+        bluveClientes.textContent = (data.bluve.clientes || 0).toLocaleString('pt-BR');
+        bluveVendas.textContent = (data.bluve.vendas || 0).toLocaleString('pt-BR');
+        bluveTx.textContent = `${data.bluve.tx_conversao}%`;
     } catch (error) {
         console.error('Erro ao carregar mÃ©tricas de Bluve:', error);
     }
@@ -859,12 +863,18 @@ function updateUI(results, hideMonitData = false, dataInicio = null, dataFim = n
 
     // Atualizar mÃ©tricas principais (apenas se nÃ£o for gerente e dados existirem)
     if (!hideMonitData && currentData.total_clientes_monitoramento !== undefined) {
-        document.getElementById('geral-clientes').textContent = (currentData.total_clientes_monitoramento || 0).toLocaleString('pt-BR');
-        document.getElementById('geral-vendas').textContent = ((currentData.total_vendas_monitoramento || 0) + (currentData.total_omni || 0)).toLocaleString('pt-BR');
-        document.getElementById('geral-tx-conversao').textContent = `${parseFloat(currentData.tx_conversao_monitoramento || 0).toFixed(2)}%`;
-        document.getElementById('geral-clientes-comp').innerHTML = getComparisonHtml(currentData.total_clientes_monitoramento, comparisonData.total_clientes_monitoramento || 0);
-        document.getElementById('geral-vendas-comp').innerHTML = getComparisonHtml((currentData.total_vendas_monitoramento || 0) + (currentData.total_omni || 0), (comparisonData.total_vendas_monitoramento || 0) + (comparisonData.total_omni || 0));
-        document.getElementById('geral-tx-conversao-comp').innerHTML = getComparisonHtml(currentData.tx_conversao_monitoramento, comparisonData.tx_conversao_monitoramento || 0, '%');
+        const geralClientes = document.getElementById('geral-clientes');
+        const geralVendas = document.getElementById('geral-vendas');
+        const geralTx = document.getElementById('geral-tx-conversao');
+        const geralClientesComp = document.getElementById('geral-clientes-comp');
+        const geralVendasComp = document.getElementById('geral-vendas-comp');
+        const geralTxComp = document.getElementById('geral-tx-conversao-comp');
+        if (geralClientes) geralClientes.textContent = (currentData.total_clientes_monitoramento || 0).toLocaleString('pt-BR');
+        if (geralVendas) geralVendas.textContent = ((currentData.total_vendas_monitoramento || 0) + (currentData.total_omni || 0)).toLocaleString('pt-BR');
+        if (geralTx) geralTx.textContent = `${parseFloat(currentData.tx_conversao_monitoramento || 0).toFixed(2)}%`;
+        if (geralClientesComp) geralClientesComp.innerHTML = getComparisonHtml(currentData.total_clientes_monitoramento, comparisonData.total_clientes_monitoramento || 0);
+        if (geralVendasComp) geralVendasComp.innerHTML = getComparisonHtml((currentData.total_vendas_monitoramento || 0) + (currentData.total_omni || 0), (comparisonData.total_vendas_monitoramento || 0) + (comparisonData.total_omni || 0));
+        if (geralTxComp) geralTxComp.innerHTML = getComparisonHtml(currentData.tx_conversao_monitoramento, comparisonData.tx_conversao_monitoramento || 0, '%');
     }
     
     // Atualizar mÃ©tricas da loja
