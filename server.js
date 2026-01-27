@@ -19,7 +19,6 @@ const { body, validationResult } = require('express-validator');
 const { requireAuth, requireAuthPage, getLojaFilter, getPermissions } = require('./middleware/roleAuth');
 const jwt = require('jsonwebtoken');
 const { exec } = require('child_process');
-const googleDriveService = require('./services/googleDriveService');
 
 // Database adapter - usa PostgreSQL se configurado, senÃ£o SQLite
 const dbAdapter = require('./src/config/db-adapter');
@@ -2731,24 +2730,6 @@ function iniciarServidor() {
             console.log(`Dominio local configurado via LOCAL_DOMAIN. Certifique-se de mapear em hosts: ${LOCAL_DOMAIN} -> 127.0.0.1`);
         }
         logEvent('info', 'system', 'server_start', `Servidor iniciado em http://0.0.0.0:${PORT}`);
-
-        // Inicializar Google Drive se configurado
-        try {
-            const driveAutenticado = await googleDriveService.autenticar();
-            if (driveAutenticado) {
-                const quota = await googleDriveService.verificarQuota();
-                if (quota) {
-                    console.log(`Google Drive: ${quota.usadoGB}GB de ${quota.limiteGB}GB usados (${quota.percentual}%)`);
-
-                    // verificar se precisa de backup automatico
-                    if (quota.precisaBackup) {
-                        console.log('ATENCAO: Drive proximo do limite! Configure EMAIL_BACKUP no .env para backup automatico.');
-                    }
-                }
-            }
-        } catch (error) {
-            console.log('Google Drive nao configurado. Sistema funcionara com SQLite local.');
-        }
 
         if (AUTO_OPEN_BROWSER) {
             setTimeout(() => openBrowser(baseUrl), 500);
