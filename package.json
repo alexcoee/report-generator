@@ -22,6 +22,7 @@
     "start": "node server.js"
   },
   "bin": "server.js",
+<<<<<<< HEAD
   "pkg": {
     "assets": [
       "public/**/*",
@@ -37,8 +38,9 @@
       "--no-console"
     ]
   },
+=======
+>>>>>>> 027e36057b879b2113268e74a728c16363385b6e
   "dependencies": {
-    "archiver": "^7.0.1",
     "axios": "^1.13.2",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.7",
@@ -48,7 +50,6 @@
     "express-rate-limit": "^8.2.1",
     "express-session": "^1.18.2",
     "express-validator": "^7.3.0",
-    "googleapis": "^165.0.0",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.2",

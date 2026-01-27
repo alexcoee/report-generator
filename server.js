@@ -18,8 +18,11 @@ const rateLimit = require('express-rate-limit');
 const { body, validationResult } = require('express-validator');
 const { requireAuth, requireAuthPage, getLojaFilter, getPermissions } = require('./middleware/roleAuth');
 const jwt = require('jsonwebtoken');
+<<<<<<< HEAD
 const { exec } = require('child_process');
 const googleDriveService = require('./services/googleDriveService');
+=======
+>>>>>>> 027e36057b879b2113268e74a728c16363385b6e
 
 // Database adapter - usa PostgreSQL se configurado, senão SQLite
 const dbAdapter = require('./src/config/db-adapter');
@@ -1068,120 +1071,6 @@ app.delete('/api/relatorios/:id', requirePageLogin, validateCsrf, (req, res) => 
 // =================================================================
 
 // Verificar quota do Google Drive
-app.get('/api/drive/quota', requirePageLogin, async (req, res) => {
-    try {
-        const quota = await googleDriveService.verificarQuota();
-        if (!quota) {
-            return res.status(503).json({ error: 'Google Drive não configurado' });
-        }
-        res.json(quota);
-    } catch (error) {
-        console.error('Erro ao verificar quota:', error.message);
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// Salvar relatório no Google Drive
-app.post('/api/drive/relatorios', requirePageLogin, validateCsrf, async (req, res) => {
-    try {
-        const relatorio = {
-            ...req.body,
-            enviado_por_usuario: req.session.username,
-            data_criacao: new Date().toISOString()
-        };
-        
-        const resultado = await googleDriveService.salvarRelatorio(relatorio);
-        
-        // Verificar se precisa de backup automático
-        const quota = await googleDriveService.verificarQuota();
-        if (quota && quota.precisaBackup) {
-            const emailBackup = process.env.EMAIL_BACKUP;
-            if (emailBackup) {
-                console.log('Limite do Drive atingido! Iniciando backup automatico...');
-                googleDriveService.fazerBackup(emailBackup).catch(err => {
-                    console.error('Erro no backup automático:', err.message);
-                });
-            }
-        }
-        
-        res.status(201).json({ 
-            success: true, 
-            arquivo: resultado,
-            quota: quota 
-        });
-    } catch (error) {
-        console.error('Erro ao salvar relatório no Drive:', error.message);
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// Listar relatórios do Google Drive
-app.get('/api/drive/relatorios', requirePageLogin, async (req, res) => {
-    try {
-        const filtros = {};
-        if (req.query.ano) {
-            filtros.ano = req.query.ano;
-        }
-        
-        const relatorios = await googleDriveService.listarRelatorios(filtros);
-        res.json({ relatorios, total: relatorios.length });
-    } catch (error) {
-        console.error('Erro ao listar relatórios do Drive:', error.message);
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// Fazer backup manual
-app.post('/api/drive/backup', requirePageLogin, validateCsrf, async (req, res) => {
-    try {
-        const emailDestino = req.body.email || process.env.BACKUP_EMAIL || process.env.EMAIL_BACKUP;
-        
-        if (!emailDestino) {
-            return res.status(400).json({ 
-                error: 'Email de destino não fornecido. Configure BACKUP_EMAIL' 
-            });
-        }
-        
-        const resultado = await googleDriveService.fazerBackup(emailDestino);
-        res.json({ 
-            success: true, 
-            ...resultado,
-            email: emailDestino,
-            mensagem: `Backup enviado para ${emailDestino}` 
-        });
-    } catch (error) {
-        console.error('Erro ao fazer backup:', error.message);
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// Limpar relatórios antigos
-app.post('/api/drive/limpar', requirePageLogin, validateCsrf, async (req, res) => {
-    try {
-        const diasManter = parseInt(req.body.dias) || 90;
-        const removidos = await googleDriveService.limparRelatoriosAntigos(diasManter);
-        res.json({ 
-            success: true, 
-            removidos,
-            mensagem: `${removidos} relatórios antigos removidos` 
-        });
-    } catch (error) {
-        console.error('Erro ao limpar relatórios:', error.message);
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// Obter URL de autorização (para primeira configuração)
-app.get('/api/drive/auth-url', requirePageLogin, (req, res) => {
-    try {
-        const url = googleDriveService.gerarURLAutorizacao();
-        res.json({ authUrl: url });
-    } catch (error) {
-        console.error('Erro ao gerar URL de autorização:', error.message);
-        res.status(500).json({ error: error.message });
-    }
-});
-
 const formatCurrency = (value) => { const numberValue = Number(value) || 0; return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(numberValue); };
 
 // Função para desenhar um gráfico de rosquinha (donut chart)
@@ -2845,6 +2734,7 @@ function iniciarServidor() {
             console.log(`Dominio local configurado via LOCAL_DOMAIN. Certifique-se de mapear em hosts: ${LOCAL_DOMAIN} -> 127.0.0.1`);
         }
         logEvent('info', 'system', 'server_start', `Servidor iniciado em http://0.0.0.0:${PORT}`);
+<<<<<<< HEAD
 
         // Inicializar Google Drive se configurado
         try {
@@ -2868,6 +2758,8 @@ function iniciarServidor() {
         if (AUTO_OPEN_BROWSER) {
             setTimeout(() => openBrowser(baseUrl), 500);
         }
+=======
+        
+>>>>>>> 027e36057b879b2113268e74a728c16363385b6e
     });
 }
-
