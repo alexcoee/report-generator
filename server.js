@@ -2035,6 +2035,21 @@ app.delete('/api/backup/clear', requirePageLogin, (req, res) => {
         res.json({ success: true, message: 'RelatÃ³rios e demandas foram limpos.' });
     });
 });
+
+// Baixar banco de dados atual (SQLite)
+app.get('/api/backup/download', requirePageLogin, (req, res) => {
+    try {
+        const date = new Date().toISOString().slice(0, 10);
+        const fileName = `backup_${date}.sqlite`;
+        return res.download(DB_PATH, fileName, (err) => {
+            if (err && !res.headersSent) {
+                res.status(500).send("NÃ£o foi possÃ­vel baixar o arquivo de backup.");
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'NÃ£o foi possÃ­vel baixar o banco de dados.' });
+    }
+});
 // Restaurar backup SQLite (.db/.sqlite) no modo local
 app.post('/api/backup/restore', requirePageLogin, upload.single('backupFile'), (req, res) => {
     if (!req.file) {
