@@ -118,6 +118,25 @@
     </div>
 </div><!-- ... --></div>
 
+    <div class="modal fade" id="copyTextModal" tabindex="-1" aria-labelledby="copyTextModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="copyTextModalLabel">Copiar texto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small mb-2">Selecione o texto abaixo e use Ctrl+C.</p>
+                    <textarea id="copyTextArea" class="form-control" rows="10" readonly></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" id="copyTextSelectBtn">Selecionar tudo</button>
+                    <button type="button" class="btn btn-primary" id="copyTextCopyBtn">Copiar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module" src="/js/app.js?v=5"></script> <!-- Versão 5 para limpar o cache -->

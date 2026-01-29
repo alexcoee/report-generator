@@ -22,6 +22,8 @@ export function initConsultaPage() {
     const limit = 20;
     let currentReportId = null;
     let totalReportsCount = 0;
+    const currencyFormatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+    const dateFormatter = new Intl.DateTimeFormat('pt-BR', { timeZone: 'UTC' });
 
     if (eventController) {
         eventController.abort();
@@ -53,11 +55,6 @@ export function initConsultaPage() {
                 totalReportsCount = total;
             }
 
-            const formatCurrency = (value) => {
-                const numberValue = Number(value) || 0;
-                return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(numberValue);
-            };
-
             const newRowsHtml = relatorios.map((r, index) => {
                 // ALTERAÇÃO: Lógica para criar um ID sequencial contínuo
                 const isDescending = filtroOrdem.value === 'desc';
@@ -69,8 +66,8 @@ export function initConsultaPage() {
                     <tr>
                         <td class="ps-3">${sequentialId}</td>
                         <td>${r.loja}</td>
-                        <td>${new Date(r.data).toLocaleDateString('pt-BR', {timeZone: 'UTC'})}</td>
-                        <td>${formatCurrency(r.total_vendas_dinheiro)}</td>
+                        <td>${dateFormatter.format(new Date(r.data))}</td>
+                        <td>${currencyFormatter.format(Number(r.total_vendas_dinheiro) || 0)}</td>
                         <td class="text-end pe-3">
                             <div class="btn-group btn-group-sm" role="group">
                                 <button type="button" class="btn btn-outline-primary" data-action="visualizar" data-id="${r.id}" title="Visualizar"><i class="bi bi-eye"></i></button>
@@ -121,8 +118,8 @@ export function initConsultaPage() {
             
             // Preencher informações do relatório
             infoLoja.textContent = relatorio.loja || '-';
-            infoData.textContent = new Date(relatorio.data).toLocaleDateString('pt-BR', {timeZone: 'UTC'});
-            infoVendas.textContent = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(relatorio.total_vendas_dinheiro || 0);
+            infoData.textContent = dateFormatter.format(new Date(relatorio.data));
+            infoVendas.textContent = currencyFormatter.format(relatorio.total_vendas_dinheiro || 0);
             
             // Carregar preview do PDF do relatório na aba correta
             const response = await fetch(`/api/relatorios/${id}/pdf`);
@@ -362,12 +359,35 @@ export function initConsultaPage() {
             if (copied) {
                 showToast('Sucesso!', 'Texto copiado.', 'success');
             } else {
-                showToast('Atenção', 'Não foi possível copiar automaticamente. Use Ctrl+C no texto aberto.', 'warning');
-                const w = window.open('', '_blank');
-                if (w) {
-                    w.document.write('<pre style="white-space:pre-wrap;font-family:system-ui,Segoe UI,Arial,sans-serif;"></pre>');
-                    w.document.querySelector('pre').textContent = textToCopy;
-                    w.document.title = 'Relatório (Copiar Texto)';
+                const modalEl = document.getElementById('copyTextModal');
+                const textareaEl = document.getElementById('copyTextArea');
+                const selectBtn = document.getElementById('copyTextSelectBtn');
+                const copyBtn = document.getElementById('copyTextCopyBtn');
+                if (modalEl && textareaEl && selectBtn && copyBtn) {
+                    textareaEl.value = textToCopy;
+                    const modal = new bootstrap.Modal(modalEl);
+                    const selectAll = () => {
+                        textareaEl.focus();
+                        textareaEl.select();
+                        textareaEl.setSelectionRange(0, textareaEl.value.length);
+                    };
+                    selectBtn.onclick = () => selectAll();
+                    copyBtn.onclick = () => {
+                        selectAll();
+                        const ok = document.execCommand('copy');
+                        showToast(ok ? 'Sucesso!' : 'Atenção', ok ? 'Texto copiado.' : 'Use Ctrl+C no texto.', ok ? 'success' : 'warning');
+                    };
+                    modalEl.addEventListener('shown.bs.modal', selectAll, { once: true });
+                    modal.show();
+                    showToast('Atenção', 'Copie manualmente usando Ctrl+C.', 'warning');
+                } else {
+                    showToast('Atenção', 'Não foi possível copiar automaticamente. Use Ctrl+C no texto aberto.', 'warning');
+                    const w = window.open('', '_blank');
+                    if (w) {
+                        w.document.write('<pre style="white-space:pre-wrap;font-family:system-ui,Segoe UI,Arial,sans-serif;"></pre>');
+                        w.document.querySelector('pre').textContent = textToCopy;
+                        w.document.title = 'Relatório (Copiar Texto)';
+                    }
                 }
             }
         } catch (err) {
