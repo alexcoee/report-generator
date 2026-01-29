@@ -340,8 +340,36 @@ export function initConsultaPage() {
             const response = await fetch(`/api/relatorios/${currentReportId}/txt`);
             if (!response.ok) throw new Error("Falha ao buscar texto para cópia.");
             const textToCopy = await response.text();
-            await navigator.clipboard.writeText(textToCopy);
-            showToast('Sucesso!', 'Texto copiado.', 'success');
+            const canUseClipboardApi = navigator.clipboard && window.isSecureContext;
+            if (canUseClipboardApi) {
+                await navigator.clipboard.writeText(textToCopy);
+                showToast('Sucesso!', 'Texto copiado.', 'success');
+                return;
+            }
+
+            const tempArea = document.createElement('textarea');
+            tempArea.value = textToCopy;
+            tempArea.setAttribute('readonly', '');
+            tempArea.style.position = 'fixed';
+            tempArea.style.top = '-1000px';
+            tempArea.style.opacity = '0';
+            document.body.appendChild(tempArea);
+            tempArea.select();
+            tempArea.setSelectionRange(0, tempArea.value.length);
+            const copied = document.execCommand('copy');
+            document.body.removeChild(tempArea);
+
+            if (copied) {
+                showToast('Sucesso!', 'Texto copiado.', 'success');
+            } else {
+                showToast('Atenção', 'Não foi possível copiar automaticamente. Use Ctrl+C no texto aberto.', 'warning');
+                const w = window.open('', '_blank');
+                if (w) {
+                    w.document.write('<pre style="white-space:pre-wrap;font-family:system-ui,Segoe UI,Arial,sans-serif;"></pre>');
+                    w.document.querySelector('pre').textContent = textToCopy;
+                    w.document.title = 'Relatório (Copiar Texto)';
+                }
+            }
         } catch (err) {
             showToast('Erro', 'Não foi possível copiar o texto.', 'danger');
         }
