@@ -18,6 +18,7 @@ export function initNovoRelatorioPage() {
     const lojaSelect = document.getElementById("loja");
     const dataInput = document.getElementById("data");
     const resultadosPdfContainer = document.getElementById('resultados-pdf-container');
+    const pdfImportFeedback = document.getElementById('pdf-import-feedback');
     const totalVendasDinheiroInput = form.querySelector('[name="total_vendas_dinheiro"]');
     const ticketMedioInput = form.querySelector('[name="ticket_medio"]');
     const paInput = form.querySelector('[name="pa"]');
@@ -51,6 +52,12 @@ export function initNovoRelatorioPage() {
         rankingPdf: false,
         ticketPdf: false
     };
+
+    function setPdfFeedback(message, type = 'muted') {
+        if (!pdfImportFeedback) return;
+        pdfImportFeedback.textContent = message;
+        pdfImportFeedback.className = `small mt-1 text-${type}`;
+    }
 
     // --- Funções de Gerenciamento de Rascunho ---
     function salvarRascunho() {
@@ -481,6 +488,7 @@ export function initNovoRelatorioPage() {
 
         btnImportarPdf.disabled = true;
         btnImportarPdf.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processando...';
+        setPdfFeedback(`Enviando PDF: ${file.name}`, 'info');
 
         try {
             const formData = new FormData();
@@ -495,6 +503,9 @@ export function initNovoRelatorioPage() {
             if (!response.ok) throw new Error(result.error || 'Erro ao processar PDF.');
             
             const { data: extractedData } = result;
+            if (!extractedData) {
+                throw new Error('PDF recebido, mas nenhum dado foi extraído.');
+            }
             
             // PREENCHIMENTO EXPLÍCITO CORRIGIDO
             if (extractedData.total_vendas_dinheiro) totalVendasDinheiroInput.value = extractedData.total_vendas_dinheiro;
@@ -524,6 +535,12 @@ export function initNovoRelatorioPage() {
             calcularEAtualizarGraficos();
             salvarRascunho();
             showToast("Sucesso!", "Dados do PDF importados com sucesso.", "success");
+            if (extractedData.loja || extractedData.data) {
+                const label = [extractedData.loja, extractedData.data].filter(Boolean).join(' - ');
+                setPdfFeedback(`PDF importado: ${label || 'dados preenchidos'}`, 'success');
+            } else {
+                setPdfFeedback('PDF importado com sucesso.', 'success');
+            }
             
             // SALVAR PDF DE RANKING FISICAMENTE NO SERVIDOR
             const loja = lojaSelect.value;
@@ -562,6 +579,7 @@ export function initNovoRelatorioPage() {
 
         } catch (error) {
             showToast("Erro na Importação", error.message, "danger");
+            setPdfFeedback(`Erro ao importar PDF: ${error.message}`, 'danger');
             btnImportarPdf.disabled = false;
             btnImportarPdf.innerHTML = '<i class="bi bi-file-earmark-arrow-up-fill"></i>';
             pdfFileInput.value = '';

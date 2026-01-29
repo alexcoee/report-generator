@@ -1,10 +1,10 @@
 /**
- * Middleware de AutenticaÃ§Ã£o
- * Sistema simples de controle de acesso - todos os usuÃ¡rios autenticados tÃªm acesso total
+ * Middleware de Autenticação
+ * Sistema simples de controle de acesso - todos os usuários autenticados têm acesso total
  */
 
 /**
- * Middleware simples para verificar se o usuÃ¡rio estÃ¡ autenticado
+ * Middleware simples para verificar se o usuário está autenticado
  * Substitui os antigos requireRole e requirePage
  */
 function ensureLocalSession(req) {
@@ -25,8 +25,8 @@ function requireAuth(req, res, next) {
 }
 
 /**
- * Middleware para pÃ¡ginas que requerem autenticaÃ§Ã£o
- * Redireciona para login se nÃ£o autenticado
+ * Middleware para páginas que requerem autenticação
+ * Redireciona para login se não autenticado
  */
 function requireAuthPage(req, res, next) {
     ensureLocalSession(req);
@@ -34,7 +34,7 @@ function requireAuthPage(req, res, next) {
 }
 
 /**
- * Retorna todas as permissÃµes (todos os usuÃ¡rios tÃªm acesso a tudo)
+ * Retorna todas as permissões (todos os usuários têm acesso a tudo)
  */
 function getPermissions() {
     return {

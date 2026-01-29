@@ -1,6 +1,6 @@
-﻿import { showToast } from '../utils.js';
+import { showToast } from '../utils.js';
 
-// --- VariÃ¡veis de Estado Globais no MÃ³dulo ---
+// --- Variáveis de Estado Globais no Módulo ---
 let dashboardLineChart = null;
 let dashboardBarChart = null;
 let dashboardDonutChart = null;
@@ -10,7 +10,7 @@ let storeTicketChart = null;
 let storePaChart = null;
 let paymentDistributionChart = null;
 
-// --- FunÃ§Ãµes Auxiliares ---
+// --- Funções Auxiliares ---
 const getCssVar = (varName) => getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
 const toISODateString = (date) => date.toISOString().split('T')[0];
 
@@ -56,7 +56,7 @@ function getComparisonHtml(current, previous, unit = '') {
     return `<span class="${colorClass}" data-bs-toggle="tooltip" data-bs-title="${tooltipTitle}">${icon} ${diff.toFixed(1)}%</span>`;
 }
 
-// --- FunÃ§Ãµes de RenderizaÃ§Ã£o de GrÃ¡ficos ---
+// --- Funções de Renderização de Gráficos ---
 
 function renderBarChart(rankingData) {
     const ctx = document.getElementById('dashboard-bar-chart').getContext('2d');
@@ -86,7 +86,7 @@ function renderBarChart(rankingData) {
         backgroundColor = getCssVar('--color-success');
     } else {
         data = topLojas.map(l => parseFloat(l.tx_loja));
-        label = 'Taxa de ConversÃ£o (%)';
+        label = 'Taxa de Conversão (%)';
         backgroundColor = '#4169E1';
     }
 
@@ -150,7 +150,7 @@ function renderDonutChart(rankingData) {
     const labels = topLojas.map(l => l.loja.length > 15 ? l.loja.substring(0, 15) + '...' : l.loja);
     const data = topLojas.map(l => parseFloat(l.tx_loja));
     
-    // Cores claras e vibrantes (diferentes do grÃ¡fico de linha)
+    // Cores claras e vibrantes (diferentes do gráfico de linha)
     const colors = ['#f472b6', '#60a5fa', '#fbbf24', '#a78bfa', '#34d399'];
 
     if (dashboardDonutChart) dashboardDonutChart.destroy();
@@ -224,7 +224,7 @@ function renderStoreSalesChart(data) {
         data: {
             labels: labels,
             datasets: [{
-                label: 'Vendas MÃ©dias por Dia',
+                label: 'Vendas Médias por Dia',
                 data: values,
                 backgroundColor: getCssVar('--accent-color'),
                 borderRadius: 6,
@@ -242,9 +242,9 @@ function renderStoreSalesChart(data) {
                             const index = context.dataIndex;
                             const store = topStores[index];
                             return [
-                                'MÃ©dia/dia: ' + store.vendas_media_dia.toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
+                                'Média/dia: ' + store.vendas_media_dia.toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
                                 'Total: ' + store.total_vendas.toLocaleString('pt-BR'),
-                                'RelatÃ³rios: ' + store.dias_registrados
+                                'Relatórios: ' + store.dias_registrados
                             ];
                         }
                     }
@@ -278,7 +278,7 @@ function renderStoreTicketChart(data) {
         data: {
             labels: labels,
             datasets: [{
-                label: 'Ticket MÃ©dio (R$)',
+                label: 'Ticket Médio (R$)',
                 data: values,
                 backgroundColor: '#10b981',
                 borderRadius: 6,
@@ -297,8 +297,8 @@ function renderStoreTicketChart(data) {
                             const index = context.dataIndex;
                             const store = topStores[index];
                             return [
-                                'Ticket MÃ©dio: R$ ' + store.ticket_medio.toFixed(2),
-                                'Baseado em ' + store.dias_registrados + ' relatÃ³rio(s)'
+                                'Ticket Médio: R$ ' + store.ticket_medio.toFixed(2),
+                                'Baseado em ' + store.dias_registrados + ' relatório(s)'
                             ];
                         }
                     }
@@ -332,7 +332,7 @@ function renderStorePaChart(data) {
         data: {
             labels: labels,
             datasets: [{
-                label: 'PeÃ§as por Venda (PA)',
+                label: 'Peças por Venda (PA)',
                 data: values,
                 backgroundColor: '#f59e0b',
                 borderRadius: 6,
@@ -351,7 +351,7 @@ function renderStorePaChart(data) {
                             const store = topStores[index];
                             return [
                                 'PA: ' + store.pa.toFixed(2),
-                                'Baseado em ' + store.dias_registrados + ' relatÃ³rio(s)'
+                                'Baseado em ' + store.dias_registrados + ' relatório(s)'
                             ];
                         }
                     }
@@ -383,7 +383,7 @@ function renderPaymentDistributionChart(data) {
     paymentDistributionChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
-            labels: ['CartÃ£o', 'PIX', 'Dinheiro'],
+            labels: ['Cartão', 'PIX', 'Dinheiro'],
             datasets: [{
                 data: [totalCartao, totalPix, totalDinheiro],
                 backgroundColor: ['#3b82f6', '#10b981', '#f59e0b'],
@@ -505,7 +505,7 @@ function renderLineChart(currentChartData, comparisonChartData, hideMonitData = 
         }
     ];
     
-    // Adicionar dados de monitoramento apenas se nÃ£o for gerente
+    // Adicionar dados de monitoramento apenas se não for gerente
     if (!hideMonitData) {
         datasets.push(
             {
@@ -550,7 +550,7 @@ function updateOverviewCards(rankingData, currentData) {
     // Total de lojas ativas
     document.getElementById('overview-total-lojas').textContent = rankingData.length;
     
-    // Melhor loja (por taxa de conversÃ£o)
+    // Melhor loja (por taxa de conversão)
     if (rankingData.length > 0) {
         const melhorLoja = [...rankingData].sort((a, b) => parseFloat(b.tx_loja) - parseFloat(a.tx_loja))[0];
         const nomeLoja = melhorLoja.loja.length > 25 ? melhorLoja.loja.substring(0, 25) + '...' : melhorLoja.loja;
@@ -559,7 +559,7 @@ function updateOverviewCards(rankingData, currentData) {
         document.getElementById('overview-melhor-loja').textContent = '-';
     }
     
-    // MÃ©dia de conversÃ£o
+    // Média de conversão
     if (rankingData.length > 0) {
         const somaConversao = rankingData.reduce((acc, loja) => acc + parseFloat(loja.tx_loja), 0);
         const media = somaConversao / rankingData.length;
@@ -573,7 +573,7 @@ function updateOverviewCards(rankingData, currentData) {
     document.getElementById('overview-total-vendas').textContent = totalVendas.toLocaleString('pt-BR');
 }
 
-// FunÃ§Ã£o para popular os dropdowns de loja nos cards Monitoramento e Bluve
+// Função para popular os dropdowns de loja nos cards Monitoramento e Bluve
 async function populateStoreDropdowns() {
     try {
         const response = await fetch('/api/lojas');
@@ -583,7 +583,7 @@ async function populateStoreDropdowns() {
         const filtroBluve = document.getElementById('filtro-loja-bluve');
         
         if (filtroMonitoramento && filtroBluve) {
-            // Limpar opÃ§Ãµes existentes (exceto "Geral")
+            // Limpar opções existentes (exceto "Geral")
             filtroMonitoramento.innerHTML = '<option value="">Geral</option>';
             filtroBluve.innerHTML = '<option value="">Geral</option>';
             
@@ -605,7 +605,7 @@ async function populateStoreDropdowns() {
     }
 }
 
-// FunÃ§Ã£o para atualizar apenas o card Monitoramento
+// Função para atualizar apenas o card Monitoramento
 async function updateMonitoramentoCard(loja = '') {
     try {
         // Obter a loja selecionada no dropdown Bluve para manter seus dados
@@ -625,11 +625,11 @@ async function updateMonitoramentoCard(loja = '') {
         document.getElementById('monitoramento-vendas').textContent = (data.monitoramento.vendas || 0).toLocaleString('pt-BR');
         document.getElementById('monitoramento-tx-conversao').textContent = `${data.monitoramento.tx_conversao}%`;
     } catch (error) {
-        console.error('Erro ao carregar mÃ©tricas de Monitoramento:', error);
+        console.error('Erro ao carregar métricas de Monitoramento:', error);
     }
 }
 
-// FunÃ§Ã£o para atualizar apenas o card Bluve
+// Função para atualizar apenas o card Bluve
 async function updateBluveCard(loja = '') {
     try {
         // Obter a loja selecionada no dropdown Monitoramento para manter seus dados
@@ -653,18 +653,18 @@ async function updateBluveCard(loja = '') {
         bluveVendas.textContent = (data.bluve.vendas || 0).toLocaleString('pt-BR');
         bluveTx.textContent = `${data.bluve.tx_conversao}%`;
     } catch (error) {
-        console.error('Erro ao carregar mÃ©tricas de Bluve:', error);
+        console.error('Erro ao carregar métricas de Bluve:', error);
     }
 }
 
-// Inicializar dropdowns e mÃ©tricas
+// Inicializar dropdowns e métricas
 function initMetricsCards() {
     // Popular dropdowns
     populateStoreDropdowns();
     populateOmniStoresDropdown();
     populateAssistenciasStoresDropdown();
     
-    // Carregar mÃ©tricas gerais inicialmente para ambos os cards
+    // Carregar métricas gerais inicialmente para ambos os cards
     updateMonitoramentoCard();
     updateBluveCard();
     
@@ -699,7 +699,7 @@ function initMetricsCards() {
     }
 }
 
-// Popular dropdown de lojas com funÃ§Ã£o Omni
+// Popular dropdown de lojas com função Omni
 async function populateOmniStoresDropdown() {
     try {
         const response = await fetch('/api/lojas');
@@ -723,7 +723,7 @@ async function populateOmniStoresDropdown() {
     }
 }
 
-// Popular dropdown de lojas com funÃ§Ã£o AssistÃªncia TÃ©cnica
+// Popular dropdown de lojas com função Assistência Técnica
 async function populateAssistenciasStoresDropdown() {
     try {
         const response = await fetch('/api/lojas');
@@ -743,11 +743,11 @@ async function populateAssistenciasStoresDropdown() {
                 });
         }
     } catch (error) {
-        console.error('Erro ao carregar lojas de AssistÃªncias:', error);
+        console.error('Erro ao carregar lojas de Assistências:', error);
     }
 }
 
-// Atualizar card de AssistÃªncias de forma independente (sempre mostra dados de HOJE)
+// Atualizar card de Assistências de forma independente (sempre mostra dados de HOJE)
 async function updateAssistenciasCard() {
     try {
         const hoje = toISODateString(new Date());
@@ -768,7 +768,7 @@ async function updateAssistenciasCard() {
         
         document.getElementById('card-assistencias-total').textContent = assistenciasTotal.toLocaleString('pt-BR');
     } catch (error) {
-        console.error('Erro ao carregar card de AssistÃªncias:', error);
+        console.error('Erro ao carregar card de Assistências:', error);
         document.getElementById('card-assistencias-total').textContent = '0';
     }
 }
@@ -799,7 +799,7 @@ async function updateOmniCard() {
     }
 }
 
-// Atualizar cards estÃ¡ticos (RelatÃ³rios Hoje e Ãšltima Loja)
+// Atualizar cards estáticos (Relatórios Hoje e Última Loja)
 async function updateStaticCards() {
     try {
         const hoje = toISODateString(new Date());
@@ -818,7 +818,7 @@ async function updateStaticCards() {
                 document.getElementById('card-ultima-loja-data').textContent = `Enviado em ${dataFormatada}`;
             } else {
                 document.getElementById('card-ultima-loja').textContent = '-';
-                document.getElementById('card-ultima-loja-data').textContent = 'Nenhum relatÃ³rio';
+                document.getElementById('card-ultima-loja-data').textContent = 'Nenhum relatório';
             }
         } else {
             document.getElementById('card-ultima-loja').textContent = '-';
@@ -833,7 +833,7 @@ async function updateStaticCards() {
         
         document.getElementById('card-relatorios-hoje').textContent = relatoriosHojeTotal.toLocaleString('pt-BR');
     } catch (error) {
-        console.error('Erro ao carregar cards estÃ¡ticos:', error);
+        console.error('Erro ao carregar cards estáticos:', error);
         document.getElementById('card-ultima-loja').textContent = 'Erro';
         document.getElementById('card-ultima-loja-data').textContent = 'Erro ao carregar';
         document.getElementById('card-relatorios-hoje').textContent = '0';
@@ -855,13 +855,13 @@ function updateUI(results, hideMonitData = false, dataInicio = null, dataFim = n
     // Armazenar rankingData globalmente
     lastRankingData = rankingData;
 
-    // Atualizar cards de visÃ£o geral
+    // Atualizar cards de visão geral
     updateOverviewCards(rankingData, currentData);
     
     // Atualizar cards de indicadores de performance
     updatePerformanceCards(dataInicio, dataFim);
 
-    // Atualizar mÃ©tricas principais (apenas se nÃ£o for gerente e dados existirem)
+    // Atualizar métricas principais (apenas se não for gerente e dados existirem)
     if (!hideMonitData && currentData.total_clientes_monitoramento !== undefined) {
         const geralClientes = document.getElementById('geral-clientes');
         const geralVendas = document.getElementById('geral-vendas');
@@ -877,7 +877,7 @@ function updateUI(results, hideMonitData = false, dataInicio = null, dataFim = n
         if (geralTxComp) geralTxComp.innerHTML = getComparisonHtml(currentData.tx_conversao_monitoramento, comparisonData.tx_conversao_monitoramento || 0, '%');
     }
     
-    // Atualizar mÃ©tricas da loja
+    // Atualizar métricas da loja
     const lojaClientes = document.getElementById('loja-clientes');
     const lojaVendas = document.getElementById('loja-vendas');
     const lojaTxConversao = document.getElementById('loja-tx-conversao');
@@ -892,7 +892,7 @@ function updateUI(results, hideMonitData = false, dataInicio = null, dataFim = n
     if (lojaVendasComp) lojaVendasComp.innerHTML = getComparisonHtml(currentData.total_vendas_loja, comparisonData.total_vendas_loja);
     if (lojaTxConversaoComp) lojaTxConversaoComp.innerHTML = getComparisonHtml(currentData.tx_conversao_loja, comparisonData.tx_conversao_loja, '%');
 
-    // Renderizar grÃ¡ficos
+    // Renderizar gráficos
     renderLineChart(currentChartData, comparisonChartData, hideMonitData);
     renderBarChart(rankingData);
     renderDonutChart(rankingData);
@@ -902,7 +902,7 @@ function updateUI(results, hideMonitData = false, dataInicio = null, dataFim = n
     [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
 }
 
-// --- LÃ³gica Principal e Eventos ---
+// --- Lógica Principal e Eventos ---
 export function initAdminPage(currentUser) {
     const form = document.getElementById('form-filtros-dashboard');
     if (!form) return;
@@ -943,18 +943,18 @@ export function initAdminPage(currentUser) {
         monitoramentoCard.classList.remove('d-none', 'hidden', 'invisible');
     }
 
-    // Garantir que o card Bluve esteja SEMPRE visÃ­vel (FORÃ‡ADO)
+    // Garantir que o card Bluve esteja SEMPRE visível (FORÇADO)
     if (lojaCardCol) {
         lojaCardCol.style.display = 'block';
         lojaCardCol.style.visibility = 'visible';
         lojaCardCol.style.opacity = '1';
         lojaCardCol.classList.remove('d-none', 'hidden', 'invisible', 'full-width');
-        console.log('âœ… Card Bluve garantido como visÃ­vel - display:', lojaCardCol.style.display);
+        console.log('âœ… Card Bluve garantido como visível - display:', lojaCardCol.style.display);
     } else {
-        console.error('âŒ ERRO CRÃTICO: Elemento loja-card-col nÃ£o encontrado no DOM!');
+        console.error('âŒ ERRO CRÍTICO: Elemento loja-card-col não encontrado no DOM!');
     }
     
-    // VerificaÃ§Ã£o adicional apÃ³s delay para garantir que o card permanece visÃ­vel
+    // Verificação adicional após delay para garantir que o card permanece visível
     setTimeout(() => {
         const lojaCardCheck = document.getElementById('loja-card-col');
         if (lojaCardCheck) {
@@ -965,7 +965,7 @@ export function initAdminPage(currentUser) {
             console.log('âœ… Card Bluve RE-verificado - computedDisplay:', computedDisplay);
             
             if (computedDisplay === 'none') {
-                console.error('âŒ ALERTA: Card Bluve ainda estÃ¡ com display:none. ForÃ§ando novamente...');
+                console.error('âŒ ALERTA: Card Bluve ainda está com display:none. Forçando novamente...');
                 lojaCardCheck.style.setProperty('display', 'block', 'important');
             }
         }
@@ -1025,7 +1025,7 @@ export function initAdminPage(currentUser) {
             const startDate = new Date(dataInicio + 'T00:00:00');
             const endDate = new Date(dataFim + 'T00:00:00');
             
-            // Comparar com perÃ­odo anterior
+            // Comparar com período anterior
             const diff = endDate.getTime() - startDate.getTime();
             const compEndDate = new Date(startDate.getTime() - 86400000);
             const compStartDate = new Date(compEndDate.getTime() - diff);
@@ -1062,11 +1062,11 @@ export function initAdminPage(currentUser) {
 
             updateUI(results, isNotAdmin, dataInicio, dataFim);
             
-            // Atualizar grÃ¡ficos de desempenho das lojas
+            // Atualizar gráficos de desempenho das lojas
             loadStorePerformance(dataInicio, dataFim);
         } catch (error) {
             console.error("Erro ao analisar dados:", error.message, error.stack);
-            showToast("Erro", "NÃ£o foi possÃ­vel carregar os dados do dashboard.", "danger");
+            showToast("Erro", "Não foi possível carregar os dados do dashboard.", "danger");
         } finally {
             setLoadingState(false);
         }
@@ -1093,7 +1093,7 @@ export function initAdminPage(currentUser) {
         });
     }
 
-    // InicializaÃ§Ã£o
+    // Inicialização
     async function inicializar() {
         console.log('Inicializando dashboard...');
         await carregarLojas();
@@ -1105,7 +1105,7 @@ export function initAdminPage(currentUser) {
         loadDemandas(); // Carregar demandas pendentes
         
         // Carregar todos os dados sem filtro de data
-        console.log('Carregando todos os relatÃ³rios...');
+        console.log('Carregando todos os relatórios...');
         loadStorePerformance();
         analisarDados();
     }

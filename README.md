@@ -1,4 +1,4 @@
-﻿# Gerador de Relatorios (Local)
+# Gerador de Relatorios (Local)
 
 Sistema web local para dashboard, relatorios e rotinas operacionais.
 

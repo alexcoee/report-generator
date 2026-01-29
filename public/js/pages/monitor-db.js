@@ -1,4 +1,4 @@
-﻿export function initMonitorDbPage() {
+export function initMonitorDbPage() {
     carregarDadosMonitor();
     
     setInterval(carregarDadosMonitor, 30000);
@@ -39,7 +39,7 @@ function atualizarEstatisticasTabelas(tableStats) {
     const tbody = document.getElementById('table-stats');
     
     if (!tableStats || tableStats.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="3" class="text-center text-muted">Nenhum dado disponÃ­vel</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="3" class="text-center text-muted">Nenhum dado disponível</td></tr>';
         return;
     }
     
@@ -92,7 +92,7 @@ function atualizarAtividadesRecentes(activities) {
                 <i class="bi ${icon} me-2 mt-1"></i>
                 <div class="flex-grow-1">
                     <div class="d-flex justify-content-between">
-                        <strong>${activity.action || 'AÃ§Ã£o'}</strong>
+                        <strong>${activity.action || 'Ação'}</strong>
                         <small class="text-muted">${timeAgo}</small>
                     </div>
                     <small class="text-muted">
@@ -140,7 +140,7 @@ function atualizarInformacoesDoSistema(systemInfo) {
     
     const emailStatus = systemInfo.emailConfigured 
         ? '<span class="text-success"><i class="bi bi-check-circle"></i> Configurado</span>' 
-        : '<span class="text-warning"><i class="bi bi-exclamation-triangle"></i> NÃ£o configurado</span>';
+        : '<span class="text-warning"><i class="bi bi-exclamation-triangle"></i> Não configurado</span>';
     document.getElementById('info-backup-email').innerHTML = emailStatus;
 
     document.getElementById('info-last-update').textContent = new Date().toLocaleTimeString('pt-BR');
@@ -158,9 +158,9 @@ function getTimeAgo(date) {
     const seconds = Math.floor((new Date() - date) / 1000);
     
     if (seconds < 60) return 'Agora mesmo';
-    if (seconds < 3600) return Math.floor(seconds / 60) + ' min atrÃ¡s';
-    if (seconds < 86400) return Math.floor(seconds / 3600) + 'h atrÃ¡s';
-    return Math.floor(seconds / 86400) + 'd atrÃ¡s';
+    if (seconds < 3600) return Math.floor(seconds / 60) + ' min atrás';
+    if (seconds < 86400) return Math.floor(seconds / 3600) + 'h atrás';
+    return Math.floor(seconds / 86400) + 'd atrás';
 }
 
 

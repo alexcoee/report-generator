@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -190,7 +190,7 @@
             <div class="login-header"><i class="bi bi-grid-3x3-gap-fill icon"></i></div>
             <form id="login-form">
                 <div class="mb-3">
-                    <label for="username" class="form-label">UsuÃ¡rio</label>
+                    <label for="username" class="form-label">Usuário</label>
                     <input type="text" class="form-control" id="username" name="username" autocomplete="username" required>
                 </div>
                 <div class="mb-4">
@@ -227,7 +227,7 @@
                 if (response.ok && result.success) {
                     window.location.href = '/admin';
                 } else {
-                    errorDiv.textContent = result.message || result.error || 'Credenciais invÃ¡lidas.';
+                    errorDiv.textContent = result.message || result.error || 'Credenciais inválidas.';
                     errorDiv.style.display = 'block';
                 }
             } catch (error) {
