@@ -400,6 +400,30 @@ export function initConsultaPage() {
         window.open(`/api/relatorios/${currentReportId}/pdf`, '_blank');
     }, { signal: eventController.signal });
 
+    document.getElementById('btn-abrir-texto-modal')?.addEventListener('click', () => {
+        if (!currentReportId) return;
+        window.open(`/api/relatorios/${currentReportId}/txt`, '_blank');
+    }, { signal: eventController.signal });
+
+    document.getElementById('btn-baixar-texto-modal')?.addEventListener('click', async () => {
+        if (!currentReportId) return;
+        try {
+            const response = await fetch(`/api/relatorios/${currentReportId}/txt`);
+            if (!response.ok) throw new Error('Falha ao baixar texto.');
+            const textBlob = await response.blob();
+            const url = URL.createObjectURL(textBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `relatorio_${currentReportId}.txt`;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(url);
+        } catch (err) {
+            showToast('Erro', 'Não foi possível baixar o texto.', 'danger');
+        }
+    }, { signal: eventController.signal });
+
     formFiltros.addEventListener('submit', (e) => { e.preventDefault(); carregarRelatorios(true); }, { signal: eventController.signal });
     
     // ADICIONADO: Resetar o filtro de ordem ao limpar
