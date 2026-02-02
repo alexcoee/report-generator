@@ -175,10 +175,10 @@ export function initConsultaPage() {
             const rankings = rankingsData.rankings || [];
             
             // Limpar abas antigas (exceto a do relatório)
-            const existingTabs = tabsList.querySelectorAll('li:not(:first-child)');
+            const existingTabs = tabsList.querySelectorAll('li:not(:first-child):not(#tab-txt-item)');
             existingTabs.forEach(tab => tab.remove());
             
-            const existingPanes = tabsContent.querySelectorAll('.tab-pane:not(#tab-relatorio)');
+            const existingPanes = tabsContent.querySelectorAll('.tab-pane:not(#tab-relatorio):not(#tab-txt)');
             existingPanes.forEach(pane => pane.remove());
             
             if (tickets.length === 0 && rankings.length === 0) {
