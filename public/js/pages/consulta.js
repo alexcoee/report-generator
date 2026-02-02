@@ -105,11 +105,16 @@ export function initConsultaPage() {
         const infoVendas = document.getElementById('info-vendas');
         const tabRelatorio = document.getElementById('tab-relatorio');
         const tabTxtContent = document.getElementById('tab-txt-content');
+        const txtStatus = document.getElementById('txt-status');
+        const btnRecarregarTxt = document.getElementById('btn-recarregar-txt');
         
         modalLabel.textContent = `Carregando Relatório...`;
         tabRelatorio.innerHTML = '<div class="d-flex justify-content-center align-items-center" style="height: 70vh;"><div class="spinner-border" role="status"></div></div>';
         if (tabTxtContent) {
-            tabTxtContent.textContent = 'Carregando texto...';
+            tabTxtContent.value = '';
+        }
+        if (txtStatus) {
+            txtStatus.textContent = 'Carregando...';
         }
         listaAnexos.innerHTML = '<div class="text-muted small text-center py-2"><i class="bi bi-file-earmark"></i> Carregando...</div>';
         modalView.show();
@@ -135,16 +140,29 @@ export function initConsultaPage() {
 
             // Carregar texto do relatório na aba Texto
             if (tabTxtContent) {
-                try {
-                    const txtResponse = await fetch(`/api/relatorios/${id}/txt`);
-                    if (txtResponse.ok) {
-                        const txt = await txtResponse.text();
-                        tabTxtContent.textContent = txt || 'Sem conteúdo.';
-                    } else {
-                        tabTxtContent.textContent = 'Não foi possível carregar o texto.';
+                const carregarTexto = async () => {
+                    if (txtStatus) txtStatus.textContent = 'Carregando...';
+                    try {
+                        const txtResponse = await fetch(`/api/relatorios/${id}/txt`);
+                        if (txtResponse.ok) {
+                            const txt = await txtResponse.text();
+                            tabTxtContent.value = txt || '';
+                            if (txtStatus) {
+                                txtStatus.textContent = txt ? `Texto carregado (${txt.length} caracteres)` : 'Sem conteúdo.';
+                            }
+                        } else {
+                            tabTxtContent.value = '';
+                            if (txtStatus) txtStatus.textContent = `Falha ao carregar texto (HTTP ${txtResponse.status}).`;
+                        }
+                    } catch (txtError) {
+                        tabTxtContent.value = '';
+                        if (txtStatus) txtStatus.textContent = 'Falha ao carregar texto.';
                     }
-                } catch (txtError) {
-                    tabTxtContent.textContent = 'Não foi possível carregar o texto.';
+                };
+
+                await carregarTexto();
+                if (btnRecarregarTxt) {
+                    btnRecarregarTxt.onclick = carregarTexto;
                 }
             }
             

@@ -147,9 +147,13 @@
                             </div>
                             <div class="tab-pane fade" id="tab-txt" role="tabpanel" style="min-height: 70vh;">
                                 <div class="p-3">
-                                    <div id="tab-txt-content" class="border rounded bg-light p-3" style="white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace; min-height: 50vh;">
-                                        Carregando texto...
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-recarregar-txt">
+                                            <i class="bi bi-arrow-repeat"></i> Recarregar texto
+                                        </button>
+                                        <span id="txt-status" class="small text-muted">Aguardando...</span>
                                     </div>
+                                    <textarea id="tab-txt-content" class="form-control border rounded bg-light" rows="18" readonly></textarea>
                                 </div>
                             </div>
                         </div>
