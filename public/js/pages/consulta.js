@@ -107,6 +107,31 @@ export function initConsultaPage() {
         const tabTxtContent = document.getElementById('tab-txt-content');
         const txtStatus = document.getElementById('txt-status');
         const btnRecarregarTxt = document.getElementById('btn-recarregar-txt');
+        const tabsList = document.getElementById('tabs-visualizacao');
+        const tabsContent = document.getElementById('tabs-visualizacao-content');
+
+        if (tabsList && tabsContent && !document.getElementById('tab-txt-btn')) {
+            tabsList.insertAdjacentHTML('beforeend', `
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="tab-txt-btn" data-bs-toggle="tab" data-bs-target="#tab-txt" type="button" role="tab">
+                        <i class="bi bi-filetype-txt me-1"></i> Texto
+                    </button>
+                </li>
+            `);
+            tabsContent.insertAdjacentHTML('beforeend', `
+                <div class="tab-pane fade" id="tab-txt" role="tabpanel" style="min-height: 70vh;">
+                    <div class="p-3">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-recarregar-txt">
+                                <i class="bi bi-arrow-repeat"></i> Recarregar texto
+                            </button>
+                            <span id="txt-status" class="small text-muted">Aguardando...</span>
+                        </div>
+                        <textarea id="tab-txt-content" class="form-control border rounded bg-light" rows="18" readonly></textarea>
+                    </div>
+                </div>
+            `);
+        }
         
         modalLabel.textContent = `Carregando Relatório...`;
         tabRelatorio.innerHTML = '<div class="d-flex justify-content-center align-items-center" style="height: 70vh;"><div class="spinner-border" role="status"></div></div>';
