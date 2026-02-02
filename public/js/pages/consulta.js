@@ -104,9 +104,13 @@ export function initConsultaPage() {
         const infoData = document.getElementById('info-data');
         const infoVendas = document.getElementById('info-vendas');
         const tabRelatorio = document.getElementById('tab-relatorio');
+        const tabTxtContent = document.getElementById('tab-txt-content');
         
         modalLabel.textContent = `Carregando Relatório...`;
         tabRelatorio.innerHTML = '<div class="d-flex justify-content-center align-items-center" style="height: 70vh;"><div class="spinner-border" role="status"></div></div>';
+        if (tabTxtContent) {
+            tabTxtContent.textContent = 'Carregando texto...';
+        }
         listaAnexos.innerHTML = '<div class="text-muted small text-center py-2"><i class="bi bi-file-earmark"></i> Carregando...</div>';
         modalView.show();
 
@@ -128,6 +132,21 @@ export function initConsultaPage() {
             const fileURL = URL.createObjectURL(fileBlob);
             modalLabel.textContent = `Visualizar Relatório #${id}`;
             tabRelatorio.innerHTML = `<iframe src="${fileURL}" style="width: 100%; height: 70vh; border: none;"></iframe>`;
+
+            // Carregar texto do relatório na aba Texto
+            if (tabTxtContent) {
+                try {
+                    const txtResponse = await fetch(`/api/relatorios/${id}/txt`);
+                    if (txtResponse.ok) {
+                        const txt = await txtResponse.text();
+                        tabTxtContent.textContent = txt || 'Sem conteúdo.';
+                    } else {
+                        tabTxtContent.textContent = 'Não foi possível carregar o texto.';
+                    }
+                } catch (txtError) {
+                    tabTxtContent.textContent = 'Não foi possível carregar o texto.';
+                }
+            }
             
             // Carregar anexos (tickets e rankings)
             await carregarAnexos(id, relatorio.loja, relatorio.data);
@@ -400,29 +419,6 @@ export function initConsultaPage() {
         window.open(`/api/relatorios/${currentReportId}/pdf`, '_blank');
     }, { signal: eventController.signal });
 
-    document.getElementById('btn-abrir-texto-modal')?.addEventListener('click', () => {
-        if (!currentReportId) return;
-        window.open(`/api/relatorios/${currentReportId}/txt`, '_blank');
-    }, { signal: eventController.signal });
-
-    document.getElementById('btn-baixar-texto-modal')?.addEventListener('click', async () => {
-        if (!currentReportId) return;
-        try {
-            const response = await fetch(`/api/relatorios/${currentReportId}/txt`);
-            if (!response.ok) throw new Error('Falha ao baixar texto.');
-            const textBlob = await response.blob();
-            const url = URL.createObjectURL(textBlob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `relatorio_${currentReportId}.txt`;
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-            URL.revokeObjectURL(url);
-        } catch (err) {
-            showToast('Erro', 'Não foi possível baixar o texto.', 'danger');
-        }
-    }, { signal: eventController.signal });
 
     formFiltros.addEventListener('submit', (e) => { e.preventDefault(); carregarRelatorios(true); }, { signal: eventController.signal });
     

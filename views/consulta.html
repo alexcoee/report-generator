@@ -132,12 +132,24 @@
                                     <i class="bi bi-file-earmark-text me-1"></i> Relatório
                                 </button>
                             </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="tab-txt-btn" data-bs-toggle="tab" data-bs-target="#tab-txt" type="button" role="tab">
+                                    <i class="bi bi-filetype-txt me-1"></i> Texto
+                                </button>
+                            </li>
                         </ul>
                         
                         <!-- Conteúdo das Abas -->
                         <div class="tab-content" id="tabs-visualizacao-content">
                             <div class="tab-pane fade show active" id="tab-relatorio" role="tabpanel" style="min-height: 70vh;">
                                 <div id="modal-body-content" style="min-height: 70vh;">
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="tab-txt" role="tabpanel" style="min-height: 70vh;">
+                                <div class="p-3">
+                                    <div id="tab-txt-content" class="border rounded bg-light p-3" style="white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace; min-height: 50vh;">
+                                        Carregando texto...
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -147,9 +159,6 @@
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                 <div>
-                    <button type="button" class="btn btn-primary" id="btn-copiar-texto-modal"><i class="bi bi-clipboard-check"></i> Copiar .txt</button>
-                    <button type="button" class="btn btn-outline-primary" id="btn-abrir-texto-modal"><i class="bi bi-box-arrow-up-right"></i> Abrir .txt</button>
-                    <button type="button" class="btn btn-outline-secondary" id="btn-baixar-texto-modal"><i class="bi bi-download"></i> Baixar .txt</button>
                     <button type="button" class="btn btn-danger" id="btn-gerar-pdf-modal"><i class="bi bi-file-earmark-pdf"></i> Abrir PDF</button>
                 </div>
             </div>
