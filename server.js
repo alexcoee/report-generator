@@ -390,6 +390,7 @@ app.get('/dev/system', requirePageLogin, (req, res) => {
 app.get('/content/:page', requirePageLogin, (req, res) => {
     const allowedPages = ['admin', 'consulta', 'demandas', 'gerenciar-lojas', 'assistencia', 'alertas-tecnico', 'novo-relatorio', 'gerenciar-usuarios', 'logs', 'configuracoes', 'monitor-db'];
     if (allowedPages.includes(req.params.page)) {
+        res.set('Cache-Control', 'no-store');
         res.sendFile(path.join(__dirname, 'views', `${req.params.page}.html`));
     } else {
         res.status(404).send('Página não encontrada');

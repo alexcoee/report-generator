@@ -49,7 +49,7 @@ async function loadPage(path) {
     pageContent.innerHTML = '<div class="d-flex justify-content-center p-5"><div class="spinner-border" role="status"></div></div>';
 
     try {
-        const response = await fetch(`/content/${activePage}`);
+            const response = await fetch(`/content/${activePage}`, { cache: 'no-store' });
         if (!response.ok) throw new Error(`Página /content/${activePage} não encontrada.`);
 
         pageContent.innerHTML = await response.text();
